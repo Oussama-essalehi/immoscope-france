@@ -12,6 +12,7 @@ from pathlib import Path
 
 import requests
 
+from src.income import archive_path
 from src.settings import load_config, project_path, setup_logging
 
 logger = logging.getLogger("download")
@@ -74,6 +75,19 @@ def run(force: bool = False) -> list[Path]:
             logger.info("Downloading %s", url)
             download_file(url, target, source["timeout_seconds"])
             logger.info("Saved %s (%.1f MB)", target.name, target.stat().st_size / 1e6)
+
+    income = cfg.get("income", {})
+    if income.get("enabled", False):
+        target = archive_path()
+        if target.exists() and not force:
+            logger.info("Already present: %s", target.name)
+        else:
+            try:
+                logger.info("Downloading INSEE Filosofi %s: %s", income["year"], income["url"])
+                download_file(income["url"], target, source["timeout_seconds"])
+            except requests.RequestException as exc:
+                # Optional enrichment: the DVF pipeline must not fail because of it.
+                logger.warning("Filosofi download failed (%s): income enrichment skipped", exc)
     return paths
 
 

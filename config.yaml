@@ -7,6 +7,13 @@ data_source:
   file_pattern: "{base_url}/{year}/departements/{department}.csv.gz"
   timeout_seconds: 120
 
+# Enrichissement optionnel : revenus INSEE Filosofi 2021 (base communale).
+# Page source : https://www.insee.fr/fr/statistiques/7756729
+income:
+  enabled: true
+  url: "https://www.insee.fr/fr/statistiques/fichier/7756729/base-cc-filosofi-2021-geo2025_csv.zip"
+  year: 2021
+
 scope:
   departments: ["31", "33", "34", "44", "69"]
   # "auto" = toutes les années publiées dans le répertoire latest/csv/,
