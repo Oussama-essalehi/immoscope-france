@@ -1,0 +1,23 @@
+# Base PostgreSQL 16 locale pour la couche SQL du projet.
+# Démarrage : docker compose up -d --wait
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: dvf-postgres
+    environment:
+      POSTGRES_DB: ${DVF_DB_NAME:-dvf}
+      POSTGRES_USER: ${DVF_DB_USER:-dvf}
+      POSTGRES_PASSWORD: ${DVF_DB_PASSWORD:-dvf_local}
+    ports:
+      - "${DVF_DB_PORT:-5433}:5432"
+    volumes:
+      - dvf_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+volumes:
+  dvf_pgdata:
