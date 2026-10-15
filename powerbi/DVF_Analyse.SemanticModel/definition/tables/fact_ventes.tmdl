@@ -1,0 +1,142 @@
+/// Une ligne par vente d'un seul logement (maison ou appartement) après nettoyage DVF.
+table fact_ventes
+	lineageTag: 14d0c965-be84-5948-a284-c9b0d4766e8f
+
+	column id_mutation
+		dataType: string
+		lineageTag: 5713beda-612b-5eb2-80a4-89c0edac1406
+		summarizeBy: none
+		sourceColumn: id_mutation
+
+		annotation SummarizationSetBy = User
+
+	column date_key
+		dataType: int64
+		isHidden
+		lineageTag: 9f41429d-016b-5472-80f3-4a623cd81318
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = User
+
+	column commune_key
+		dataType: int64
+		isHidden
+		lineageTag: cb01afcb-9768-50ea-bfbf-0d1144aeb97c
+		summarizeBy: none
+		sourceColumn: commune_key
+
+		annotation SummarizationSetBy = User
+
+	column type_local_key
+		dataType: int64
+		isHidden
+		lineageTag: 5c382bc0-6ceb-5c5d-a0e6-806caf710b9b
+		summarizeBy: none
+		sourceColumn: type_local_key
+
+		annotation SummarizationSetBy = User
+
+	column profil_key
+		dataType: int64
+		isHidden
+		lineageTag: af2a21f5-ccb2-54ca-b1be-2753d63d0465
+		summarizeBy: none
+		sourceColumn: profil_key
+
+		annotation SummarizationSetBy = User
+
+	column valeur_fonciere
+		dataType: double
+		formatString: #,0 "€"
+		lineageTag: 003c5afd-6abb-5b11-be58-f8c6160475a3
+		summarizeBy: none
+		sourceColumn: valeur_fonciere
+
+		annotation SummarizationSetBy = User
+
+	column surface
+		dataType: double
+		formatString: #,0 "m²"
+		lineageTag: 00e702de-8490-5457-a4d9-f9bbf5c806cd
+		summarizeBy: none
+		sourceColumn: surface
+
+		annotation SummarizationSetBy = User
+
+	column prix_m2
+		dataType: double
+		formatString: #,0 "€"
+		lineageTag: 9b26aaa5-bae9-5fe7-9393-cf40f16bd7b7
+		summarizeBy: none
+		sourceColumn: prix_m2
+
+		annotation SummarizationSetBy = User
+
+	column nb_pieces
+		dataType: int64
+		formatString: 0
+		lineageTag: 5f15fb33-d1df-517d-8c0e-db308abfa8b7
+		summarizeBy: none
+		sourceColumn: nb_pieces
+
+		annotation SummarizationSetBy = User
+
+	column surface_terrain
+		dataType: double
+		formatString: #,0 "m²"
+		lineageTag: 87ff9b1f-4293-598a-a62c-26c8c89e4de6
+		summarizeBy: none
+		sourceColumn: surface_terrain
+
+		annotation SummarizationSetBy = User
+
+	column latitude
+		dataType: double
+		dataCategory: Latitude
+		lineageTag: c93fe293-db92-5377-a87e-df48eb6409d1
+		summarizeBy: none
+		sourceColumn: latitude
+
+		annotation SummarizationSetBy = User
+
+	column longitude
+		dataType: double
+		dataCategory: Longitude
+		lineageTag: 1735dc5b-9592-5ea7-a19f-ce2df0092fcf
+		summarizeBy: none
+		sourceColumn: longitude
+
+		annotation SummarizationSetBy = User
+
+	partition fact_ventes = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(
+				        File.Contents(DataFolder & "fact_ventes.csv"),
+				        [Delimiter = ",", Columns = 12, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+				    ),
+				    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    TypedColumns = Table.TransformColumnTypes(
+				        PromotedHeaders,
+				        {
+				            {"id_mutation", type text},
+				            {"date_key", Int64.Type},
+				            {"commune_key", Int64.Type},
+				            {"type_local_key", Int64.Type},
+				            {"profil_key", Int64.Type},
+				            {"valeur_fonciere", type number},
+				            {"surface", type number},
+				            {"prix_m2", type number},
+				            {"nb_pieces", Int64.Type},
+				            {"surface_terrain", type number},
+				            {"latitude", type number},
+				            {"longitude", type number}
+				        },
+				        "en-US"
+				    )
+				in
+				    TypedColumns
+
+	annotation PBI_ResultType = Table

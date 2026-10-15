@@ -1,0 +1,5 @@
+/// Dossier contenant les CSV de data/gold (chemin absolu, terminé par une barre oblique inverse).
+expression DataFolder = "C:\dvf-immobilier-analyse\data\gold\" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: 3517af6a-3395-5d54-ad75-e28270481072
+
+	annotation PBI_ResultType = Text

@@ -1,0 +1,22 @@
+model Model
+	culture: fr-FR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
+	sourceQueryCulture: fr-FR
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["DataFolder", "dim_date", "dim_commune", "dim_type_local", "dim_profil_bien", "fact_ventes", "_Mesures"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table _Mesures
+ref table fact_ventes
+ref table dim_date
+ref table dim_commune
+ref table dim_type_local
+ref table dim_profil_bien
+ref table 'Paramètre Budget'

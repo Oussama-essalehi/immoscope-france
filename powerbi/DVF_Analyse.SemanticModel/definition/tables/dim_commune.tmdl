@@ -1,0 +1,156 @@
+/// Communes (et arrondissements de Lyon) ayant au moins une vente, avec libellé de ville principale et revenus INSEE Filosofi 2021.
+table dim_commune
+	lineageTag: 208ddc88-d93c-54ad-bc8b-d357d3f08121
+
+	column commune_key
+		dataType: int64
+		isHidden
+		lineageTag: c16d0cd7-c273-560d-ab4d-1b0402c79117
+		summarizeBy: none
+		sourceColumn: commune_key
+
+		annotation SummarizationSetBy = User
+
+	column code_commune
+		dataType: string
+		lineageTag: d2cf2bbc-64e8-5286-9cc0-7686ddd8a9fd
+		summarizeBy: none
+		sourceColumn: code_commune
+
+		annotation SummarizationSetBy = User
+
+	column nom_commune
+		dataType: string
+		dataCategory: Place
+		lineageTag: 184a3d66-656f-5c40-96fc-13243ee1aab3
+		summarizeBy: none
+		sourceColumn: nom_commune
+
+		annotation SummarizationSetBy = User
+
+	column code_departement
+		dataType: string
+		lineageTag: a53eec6d-6634-5528-9f73-313000b864ab
+		summarizeBy: none
+		sourceColumn: code_departement
+
+		annotation SummarizationSetBy = User
+
+	column nom_departement
+		dataType: string
+		lineageTag: 662b0e63-7a98-581b-94d5-a7ab871d3955
+		summarizeBy: none
+		sourceColumn: nom_departement
+
+		annotation SummarizationSetBy = User
+
+	column departement
+		dataType: string
+		lineageTag: 72cf9c23-9de7-5b1d-9ad7-689a8fd72447
+		summarizeBy: none
+		sourceColumn: departement
+
+		annotation SummarizationSetBy = User
+
+	column ville_principale
+		dataType: string
+		lineageTag: 9fddc021-2064-55db-90c4-2f66e7904789
+		summarizeBy: none
+		sourceColumn: ville_principale
+
+		annotation SummarizationSetBy = User
+
+	column est_ville_principale
+		dataType: boolean
+		lineageTag: 9c9451f7-c2fb-56d4-b1a2-0485d0d0208a
+		summarizeBy: none
+		sourceColumn: est_ville_principale
+
+		annotation SummarizationSetBy = User
+
+	column est_metropole
+		dataType: boolean
+		lineageTag: 6b7cffbc-0828-5c74-984d-153367c945c0
+		summarizeBy: none
+		sourceColumn: est_metropole
+
+		annotation SummarizationSetBy = User
+
+	column latitude
+		dataType: double
+		dataCategory: Latitude
+		lineageTag: 20946eca-4ab9-59af-80ef-de5cceb354e5
+		summarizeBy: none
+		sourceColumn: latitude
+
+		annotation SummarizationSetBy = User
+
+	column longitude
+		dataType: double
+		dataCategory: Longitude
+		lineageTag: 574b947d-c771-58b6-b732-890b7cfa7b2f
+		summarizeBy: none
+		sourceColumn: longitude
+
+		annotation SummarizationSetBy = User
+
+	column niveau_vie_median
+		dataType: double
+		formatString: #,0 "€"
+		lineageTag: cb2fa59c-4bb0-5d82-b9bc-884b15f292a5
+		summarizeBy: none
+		sourceColumn: niveau_vie_median
+
+		annotation SummarizationSetBy = User
+
+	column revenu_menage_median
+		dataType: double
+		formatString: #,0 "€"
+		lineageTag: 04f230c3-2235-59f2-9cd2-0739a9a3faf7
+		summarizeBy: none
+		sourceColumn: revenu_menage_median
+
+		annotation SummarizationSetBy = User
+
+	column revenu_menage_ville
+		dataType: double
+		formatString: #,0 "€"
+		lineageTag: c09a01a4-e8ec-506e-88fa-b9854dd7ec8c
+		summarizeBy: none
+		sourceColumn: revenu_menage_ville
+
+		annotation SummarizationSetBy = User
+
+	partition dim_commune = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(
+				        File.Contents(DataFolder & "dim_commune.csv"),
+				        [Delimiter = ",", Columns = 14, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+				    ),
+				    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    TypedColumns = Table.TransformColumnTypes(
+				        PromotedHeaders,
+				        {
+				            {"commune_key", Int64.Type},
+				            {"code_commune", type text},
+				            {"nom_commune", type text},
+				            {"code_departement", type text},
+				            {"nom_departement", type text},
+				            {"departement", type text},
+				            {"ville_principale", type text},
+				            {"est_ville_principale", type logical},
+				            {"est_metropole", type logical},
+				            {"latitude", type number},
+				            {"longitude", type number},
+				            {"niveau_vie_median", type number},
+				            {"revenu_menage_median", type number},
+				            {"revenu_menage_ville", type number}
+				        },
+				        "en-US"
+				    )
+				in
+				    TypedColumns
+
+	annotation PBI_ResultType = Table

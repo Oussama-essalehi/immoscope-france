@@ -1,0 +1,16 @@
+relationship aa95d5d3-11f8-53e7-b6dd-82c81fadbb26
+	fromColumn: fact_ventes.date_key
+	toColumn: dim_date.date_key
+
+relationship 192ae2cb-a975-538b-8953-ea1d4864e8e3
+	fromColumn: fact_ventes.commune_key
+	toColumn: dim_commune.commune_key
+
+relationship bde5ae43-87f1-5baa-92e9-54e26f87942a
+	fromColumn: fact_ventes.type_local_key
+	toColumn: dim_type_local.type_local_key
+
+relationship ec451d2b-e93e-5e59-b029-a59d3a31ffb4
+	fromColumn: fact_ventes.profil_key
+	toColumn: dim_profil_bien.profil_key
+

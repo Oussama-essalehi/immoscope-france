@@ -1,0 +1,23 @@
+/// Paramètre de simulation : budget d'achat de 100 000 € à 500 000 € par pas de 10 000 €.
+table 'Paramètre Budget'
+	lineageTag: b2e7cf3c-9c66-51a4-930a-f6b84c805372
+
+	column Budget
+		dataType: int64
+		formatString: #,0 "€"
+		lineageTag: 6f85c837-8f86-504d-879e-ce981fd6d322
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
+
+		annotation SummarizationSetBy = User
+
+	partition 'Paramètre Budget' = calculated
+		mode: import
+		source = GENERATESERIES(100000, 500000, 10000)
+
+	annotation PBI_Id = 56bbed0d96805056898e1ab17f093beb
