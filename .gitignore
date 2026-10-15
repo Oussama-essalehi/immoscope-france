@@ -32,3 +32,6 @@ powerbi/**/.pbi/unappliedChanges.json
 Thumbs.db
 .vscode/
 .idea/
+
+# Power BI schema cache (downloaded by src/validate_powerbi.py)
+powerbi/.schema_cache/

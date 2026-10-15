@@ -2,7 +2,7 @@
 # `python run.py <cible>`).
 PYTHON ?= python
 
-.PHONY: all db-up download clean load analyze export check test notebook db-down
+.PHONY: all db-up download clean load analyze export check test notebook validate-pbi db-down
 
 all:
 	$(PYTHON) run.py all
@@ -33,6 +33,9 @@ test:
 
 notebook:
 	$(PYTHON) run.py notebook
+
+validate-pbi:
+	$(PYTHON) run.py validate-pbi
 
 db-down:
 	docker compose down

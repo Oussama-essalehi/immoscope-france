@@ -59,6 +59,11 @@ def check() -> None:
     step.run()
 
 
+def validate_pbi() -> None:
+    from src import validate_powerbi as step
+    step.run()
+
+
 def test() -> None:
     subprocess.run([sys.executable, "-m", "pytest"], cwd=PROJECT_ROOT, check=True)
 
@@ -85,6 +90,7 @@ STEPS: dict[str, Callable[[], None]] = {
     "check": check,
     "test": test,
     "notebook": notebook,
+    "validate-pbi": validate_pbi,
 }
 PIPELINE = ["db-up", "download", "clean", "load", "analyze", "export", "check", "test"]
 
