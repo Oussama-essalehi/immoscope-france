@@ -1,0 +1,34 @@
+# Local tooling
+.claude/
+
+# Data (re-created by `make all`)
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Personal interview notes
+docs/PERSONAL_NOTES.md
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+.venv/
+venv/
+*.egg-info/
+
+# Secrets
+.env
+
+# Power BI local artefacts
+powerbi/**/.pbi/localSettings.json
+powerbi/**/.pbi/cache.abf
+powerbi/**/.pbi/unappliedChanges.json
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
