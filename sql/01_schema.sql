@@ -54,6 +54,22 @@ CREATE TABLE dim_type_local (
 );
 
 -- -----------------------------------------------------------------------------
+-- Dimension « profil du bien » (dimension fourre-tout / junk dimension) :
+-- une ligne par combinaison de tranches de prix, de surface et de pièces.
+-- Évite de répéter trois libellés texte sur chaque vente et porte l'ordre de tri.
+-- -----------------------------------------------------------------------------
+CREATE TABLE dim_profil_bien (
+    profil_key             INTEGER   PRIMARY KEY,
+    tranche_prix           TEXT      NOT NULL,
+    tranche_prix_ordre     SMALLINT  NOT NULL,
+    tranche_surface        TEXT      NOT NULL,
+    tranche_surface_ordre  SMALLINT  NOT NULL,
+    tranche_pieces         TEXT      NOT NULL,
+    tranche_pieces_ordre   SMALLINT  NOT NULL,
+    UNIQUE (tranche_prix, tranche_surface, tranche_pieces)
+);
+
+-- -----------------------------------------------------------------------------
 -- Table de faits
 -- -----------------------------------------------------------------------------
 CREATE TABLE fact_ventes (
@@ -61,21 +77,20 @@ CREATE TABLE fact_ventes (
     date_key         INTEGER          NOT NULL REFERENCES dim_date (date_key),
     commune_key      INTEGER          NOT NULL REFERENCES dim_commune (commune_key),
     type_local_key   SMALLINT         NOT NULL REFERENCES dim_type_local (type_local_key),
+    profil_key       INTEGER          NOT NULL REFERENCES dim_profil_bien (profil_key),
     valeur_fonciere  DOUBLE PRECISION NOT NULL CHECK (valeur_fonciere > 0),
     surface          DOUBLE PRECISION NOT NULL CHECK (surface > 0),
     prix_m2          DOUBLE PRECISION NOT NULL CHECK (prix_m2 > 0),
     nb_pieces        SMALLINT,
     surface_terrain  DOUBLE PRECISION,
     latitude         DOUBLE PRECISION,
-    longitude        DOUBLE PRECISION,
-    tranche_prix     TEXT             NOT NULL,
-    tranche_surface  TEXT             NOT NULL,
-    tranche_pieces   TEXT             NOT NULL
+    longitude        DOUBLE PRECISION
 );
 
 CREATE INDEX ix_fact_ventes_date      ON fact_ventes (date_key);
 CREATE INDEX ix_fact_ventes_commune   ON fact_ventes (commune_key);
 CREATE INDEX ix_fact_ventes_type      ON fact_ventes (type_local_key);
+CREATE INDEX ix_fact_ventes_profil    ON fact_ventes (profil_key);
 CREATE INDEX ix_dim_commune_ville     ON dim_commune (ville_principale) WHERE ville_principale IS NOT NULL;
 
 COMMENT ON TABLE  fact_ventes IS 'Une ligne par vente DVF d''un seul logement (maison ou appartement), après nettoyage';

@@ -100,15 +100,43 @@ def build_dim_type_local() -> pd.DataFrame:
     )
 
 
-def build_fact(sales: pd.DataFrame, dim_commune: pd.DataFrame) -> pd.DataFrame:
+BAND_COLUMNS = {"tranche_prix": "price", "tranche_surface": "surface", "tranche_pieces": "rooms"}
+UNKNOWN_BAND_ORDER = 99
+
+
+def build_dim_profil(sales: pd.DataFrame, bands: dict) -> pd.DataFrame:
+    """Junk dimension: one row per observed (price, surface, rooms) band combination."""
+    dim = (
+        sales[list(BAND_COLUMNS)].drop_duplicates().astype(str).reset_index(drop=True)
+    )
+    for column, key in BAND_COLUMNS.items():
+        order = {label: i + 1 for i, label in enumerate(bands[key]["labels"])}
+        dim[f"{column}_ordre"] = dim[column].map(order).fillna(UNKNOWN_BAND_ORDER).astype(int)
+    dim = dim.sort_values([f"{c}_ordre" for c in BAND_COLUMNS]).reset_index(drop=True)
+    dim.insert(0, "profil_key", dim.index + 1)
+    return dim[
+        [
+            "profil_key", "tranche_prix", "tranche_prix_ordre", "tranche_surface",
+            "tranche_surface_ordre", "tranche_pieces", "tranche_pieces_ordre",
+        ]
+    ]
+
+
+def build_fact(sales: pd.DataFrame, dim_commune: pd.DataFrame, dim_profil: pd.DataFrame) -> pd.DataFrame:
     """Fact table at the grain of one single-dwelling sale."""
     commune_keys = dim_commune.set_index("code_commune")["commune_key"]
+    profil_keys = (
+        sales[list(BAND_COLUMNS)].astype(str)
+        .merge(dim_profil[["profil_key", *BAND_COLUMNS]], on=list(BAND_COLUMNS), how="left")
+        ["profil_key"].to_numpy()
+    )
     fact = pd.DataFrame(
         {
             "id_mutation": sales["id_mutation"],
             "date_key": sales["date_mutation"].dt.strftime("%Y%m%d").astype(int),
             "commune_key": sales["code_commune"].map(commune_keys).astype(int),
             "type_local_key": sales["type_local"].map(TYPE_LOCAL_KEYS).astype(int),
+            "profil_key": profil_keys.astype(int),
             "valeur_fonciere": sales["valeur_fonciere"],
             "surface": sales["surface_reelle_bati"],
             "prix_m2": sales["prix_m2"],
@@ -116,22 +144,21 @@ def build_fact(sales: pd.DataFrame, dim_commune: pd.DataFrame) -> pd.DataFrame:
             "surface_terrain": sales["surface_terrain"],
             "latitude": sales["latitude"],
             "longitude": sales["longitude"],
-            "tranche_prix": sales["tranche_prix"],
-            "tranche_surface": sales["tranche_surface"],
-            "tranche_pieces": sales["tranche_pieces"],
         }
     )
     return fact
 
 
 def build_star_schema(sales: pd.DataFrame, cfg: dict) -> dict[str, pd.DataFrame]:
-    """Return the four tables of the star schema, in load order."""
+    """Return the five tables of the star schema, in load order."""
     dim_commune = build_dim_commune(sales, cfg, read_income())
+    dim_profil = build_dim_profil(sales, cfg["bands"])
     return {
         "dim_date": build_dim_date(int(sales["annee"].min()), int(sales["annee"].max())),
         "dim_commune": dim_commune,
         "dim_type_local": build_dim_type_local(),
-        "fact_ventes": build_fact(sales, dim_commune),
+        "dim_profil_bien": dim_profil,
+        "fact_ventes": build_fact(sales, dim_commune, dim_profil),
     }
 
 

@@ -29,13 +29,14 @@ SELECT
     f.prix_m2,
     f.nb_pieces,
     f.surface_terrain,
-    f.tranche_prix,
-    f.tranche_surface,
-    f.tranche_pieces
+    p.tranche_prix,
+    p.tranche_surface,
+    p.tranche_pieces
 FROM fact_ventes      f
 JOIN dim_date         d USING (date_key)
 JOIN dim_commune      c USING (commune_key)
-JOIN dim_type_local   t USING (type_local_key);
+JOIN dim_type_local   t USING (type_local_key)
+JOIN dim_profil_bien  p USING (profil_key);
 
 -- -----------------------------------------------------------------------------
 -- v_prix_departement_annee : médianes par département, type et année
