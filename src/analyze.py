@@ -83,15 +83,21 @@ def add_source(fig: go.Figure, note: str = "") -> None:
     )
 
 
+def ensure_browser() -> None:
+    """Point kaleido to a local Chrome/Chromium when one is installed outside its defaults."""
+    if "BROWSER_PATH" in os.environ:
+        return
+    for candidate in ("chromium", "chromium-browser", "google-chrome", "/opt/pw-browsers/chromium"):
+        found = shutil.which(candidate) or (candidate if Path(candidate).exists() else None)
+        if found:
+            os.environ["BROWSER_PATH"] = found
+            return
+
+
 def save_figure(fig: go.Figure, name: str) -> Path:
     """Write a PNG (needs Chrome/Chromium for kaleido); never fail the pipeline on it."""
     target = project_path("figures") / f"{name}.png"
-    if "BROWSER_PATH" not in os.environ:
-        for candidate in ("chromium", "chromium-browser", "google-chrome", "/opt/pw-browsers/chromium"):
-            found = shutil.which(candidate) or (candidate if Path(candidate).exists() else None)
-            if found:
-                os.environ["BROWSER_PATH"] = found
-                break
+    ensure_browser()
     try:
         fig.write_image(target, scale=2)
         logger.info("Figure saved: %s", target.name)
@@ -272,23 +278,25 @@ def mann_whitney(
     }
 
 
-def interpret(city: str, row: dict, first_year: int, last_year: int) -> str:
+def fr_number(value: float, decimals: int) -> str:
+    """French decimal formatting (comma as decimal separator)."""
+    return f"{value:.{decimals}f}".replace(".", ",")
+
+
+def interpret(label: str, row: dict, first_year: int, last_year: int, threshold: float) -> str:
     """Plain-language interpretation of one test result."""
-    direction = "plus élevés" if row["r_rang_biseriel"] > 0 else "plus bas"
-    chance = row["prob_superiorite"] * 100
+    p_text = "p < 0,001" if row["p_value"] < 0.001 else f"p = {fr_number(row['p_value'], 3)}"
     if not row["significatif"]:
         return (
-            f"{city} : pas de différence statistiquement significative entre {first_year} et "
-            f"{last_year} (p = {row['p_value']:.3f})."
+            f"{label} : pas de différence statistiquement significative entre {first_year} et "
+            f"{last_year} ({p_text}, seuil corrigé {fr_number(threshold, 4)})."
         )
+    direction = "plus élevés" if row["r_rang_biseriel"] > 0 else "plus bas"
+    chance = row["prob_superiorite"] * 100
     return (
-        f"{city} : prix au m² {direction} en {last_year} qu'en {first_year} (p < 0,001 ; effet "
+        f"{label} : prix au m² {direction} en {last_year} qu'en {first_year} ({p_text} ; effet "
         f"{row['taille_effet']}). Une vente {last_year} prise au hasard a {chance:.0f} % de chances "
         f"d'être plus chère au m² qu'une vente {first_year}."
-        if row["p_value"] < 0.001
-        else f"{city} : prix au m² {direction} en {last_year} qu'en {first_year} (p = "
-        f"{row['p_value']:.3f} ; effet {row['taille_effet']}). Une vente {last_year} prise au hasard "
-        f"a {chance:.0f} % de chances d'être plus chère au m² qu'une vente {first_year}."
     )
 
 
@@ -318,7 +326,8 @@ def price_tests(df: pd.DataFrame, first_year: int, last_year: int, alpha: float,
                 "evol_volume_pct": (len(last) / len(first) - 1) * 100,
                 **res,
                 "interpretation": interpret(
-                    city if typ == ALL_TYPES else f"{city} ({typ.lower()}s)", res, first_year, last_year
+                    city if typ == ALL_TYPES else f"{city} ({typ.lower()}s)",
+                    res, first_year, last_year, alpha / n_tests,
                 ),
             }
         )
