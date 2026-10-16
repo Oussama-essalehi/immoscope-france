@@ -4,7 +4,9 @@
 des taux et identifier où acheter au meilleur prix au m², de la donnée publique brute jusqu'à
 un tableau de bord Power BI.**
 
-![Python](https://img.shields.io/badge/Python-3.11+-3776AB) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1) ![Power BI](https://img.shields.io/badge/Power%20BI-PBIP%20%2F%20TMDL%20%2F%20PBIR-F2C811) ![Tests](https://img.shields.io/badge/tests-pytest-0A9EDC)
+**[Ouvrir le tableau de bord web](https://oussama-essalehi.github.io/dvf-immobilier-analyse/)** (aucune installation) · Power BI : [`powerbi/`](powerbi/)
+
+![Python](https://img.shields.io/badge/Python-3.11+-3776AB) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1) ![Power BI](https://img.shields.io/badge/Power%20BI-PBIP%20%2F%20TMDL%20%2F%20PBIR-F2C811) ![React](https://img.shields.io/badge/React-18-61DAFB) ![Tests](https://img.shields.io/badge/tests-pytest%20%2B%20vitest-0A9EDC)
 
 ## La question métier
 
@@ -36,6 +38,13 @@ Détail chiffré et méthode des tests : [`reports/findings.md`](reports/finding
 | Hausse des taux : volume vs prix | Évolution des prix 2021 → 2025 |
 |---|---|
 | ![Effet de la hausse des taux](reports/figures/04_effet_hausse_taux.png) | ![Classement des villes](reports/figures/05_classement_evolution_prix.png) |
+
+**Tableau de bord web** ([version en ligne](https://oussama-essalehi.github.io/dvf-immobilier-analyse/), React) — mêmes 4 pages que le rapport
+Power BI, filtres partagés, thème clair / sombre, affichage mobile :
+
+| Vue d'ensemble | Carte des prix |
+|---|---|
+| ![Tableau de bord web : vue d'ensemble](reports/figures/web_vue_ensemble.png) | ![Tableau de bord web : carte](reports/figures/web_carte.png) |
 
 **Tableau de bord Power BI** (4 pages : vue d'ensemble, carte des prix, comparaison des villes,
 simulateur de budget) :
@@ -88,6 +97,7 @@ flowchart LR
     D -->|crosscheck.py| E
     D -->|export_gold.py| F[("data/gold<br/>CSV")]
     F -->|Power Query<br/>paramètre DataFolder| G["Power BI<br/>.pbip (TMDL + PBIR)"]
+    C -->|export_web.py<br/>agrégats JSON| H["Tableau de bord web<br/>React · GitHub Pages"]
 ```
 
 Schéma en étoile : `fact_ventes` (une vente) reliée à `dim_date`, `dim_commune`,
@@ -102,8 +112,9 @@ sur 3 mois via `LATERAL` ([`sql/`](sql/)).
 | Extraction et nettoyage | Python 3.11+, pandas, NumPy, PyArrow, requests |
 | Stockage et SQL | PostgreSQL 16 (Docker), SQLAlchemy 2, psycopg 3 |
 | Analyse | SciPy (Mann-Whitney U), Plotly + Kaleido, Jupyter |
-| Qualité | pytest (14 tests), contrôle croisé SQL ↔ Python, validation des schémas Power BI |
+| Qualité | pytest (14 tests), Vitest (10 tests), contrôle croisé SQL ↔ Python, validation des schémas Power BI |
 | Restitution | Power BI Desktop, projet `.pbip` : modèle TMDL, rapport PBIR, thème personnalisé |
+| Web | React 18, TypeScript, Vite, Recharts, Leaflet (OpenStreetMap), Vitest ; déploiement GitHub Pages par GitHub Actions |
 | Orchestration | `run.py` (multiplateforme) et `Makefile`, configuration dans `config.yaml` |
 
 ## Lancer le projet
@@ -122,7 +133,7 @@ python run.py all        # ou : make all
 `all` démarre PostgreSQL (`docker compose up -d --wait`), télécharge les données, nettoie,
 charge la base, produit les analyses et les graphiques, exporte `data/gold/`, contrôle les
 médianes SQL ↔ Python et lance les tests (environ 5 minutes). Étapes unitaires :
-`download`, `clean`, `load`, `analyze`, `export`, `check`, `test`, `notebook`,
+`download`, `clean`, `load`, `analyze`, `export`, `export-web`, `check`, `test`, `notebook`,
 `validate-pbi`. Le périmètre (départements, années, villes, seuils) se règle dans
 [`config.yaml`](config.yaml).
 
@@ -136,6 +147,23 @@ médianes SQL ↔ Python et lance les tests (environ 5 minutes). Étapes unitair
 
 Pas à pas complet, valeurs de contrôle et reconstruction de chaque visuel :
 [`powerbi/BUILD_GUIDE.md`](powerbi/BUILD_GUIDE.md).
+
+**Tableau de bord web** (Node.js 20+) :
+
+```bash
+cd web
+npm install
+npm run dev        # http://localhost:5173
+npm test           # tests des sélecteurs et du formatage
+npm run build      # version statique dans web/dist
+```
+
+Les données du site (`web/public/data/*.json`, environ 340 ko) sont des agrégats produits par
+`python run.py export-web` : chaque combinaison de filtres a sa médiane exacte, calculée en
+Python, donc identique aux analyses et au rapport Power BI. Le workflow
+[`.github/workflows/deploy-web.yml`](.github/workflows/deploy-web.yml) teste, construit et
+publie le site sur GitHub Pages à chaque push sur `main` (à activer une fois : *Settings >
+Pages > Source : GitHub Actions*).
 
 ## Limites
 

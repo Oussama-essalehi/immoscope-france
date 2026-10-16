@@ -108,3 +108,17 @@ Format des CSV : UTF-8, séparateur virgule, point décimal, dates ISO `AAAA-MM-
 | `tests_mann_whitney.csv` | Tests 2021 vs 2025 avec tailles d'effet et interprétation |
 | `crosscheck_sql_python.csv` | Contrôle croisé des médianes SQL et Python |
 | `summary.json` | Chiffres clés repris dans les constats |
+
+## 5. Données du tableau de bord web (`web/public/data/`)
+
+Agrégats produits par `src/export_web.py` (`python run.py export-web`). Les médianes ne
+s'additionnent pas : chaque combinaison de filtres proposée par le site est calculée à
+l'avance. Abréviations : `n` = ventes, `p` = prix médian au m², `v` = prix médian, `s` =
+surface médiane ; `all` = toutes les valeurs du filtre.
+
+| Fichier | Clés | Contenu |
+|---|---|---|
+| `meta.json` | – | Années, départements, villes suivies, bornes du simulateur |
+| `overview.json` | `departement\|type` → mois ou année | Séries mensuelles et annuelles (vue d'ensemble) |
+| `communes.json` | `type\|annee` → commune | Communes (code, nom, département, coordonnées) et statistiques des communes ayant au moins 30 ventes |
+| `cities.json` | `ville\|type` → année ou trimestre | Statistiques des 15 villes suivies et revenu médian estimé des ménages |
