@@ -15,7 +15,9 @@ import {
   type Meta,
   type Overview,
 } from "./data";
-import { fmtEuroM2, fmtPct } from "./format";
+import { makeFormatters } from "./format";
+import { makeI18n } from "./i18n";
+import { en, fr } from "./locales";
 
 const meta: Meta = {
   source: "test",
@@ -138,9 +140,36 @@ describe("quantile classes", () => {
 });
 
 describe("format", () => {
+  const nbsp = (text: string) => text.replace(/\s/g, " ");
+
   it("formats in French", () => {
-    expect(fmtPct(-0.111)).toBe("−11,1 %");
-    expect(fmtPct(null)).toBe("–");
-    expect(fmtEuroM2(4468.1).replace(/\s/g, " ")).toBe("4 468 €/m²");
+    const f = makeFormatters("fr");
+    expect(f.pct(-0.111)).toBe("−11,1 %");
+    expect(f.pct(null)).toBe("–");
+    expect(nbsp(f.euroM2(4468.1))).toBe("4 468 €/m²");
+    expect(nbsp(f.kEuro(250000))).toBe("250 k€");
+    expect(f.month("2024-03")).toBe("mars 2024");
+  });
+
+  it("formats in English", () => {
+    const f = makeFormatters("en");
+    expect(f.pct(0.052)).toBe("+5.2%");
+    expect(f.euroM2(4468.1)).toBe("€4,468/m²");
+    expect(f.kEuro(250000)).toBe("€250k");
+    expect(f.years(4.83)).toBe("4.8 yrs");
+    expect(f.month("2024-03")).toBe("Mar 2024");
+  });
+});
+
+describe("i18n", () => {
+  it("has the same keys in both languages, none empty", () => {
+    expect(Object.keys(en).sort()).toEqual(Object.keys(fr).sort());
+    expect(Object.values(en).every((text) => text.length > 0)).toBe(true);
+  });
+
+  it("translates and fills placeholders", () => {
+    expect(makeI18n("fr").t("ov.versus", { a: 2025, b: 2024 })).toBe("2025 vs 2024");
+    expect(makeI18n("en").t("map.salesCount", { n: "1,234" })).toBe("1,234 sales");
+    expect(makeI18n("en").t("nav.map")).toBe("Price map");
   });
 });
