@@ -6,6 +6,7 @@ import pandas as pd
 import pytest
 
 from src.clean import (
+    CleaningReport,
     add_derived_columns,
     add_price_per_m2,
     aggregate_mutations,
@@ -212,17 +213,28 @@ def test_derived_columns() -> None:
         "surface": {"edges": [0, 50], "labels": ["< 50", "≥ 50"]},
         "rooms": {"edges": [1, 3], "labels": ["1-2", "3+"]},
     }
-    out = add_derived_columns(df, {"69383": "Lyon"}, ["Lyon"], bands).iloc[0]
+    out = add_derived_columns(df, bands).iloc[0]
     assert (out["annee"], out["mois"], out["trimestre"], out["annee_mois"]) == (2022, 11, 4, "2022-11")
-    assert out["ville_principale"] == "Lyon" and bool(out["est_metropole"])
     assert (out["tranche_prix"], out["tranche_surface"], out["tranche_pieces"]) == ("≥ 200 k€", "≥ 50", "3+")
+
+
+def test_reports_of_two_departments_are_summed(raw: pd.DataFrame) -> None:
+    cfg = end_to_end_config()
+    _, first = clean(raw, cfg)
+    _, second = clean(raw.assign(id_mutation=raw["id_mutation"] + "-bis"), cfg)
+    total = CleaningReport()
+    total.merge(first)
+    total.merge(second)
+    assert total.steps[0].rows_before == 2 * len(raw)
+    assert total.steps[-1].rows_after == 4
+    assert total.exclusions["plusieurs_logements"] == 2
 
 
 # --------------------------------------------------------------------------- #
 # End to end on the synthetic frame
 # --------------------------------------------------------------------------- #
-def test_clean_end_to_end(raw: pd.DataFrame) -> None:
-    cfg = {
+def end_to_end_config() -> dict:
+    return {
         "cleaning": {
             "nature_mutation": "Vente",
             "dwelling_types": DWELLINGS,
@@ -234,15 +246,16 @@ def test_clean_end_to_end(raw: pd.DataFrame) -> None:
             "outlier_quantiles": [0.0, 1.0],
             "outlier_groupby": ["code_departement", "type_local"],
         },
-        "main_cities": {"31555": "Toulouse"},
-        "metropoles": ["Toulouse"],
         "bands": {
             "price": {"edges": [0], "labels": ["tous"]},
             "surface": {"edges": [0], "labels": ["tous"]},
             "rooms": {"edges": [1], "labels": ["tous"]},
         },
     }
-    out, report = clean(raw, cfg)
+
+
+def test_clean_end_to_end(raw: pd.DataFrame) -> None:
+    out, report = clean(raw, end_to_end_config())
     assert sorted(out["id_mutation"]) == ["M1", "M2"]
     assert out.set_index("id_mutation")["prix_m2"].to_dict() == pytest.approx({"M1": 5_000.0, "M2": 4_000.0})
     assert [s.step for s in report.steps][0] == "1_vente"

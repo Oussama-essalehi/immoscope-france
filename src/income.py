@@ -2,8 +2,8 @@
 
 The communal base gives, for each commune (``COM``) and each Paris/Lyon/Marseille
 arrondissement (``ARM``), the median standard of living per consumption unit
-(``MED_SL``), the number of households (``NUM_HH``) and of consumption units
-(``NUM_CU``). The median disposable income of a household is approximated by
+(``MED_SL``), the number of households (``NUM_HH``), of consumption units
+(``NUM_CU``) and of people (``NUM_PER``, used as population to rank cities). The median disposable income of a household is approximated by
 ``MED_SL * NUM_CU / NUM_HH`` (median per unit x average units per household).
 """
 
@@ -20,7 +20,7 @@ from src.settings import load_config, project_path
 logger = logging.getLogger("income")
 
 INCOME_ARCHIVE = "filosofi_communes.zip"
-MEASURES = {"MED_SL": "niveau_vie_median", "NUM_HH": "nb_menages", "NUM_CU": "nb_uc"}
+MEASURES = {"MED_SL": "niveau_vie_median", "NUM_HH": "nb_menages", "NUM_CU": "nb_uc", "NUM_PER": "population"}
 
 
 def archive_path() -> Path:
