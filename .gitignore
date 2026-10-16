@@ -1,11 +1,13 @@
 # Local tooling
 .claude/
 
-# Data (re-created by `make all`)
+# Data (re-created by `make all`); gold CSVs exceed GitHub's 50 MB limit at national scale
 data/raw/*
 data/processed/*
+data/gold/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
+!data/gold/.gitkeep
 
 # Personal interview notes
 docs/PERSONAL_NOTES.md
