@@ -21,10 +21,16 @@ export function Cities({ data, filters, onFilters }: Props) {
   const matrix = yoyMatrix(cities, list, meta.years, filters.type);
   const period = filters.year === ALL ? `${meta.years[0]}-${meta.lastYear}` : filters.year;
 
-  // Shared y range for the small multiples, so that panels are comparable
-  const quarterly = list.map((c) => ({ city: c.name, points: cities.quarterly[key(c.name, filters.type)] ?? [] }));
-  const allPrices = quarterly.flatMap((q) => q.points.map((p) => p.p));
-  const yDomain: [number, number] = [Math.floor(Math.min(...allPrices) / 500) * 500, Math.ceil(Math.max(...allPrices) / 500) * 500];
+  // Small multiples are indexed (first quarter = 100): with prices from 1,000 to 10,000 €/m², a shared
+  // euro scale would flatten every line; a shared index scale keeps the trends comparable
+  const quarterly = list.map((c) => {
+    const points = cities.quarterly[key(c.name, filters.type)] ?? [];
+    const base = points[0]?.p;
+    return { city: c.name, points: points.map((p) => ({ ...p, i: base ? (100 * p.p) / base : null })) };
+  });
+  const allIndices = quarterly.flatMap((q) => q.points.flatMap((p) => (p.i === null ? [] : [p.i])));
+  const yDomain: [number, number] = [Math.floor(Math.min(...allIndices) / 5) * 5, Math.ceil(Math.max(...allIndices) / 5) * 5];
+  const firstQuarter = quarterly.find((q) => q.points.length > 0)?.points[0]?.q ?? "";
 
   return (
     <>
@@ -98,7 +104,7 @@ export function Cities({ data, filters, onFilters }: Props) {
         </ChartCard>
       </div>
 
-      <ChartCard title={t("ct.multiTitle")} subtitle={t("ct.multiSubtitle")}>
+      <ChartCard title={t("ct.multiTitle")} subtitle={t("ct.multiSubtitle", { q: String(firstQuarter).slice(0, 4) })}>
         <div className="multiples">
           {quarterly.map(({ city, points }) => {
             const first = points[0]?.p;
@@ -116,11 +122,17 @@ export function Cities({ data, filters, onFilters }: Props) {
                     <Tooltip
                       content={({ active, payload, label }) =>
                         active && payload?.length ? (
-                          <TooltipBox title={`${city}, ${String(label).replace("-", " ")}`} lines={[{ label: t("tip.medianM2"), value: f.euroM2(payload[0].payload.p) }]} />
+                          <TooltipBox
+                            title={`${city}, ${String(label).replace("-", " ")}`}
+                            lines={[
+                              { label: t("tip.medianM2"), value: f.euroM2(payload[0].payload.p) },
+                              { label: t("tip.index"), value: f.int(payload[0].payload.i) },
+                            ]}
+                          />
                         ) : null
                       }
                     />
-                    <Line type="monotone" dataKey="p" stroke={palette.series[0]} strokeWidth={2} dot={false} />
+                    <Line type="monotone" dataKey="i" stroke={palette.series[0]} strokeWidth={2} dot={false} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>

@@ -90,7 +90,8 @@ export const fr = {
   "ct.yoyTitle": "Évolution annuelle du prix médian au m²",
   "ct.yoySubtitle": "Variation par rapport à l'année précédente ; bleu = baisse, rouge = hausse",
   "ct.multiTitle": "Tendance trimestrielle du prix médian au m², ville par ville",
-  "ct.multiSubtitle": "Même échelle pour toutes les villes",
+  "ct.multiSubtitle": "Indice base 100 au premier trimestre {q} ; même échelle pour toutes les villes",
+  "tip.index": "Indice",
 
   // Simulator
   "sim.budget": "Budget d'achat (hors frais de notaire)",
@@ -211,7 +212,8 @@ export const en: Record<MessageKey, string> = {
   "ct.yoyTitle": "Year-over-year change of the median price per m²",
   "ct.yoySubtitle": "Change versus the previous year; blue = fall, red = rise",
   "ct.multiTitle": "Quarterly median price per m², city by city",
-  "ct.multiSubtitle": "Same scale for every city",
+  "ct.multiSubtitle": "Index, first quarter of {q} = 100; same scale for every city",
+  "tip.index": "Index",
 
   "sim.budget": "Purchase budget (excluding notary fees)",
   "sim.most": "Most floor area",
