@@ -119,7 +119,8 @@ export function PriceMap({ data, filters, onFilters, dark }: Props) {
     return { top: sorted.slice(0, 10), bottom: sorted.slice(-10).reverse() };
   }, [regional, points, data.topCommunes, filters.type, filters.year]);
 
-  const legend = palette.sequential.map((color, i) => {
+  // No points yet (region file still loading): no legend rather than empty classes
+  const legend = breaks.length === 0 ? [] : palette.sequential.map((color, i) => {
     const low = i === 0 ? null : breaks[i - 1];
     const high = i < breaks.length ? breaks[i] : null;
     const text = low === null ? `< ${f.euro(high)}` : high === null ? `≥ ${f.euro(low)}` : `${f.euro(low)} – ${f.euro(high)}`;
@@ -136,7 +137,7 @@ export function PriceMap({ data, filters, onFilters, dark }: Props) {
       <FilterBar meta={data.meta} filters={filters} onChange={onFilters} />
       <div className="map-layout">
         <ChartCard className="map-card" title={title} subtitle={loading ? t("map.loading") : subtitle}>
-          <MapContainer bounds={FRANCE} scrollWheelZoom={false} className="map" preferCanvas>
+          <MapContainer bounds={FRANCE} scrollWheelZoom={false} zoomSnap={0.25} className="map" preferCanvas>
             <TileLayer url={TILES} attribution={ATTRIBUTION} className={dark ? "tiles-dark" : "tiles-light"} />
             <FitBounds points={points} selection={`${filters.region}|${filters.dept}`} />
             {points.map((p) => (
@@ -162,7 +163,7 @@ export function PriceMap({ data, filters, onFilters, dark }: Props) {
           <div className="legend" aria-label={t("map.legendLabel")}>
             <span className="legend-title">{t("map.legend")}</span>
             {legend.map((l) => (
-              <span className="legend-item" key={l.text}>
+              <span className="legend-item" key={l.color}>
                 <span className="swatch" style={{ background: l.color }} />
                 {l.text}
               </span>
