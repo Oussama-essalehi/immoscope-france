@@ -6,8 +6,22 @@
 SET search_path TO dvf;
 
 -- -----------------------------------------------------------------------------
--- Q1a. Quel est le prix médian au m² par département et type de bien,
---      sur la dernière année disponible ?
+-- Q1a. Quel est le prix médian au m² par région et type de bien, sur la
+--      dernière année disponible ? (rang 1 = région la plus chère)
+-- -----------------------------------------------------------------------------
+SELECT
+    region,
+    type_local,
+    nb_ventes,
+    ROUND(prix_m2_median::NUMERIC)  AS prix_m2_median,
+    ROUND(prix_median::NUMERIC)     AS prix_median,
+    RANK() OVER (PARTITION BY type_local ORDER BY prix_m2_median DESC) AS rang
+FROM v_prix_region_annee
+WHERE annee = (SELECT MAX(annee) FROM dim_date)
+ORDER BY type_local, rang;
+
+-- -----------------------------------------------------------------------------
+-- Q1a bis. Prix médian au m² par département et type de bien (dernière année)
 -- -----------------------------------------------------------------------------
 SELECT
     departement,
@@ -49,7 +63,7 @@ ORDER BY prix_m2_median DESC;
 
 -- -----------------------------------------------------------------------------
 -- Q1c. Prix médian au m² par commune et type de bien, toutes années confondues
---      (communes avec au moins 100 ventes du type)
+--      (communes avec au moins 500 ventes du type)
 -- -----------------------------------------------------------------------------
 SELECT
     nom_commune,
@@ -59,24 +73,24 @@ SELECT
     ROUND(PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY prix_m2)::NUMERIC) AS prix_m2_median
 FROM v_ventes
 GROUP BY nom_commune, departement, type_local
-HAVING COUNT(*) >= 100
+HAVING COUNT(*) >= 500
 ORDER BY departement, prix_m2_median DESC;
 
 -- -----------------------------------------------------------------------------
 -- Q2a. Comment évoluent le prix médian au m² et le volume de ventes par année,
---      dans chaque département ?
+--      dans chaque région ?
 -- -----------------------------------------------------------------------------
 SELECT
-    departement,
+    region,
     annee,
     nb_ventes,
     ROUND(prix_m2_median::NUMERIC)                                        AS prix_m2_median,
     ROUND((100 * (prix_m2_median / LAG(prix_m2_median) OVER w - 1))::NUMERIC, 1) AS evol_prix_pct,
     ROUND(100 * (nb_ventes::NUMERIC / LAG(nb_ventes) OVER w - 1), 1)      AS evol_volume_pct
-FROM v_prix_departement_annee
+FROM v_prix_region_annee
 WHERE type_local = 'Ensemble'
-WINDOW w AS (PARTITION BY departement ORDER BY annee)
-ORDER BY departement, annee;
+WINDOW w AS (PARTITION BY region ORDER BY annee)
+ORDER BY region, annee;
 
 -- -----------------------------------------------------------------------------
 -- Q2b. Tendance mensuelle par ville principale : volume, médiane du mois et

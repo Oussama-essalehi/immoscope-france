@@ -21,6 +21,8 @@ SELECT
     c.nom_commune,
     c.code_departement,
     c.departement,
+    c.code_region,
+    c.region,
     c.ville_principale,
     c.est_metropole,
     t.type_local,
@@ -37,6 +39,21 @@ JOIN dim_date         d USING (date_key)
 JOIN dim_commune      c USING (commune_key)
 JOIN dim_type_local   t USING (type_local_key)
 JOIN dim_profil_bien  p USING (profil_key);
+
+-- -----------------------------------------------------------------------------
+-- v_prix_region_annee : médianes par région, type et année
+-- (GROUPING SETS ajoute la ligne « Ensemble » tous types confondus)
+-- -----------------------------------------------------------------------------
+CREATE OR REPLACE VIEW v_prix_region_annee AS
+SELECT
+    region,
+    COALESCE(type_local, 'Ensemble')                              AS type_local,
+    annee,
+    COUNT(*)                                                      AS nb_ventes,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY prix_m2)          AS prix_m2_median,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY valeur_fonciere)  AS prix_median
+FROM v_ventes
+GROUP BY GROUPING SETS ((region, type_local, annee), (region, annee));
 
 -- -----------------------------------------------------------------------------
 -- v_prix_departement_annee : médianes par département, type et année
