@@ -26,7 +26,8 @@ CREATE TABLE dim_date (
 );
 
 -- -----------------------------------------------------------------------------
--- Dimension commune (les arrondissements de Lyon sont des communes DVF)
+-- Dimension commune (les arrondissements de Paris, Lyon et Marseille sont des
+-- communes DVF ; code_ville les rattache à la commune entière)
 -- -----------------------------------------------------------------------------
 CREATE TABLE dim_commune (
     commune_key           INTEGER     PRIMARY KEY,
@@ -35,6 +36,9 @@ CREATE TABLE dim_commune (
     code_departement      VARCHAR(3)  NOT NULL,
     nom_departement       TEXT        NOT NULL,
     departement           TEXT        NOT NULL,         -- '31 - Haute-Garonne'
+    code_region           CHAR(2)     NOT NULL,
+    region                TEXT        NOT NULL,
+    code_ville            CHAR(5),                      -- commune entière (75056 pour Paris 1er)
     ville_principale      TEXT,                         -- NULL hors villes suivies
     est_ville_principale  BOOLEAN     NOT NULL,
     est_metropole         BOOLEAN     NOT NULL,
@@ -92,6 +96,7 @@ CREATE INDEX ix_fact_ventes_commune   ON fact_ventes (commune_key);
 CREATE INDEX ix_fact_ventes_type      ON fact_ventes (type_local_key);
 CREATE INDEX ix_fact_ventes_profil    ON fact_ventes (profil_key);
 CREATE INDEX ix_dim_commune_ville     ON dim_commune (ville_principale) WHERE ville_principale IS NOT NULL;
+CREATE INDEX ix_dim_commune_region    ON dim_commune (code_region);
 
 COMMENT ON TABLE  fact_ventes IS 'Une ligne par vente DVF d''un seul logement (maison ou appartement), après nettoyage';
 COMMENT ON COLUMN fact_ventes.valeur_fonciere IS 'Prix total de la mutation (jamais additionné entre les lots)';

@@ -13,32 +13,56 @@ export interface Stat {
   s?: number;
 }
 
+export interface Region {
+  code: string;
+  name: string;
+  departments: { code: string; label: string }[];
+}
+
+export interface CityMeta {
+  name: string;
+  dept: string;
+  region: string;
+  /** population rank in the scope (1 = largest) */
+  rank: number;
+  metropole: boolean;
+}
+
 export interface Meta {
   source: string;
   years: number[];
   lastYear: number;
   totalSales: number;
   communes: number;
-  departments: { code: string; label: string }[];
+  regions: Region[];
+  departmentCount: number;
   types: string[];
-  cities: { name: string; dept: string; metropole: boolean }[];
-  metropoles: string[];
+  cities: CityMeta[];
   minSalesCommune: number;
   budgets: { min: number; max: number; step: number; default: number };
 }
 
 export interface Overview {
-  /** key `dept|type` -> monthly points */
+  /** key `zone|type` -> monthly points; zone = "all", "R11" (region) or "75" (department) */
   monthly: Record<string, ({ m: string } & Stat)[]>;
-  /** key `dept|type` -> year (or "all") -> stats */
+  /** key `zone|type` -> year (or "all") -> stats */
   yearly: Record<string, Record<string, Stat>>;
 }
 
-export interface Communes {
+/** Map points (departments or communes) and their stats. */
+export interface Points {
   /** [code, name, dept, lat, lon] */
   list: [string, string, string, number, number][];
-  /** key `type|year` -> [communeIndex, n, p] (only communes with enough sales) */
+  /** key `type|year` -> [pointIndex, n, p] (only points with enough sales) */
   stats: Record<string, [number, number, number][]>;
+}
+
+/** [code, name, dept, n, p] */
+export type CommuneRow = [string, string, string, number, number];
+
+export interface TopCommunes {
+  /** key `type|year` -> most / least expensive communes of the whole scope */
+  [key: string]: { top: CommuneRow[]; bottom: CommuneRow[] };
 }
 
 export interface Cities {
@@ -51,12 +75,14 @@ export interface Cities {
 export interface Dataset {
   meta: Meta;
   overview: Overview;
-  communes: Communes;
+  departments: Points;
+  topCommunes: TopCommunes;
   cities: Cities;
 }
 
 /** Filters shared by every page (like synchronised slicers). */
 export interface Filters {
+  region: string;
   dept: string;
   type: string;
   year: string;
@@ -71,18 +97,49 @@ async function getJson<T>(name: string): Promise<T> {
 }
 
 export async function loadDataset(): Promise<Dataset> {
-  const [meta, overview, communes, cities] = await Promise.all([
+  const [meta, overview, departments, topCommunes, cities] = await Promise.all([
     getJson<Meta>("meta"),
     getJson<Overview>("overview"),
-    getJson<Communes>("communes"),
+    getJson<Points>("departements"),
+    getJson<TopCommunes>("communes_top"),
     getJson<Cities>("cities"),
   ]);
-  return { meta, overview, communes, cities };
+  return { meta, overview, departments, topCommunes, cities };
+}
+
+const regionCache = new Map<string, Promise<Points>>();
+
+/** Communes of one region, downloaded once when the map needs them. */
+export function loadRegionCommunes(region: string): Promise<Points> {
+  if (!regionCache.has(region)) {
+    const request = getJson<Points>(`communes_R${region}`);
+    request.catch(() => regionCache.delete(region)); // allow a retry after a network error
+    regionCache.set(region, request);
+  }
+  return regionCache.get(region)!;
 }
 
 // --------------------------------------------------------------------------- //
 // Selectors
 // --------------------------------------------------------------------------- //
+
+/** Zone key of the overview series for the current filters. */
+export function zoneOf(f: Pick<Filters, "region" | "dept">): string {
+  if (f.dept !== ALL) return f.dept;
+  if (f.region !== ALL) return `R${f.region}`;
+  return ALL;
+}
+
+/** Region of a department code. */
+export function regionOfDept(meta: Meta, dept: string): string | undefined {
+  return meta.regions.find((r) => r.departments.some((d) => d.code === dept))?.code;
+}
+
+/** Departments offered by the department filter (those of the selected region). */
+export function departmentsFor(meta: Meta, region: string): { code: string; label: string }[] {
+  const regions = region === ALL ? meta.regions : meta.regions.filter((r) => r.code === region);
+  return regions.flatMap((r) => r.departments).sort((a, b) => a.code.localeCompare(b.code));
+}
 
 /** Relative change, or null when the reference is missing. */
 export function change(current: number | undefined, previous: number | undefined): number | null {
@@ -105,7 +162,7 @@ export interface Kpis {
  * rule as the Power BI measures).
  */
 export function kpis(overview: Overview, meta: Meta, f: Filters): Kpis {
-  const yearly = overview.yearly[key(f.dept, f.type)] ?? {};
+  const yearly = overview.yearly[key(zoneOf(f), f.type)] ?? {};
   const current = yearly[f.year];
   const compared = f.year === ALL ? meta.lastYear : Number(f.year);
   const now = yearly[String(compared)];
@@ -120,11 +177,11 @@ export function kpis(overview: Overview, meta: Meta, f: Filters): Kpis {
 }
 
 export function monthlySeries(overview: Overview, f: Filters): ({ m: string } & Stat)[] {
-  const series = overview.monthly[key(f.dept, f.type)] ?? [];
+  const series = overview.monthly[key(zoneOf(f), f.type)] ?? [];
   return f.year === ALL ? series : series.filter((point) => point.m.startsWith(f.year));
 }
 
-export interface CommunePoint {
+export interface MapPoint {
   code: string;
   name: string;
   dept: string;
@@ -134,14 +191,22 @@ export interface CommunePoint {
   p: number;
 }
 
-export function communePoints(communes: Communes, f: Filters): CommunePoint[] {
-  const rows = communes.stats[key(f.type, f.year)] ?? [];
+/** Points with their stats for the type / year filters, optionally restricted to departments. */
+export function mapPoints(points: Points, f: Pick<Filters, "type" | "year">, depts?: Set<string>): MapPoint[] {
+  const rows = points.stats[key(f.type, f.year)] ?? [];
   return rows
     .map(([index, n, p]) => {
-      const [code, name, dept, lat, lon] = communes.list[index];
+      const [code, name, dept, lat, lon] = points.list[index];
       return { code, name, dept, lat, lon, n, p };
     })
-    .filter((point) => f.dept === ALL || point.dept === f.dept);
+    .filter((point) => !depts || depts.has(point.dept));
+}
+
+/** Cities of the selection (all, or those of the selected region / department). */
+export function citiesFor(meta: Meta, f: Pick<Filters, "region" | "dept">): CityMeta[] {
+  return meta.cities.filter(
+    (c) => (f.region === ALL || c.region === f.region) && (f.dept === ALL || c.dept === f.dept),
+  );
 }
 
 export interface CityRow {
@@ -155,9 +220,9 @@ export interface CityRow {
   rank: number;
 }
 
-/** Main cities for one type and year, ranked by median price/m² (1 = most expensive). */
-export function cityRanking(cities: Cities, meta: Meta, type: string, year: string): CityRow[] {
-  const rows = meta.cities
+/** Cities for one type and year, ranked by median price/m² (1 = most expensive). */
+export function cityRanking(cities: Cities, list: CityMeta[], type: string, year: string): CityRow[] {
+  const rows = list
     .map((c) => {
       const stat = cities.yearly[key(c.name, type)]?.[year];
       return stat ? { city: c.name, dept: c.dept, metropole: c.metropole, n: stat.n, p: stat.p, v: stat.v ?? 0, s: stat.s ?? 0, rank: 0 } : null;
@@ -169,12 +234,12 @@ export function cityRanking(cities: Cities, meta: Meta, type: string, year: stri
 }
 
 /** Year-over-year change of the median price/m² for each city and year. */
-export function yoyMatrix(cities: Cities, meta: Meta, type: string): { city: string; values: (number | null)[] }[] {
-  return meta.cities.map((c) => {
+export function yoyMatrix(cities: Cities, list: CityMeta[], years: number[], type: string): { city: string; values: (number | null)[] }[] {
+  return list.map((c) => {
     const yearly = cities.yearly[key(c.name, type)] ?? {};
     return {
       city: c.name,
-      values: meta.years.map((y) => change(yearly[String(y)]?.p, yearly[String(y - 1)]?.p)),
+      values: years.map((y) => change(yearly[String(y)]?.p, yearly[String(y - 1)]?.p)),
     };
   });
 }
@@ -186,8 +251,8 @@ export interface SimulatorRow extends CityRow {
 }
 
 /** Surface buyable with the budget at each city's median price/m², plus income ratio. */
-export function simulate(cities: Cities, meta: Meta, type: string, year: string, budget: number): SimulatorRow[] {
-  return cityRanking(cities, meta, type, year)
+export function simulate(cities: Cities, list: CityMeta[], type: string, year: string, budget: number): SimulatorRow[] {
+  return cityRanking(cities, list, type, year)
     .map((row) => {
       const income = cities.income[row.city] ?? null;
       return {

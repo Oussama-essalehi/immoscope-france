@@ -31,7 +31,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Taille des bulles = prix médian au m² ; communes avec au moins 30 ventes dans la sélection",
+                    "value": "Taille des bulles = prix médian au m² ; communes avec au moins 30 ventes dans la sélection. Choisissez une région pour une carte lisible",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "11pt",

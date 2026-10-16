@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Marché immobilier : Haute-Garonne, Gironde, Hérault, Loire-Atlantique, Rhône",
+                    "value": "Marché immobilier : les 10 régions les plus peuplées de France",
                     "textStyle": {
                       "fontFamily": "Segoe UI Semibold",
                       "fontSize": "20pt",
@@ -31,7 +31,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Ventes DVF d'un seul logement (maison ou appartement), 2021-2025",
+                    "value": "Ventes DVF d'un seul logement (maison ou appartement), 2021-2025, hors Alsace-Moselle (non couverte par DVF)",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "11pt",

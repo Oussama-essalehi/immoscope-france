@@ -10,8 +10,12 @@ Pipeline (each step is logged with row / mutation counts in a cleaning report):
 4. drop missing or zero price / built surface;
 5. compute ``prix_m2``;
 6. remove outliers (hard bounds, then 1st-99th percentile per department x type);
-7. add derived columns (calendar, main city, bands);
+7. add derived columns (calendar, region, main city, bands);
 8. write a Parquet file to ``data/processed/``.
+
+The files are processed one department at a time (all years together) so that
+memory stays bounded at national scale; the outlier percentiles are computed per
+department and property type, so the result is the same as a single pass.
 """
 
 from __future__ import annotations
@@ -24,6 +28,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from src.geo import add_region, assign_cities, departments, select_main_cities
+from src.income import read_income
 from src.settings import load_config, project_path, setup_logging
 
 logger = logging.getLogger("clean")
@@ -31,6 +37,7 @@ logger = logging.getLogger("clean")
 PROCESSED_FILE = "ventes_clean.parquet"
 REPORT_FILE = "cleaning_report.csv"
 EXCLUSIONS_FILE = "cleaning_exclusions.csv"
+CITIES_FILE = "villes_suivies.csv"
 
 RAW_DTYPES: dict[str, str] = {
     "id_mutation": "string",
@@ -101,7 +108,7 @@ class CleaningReport:
             mutations_after=after["id_mutation"].nunique(),
         )
         self.steps.append(stat)
-        logger.info(
+        logger.debug(
             "%-28s rows %10s -> %10s | mutations %9s -> %9s",
             step,
             f"{stat.rows_before:,}",
@@ -112,6 +119,21 @@ class CleaningReport:
 
     def to_frame(self) -> pd.DataFrame:
         return pd.DataFrame([asdict(s) for s in self.steps])
+
+    def merge(self, other: "CleaningReport") -> None:
+        """Add the counts of another report (e.g. another department) to this one."""
+        if not self.steps:
+            self.steps = [StepStat(**asdict(s)) for s in other.steps]
+        else:
+            for mine, theirs in zip(self.steps, other.steps):
+                if mine.step != theirs.step:
+                    raise ValueError(f"Cannot merge step {theirs.step} into {mine.step}")
+                mine.rows_before += theirs.rows_before
+                mine.rows_after += theirs.rows_after
+                mine.mutations_before += theirs.mutations_before
+                mine.mutations_after += theirs.mutations_after
+        for reason, count in other.exclusions.items():
+            self.exclusions[reason] = self.exclusions.get(reason, 0) + count
 
 
 # --------------------------------------------------------------------------- #
@@ -260,21 +282,18 @@ def assign_band(values: pd.Series, edges: Sequence[float], labels: Sequence[str]
     return pd.Series(labelled, index=values.index, dtype="string")
 
 
-def add_derived_columns(
-    df: pd.DataFrame,
-    main_cities: dict[str, str],
-    metropoles: Sequence[str],
-    bands: dict,
-) -> pd.DataFrame:
-    """Rule 7 — calendar fields, main-city label and price / surface / room bands."""
+def add_derived_columns(df: pd.DataFrame, bands: dict) -> pd.DataFrame:
+    """Rule 7 — calendar fields and price / surface / room bands.
+
+    The region and the main city are added once every department is cleaned
+    (see :func:`run`), because ranking the cities needs the whole scope.
+    """
     out = df.copy()
     dates = out["date_mutation"]
     out["annee"] = dates.dt.year.astype("int16")
     out["mois"] = dates.dt.month.astype("int8")
     out["trimestre"] = dates.dt.quarter.astype("int8")
     out["annee_mois"] = dates.dt.strftime("%Y-%m").astype("string")
-    out["ville_principale"] = out["code_commune"].map(main_cities).astype("string")
-    out["est_metropole"] = out["ville_principale"].isin(list(metropoles))
     out["tranche_prix"] = assign_band(out["valeur_fonciere"], **bands["price"])
     out["tranche_surface"] = assign_band(out["surface_reelle_bati"], **bands["surface"])
     out["tranche_pieces"] = assign_band(out["nombre_pieces_principales"], **bands["rooms"])
@@ -300,8 +319,6 @@ def clean(raw: pd.DataFrame, cfg: dict) -> tuple[pd.DataFrame, CleaningReport]:
     )
     report.exclusions.update(exclusions)
     report.add("3_un_logement", "1 ligne par mutation, un seul logement", residential, mutations)
-    for reason, count in exclusions.items():
-        logger.info("    excluded mutations (%s): %s", reason, f"{count:,}")
 
     complete = drop_missing_values(mutations)
     report.add("4_valeurs_manquantes", "Prix et surface renseignés et > 0", mutations, complete)
@@ -322,31 +339,50 @@ def clean(raw: pd.DataFrame, cfg: dict) -> tuple[pd.DataFrame, CleaningReport]:
     )
     report.add("6b_percentiles", "prix_m2 entre P1 et P99 (dép. x type)", bounded, filtered)
 
-    enriched = add_derived_columns(
-        filtered, cfg["main_cities"], cfg["metropoles"], cfg["bands"]
-    )
-    enriched = enriched.sort_values(["date_mutation", "id_mutation"]).reset_index(drop=True)
+    enriched = add_derived_columns(filtered, cfg["bands"])
     return enriched, report
 
 
 def run() -> Path:
-    """Clean every raw file and write the Parquet output and the cleaning report."""
+    """Clean every raw file, department by department, then add region and cities."""
     cfg = load_config()
-    paths = sorted(project_path("raw").glob("dvf_*.csv.gz"))
-    logger.info("Reading %d raw files", len(paths))
-    raw = load_raw(paths)
+    raw_dir = project_path("raw")
+    report = CleaningReport()
+    frames: list[pd.DataFrame] = []
+    for department in departments(cfg):
+        paths = sorted(raw_dir.glob(f"dvf_*_{department}.csv.gz"))
+        if not paths:
+            logger.warning("No raw file for department %s: skipped", department)
+            continue
+        clean_dep, report_dep = clean(load_raw(paths), cfg)
+        report.merge(report_dep)
+        frames.append(clean_dep)
+        logger.info("Department %-3s %9s raw rows -> %8s sales", department,
+                    f"{report_dep.steps[0].rows_before:,}", f"{len(clean_dep):,}")
 
-    clean_df, report = clean(raw, cfg)
+    clean_df = pd.concat(frames, ignore_index=True)
+    clean_df = add_region(clean_df, cfg)
+    cities = select_main_cities(clean_df, cfg, read_income())
+    clean_df = assign_cities(clean_df, cities, cfg)
+    clean_df = clean_df.sort_values(["date_mutation", "id_mutation"]).reset_index(drop=True)
+
+    for stat in report.steps:
+        logger.info("%-22s rows %11s -> %11s | mutations %10s -> %10s", stat.step,
+                    f"{stat.rows_before:,}", f"{stat.rows_after:,}",
+                    f"{stat.mutations_before:,}", f"{stat.mutations_after:,}")
+    for reason, count in report.exclusions.items():
+        logger.info("    excluded mutations (%s): %s", reason, f"{count:,}")
 
     target = project_path("processed") / PROCESSED_FILE
     clean_df.to_parquet(target, index=False)
-    logger.info("Wrote %s (%s sales)", target, f"{len(clean_df):,}")
+    logger.info("Wrote %s (%s sales, %d main cities)", target, f"{len(clean_df):,}", len(cities))
 
     tables = project_path("tables")
     report.to_frame().to_csv(tables / REPORT_FILE, index=False)
     pd.Series(report.exclusions, name="mutations").rename_axis("motif").to_csv(
         tables / EXCLUSIONS_FILE
     )
+    cities.to_csv(tables / CITIES_FILE, index=False)
     return target
 
 

@@ -2,33 +2,37 @@
 
 ## 1. Fichier nettoyé — `data/processed/ventes_clean.parquet`
 
-Une ligne par vente d'un seul logement (534 309 lignes).
+Une ligne par vente d'un seul logement (3 831 945 lignes, 27 329 communes, 77 départements).
 
 | Colonne | Type | Description |
 |---|---|---|
 | `id_mutation` | texte | Identifiant DVF de la mutation (non stable entre publications) |
 | `date_mutation` | date | Date de signature de l'acte |
 | `valeur_fonciere` | décimal | Prix total de la vente en € (pris une seule fois par mutation) |
-| `code_commune` | texte (5) | Code INSEE de la commune (arrondissement pour Lyon : 69381 à 69389) |
+| `code_commune` | texte (5) | Code INSEE de la commune (arrondissement pour Paris 75101-75120, Lyon 69381-69389, Marseille 13201-13216) |
 | `nom_commune` | texte | Libellé de la commune |
 | `code_departement` | texte | Code du département |
 | `type_local` | texte | `Maison` ou `Appartement` |
 | `surface_reelle_bati` | décimal | Surface réelle bâtie du logement (m²) |
 | `nombre_pieces_principales` | entier | Nombre de pièces principales |
-| `longitude`, `latitude` | décimal | Coordonnées WGS-84 de la parcelle du logement (1,5 % manquantes) |
+| `longitude`, `latitude` | décimal | Coordonnées WGS-84 de la parcelle du logement (1,2 % manquantes) |
 | `surface_terrain` | décimal | Surface de terrain de la mutation (m², somme des natures de culture distinctes) |
 | `prix_m2` | décimal | `valeur_fonciere / surface_reelle_bati` |
 | `annee`, `mois`, `trimestre` | entier | Calendrier de la date de mutation |
 | `annee_mois` | texte | `AAAA-MM` |
-| `ville_principale` | texte | Libellé de la ville suivie (vide pour les autres communes) |
-| `est_metropole` | booléen | Vrai pour Toulouse, Bordeaux, Montpellier, Nantes, Lyon |
 | `tranche_prix`, `tranche_surface`, `tranche_pieces` | texte | Tranches définies dans `config.yaml` (`Non renseigné` si absent) |
+| `code_region`, `region` | texte | Code INSEE et nom de la région (table de `config.yaml`, section `scope.regions`) |
+| `code_ville` | texte (5) | Code INSEE de la ville, arrondissements regroupés (Paris 75056, Lyon 69123, Marseille 13055), sinon `code_commune` |
+| `ville_principale` | texte | Libellé de la ville suivie (une des 30 plus grandes villes ; vide pour les autres communes) |
+| `est_metropole` | booléen | Vrai pour les 5 plus grandes villes (Paris, Marseille, Lyon, Toulouse, Nice), mises en avant dans les graphiques |
 
 ## 2. Schéma en étoile — PostgreSQL (`dvf`) et `data/gold/*.csv`
 
 Format des CSV : UTF-8, séparateur virgule, point décimal, dates ISO `AAAA-MM-JJ`, en-tête.
+Les CSV ne sont pas versionnés (`fact_ventes.csv` pèse environ 290 Mo) : `python run.py export`
+les régénère depuis PostgreSQL.
 
-### `fact_ventes` (534 309 lignes)
+### `fact_ventes` (3 831 945 lignes)
 
 | Colonne | Type SQL | Description |
 |---|---|---|
@@ -56,25 +60,27 @@ Format des CSV : UTF-8, séparateur virgule, point décimal, dates ISO `AAAA-MM-
 | `debut_mois` | Premier jour du mois |
 | `jour_semaine` | 1 = lundi … 7 = dimanche |
 
-### `dim_commune` (1 939 lignes)
+### `dim_commune` (27 329 lignes)
 
 | Colonne | Description |
 |---|---|
 | `commune_key` | Clé de substitution |
 | `code_commune`, `nom_commune` | Code INSEE et libellé |
 | `code_departement`, `nom_departement`, `departement` | Ex. `69`, `Rhône`, `69 - Rhône` |
-| `ville_principale` | Ville suivie (Lyon regroupe ses 9 arrondissements) ou vide |
+| `code_region`, `region` | Ex. `84`, `Auvergne-Rhône-Alpes` |
+| `code_ville` | Code INSEE de la ville (arrondissements de Paris, Lyon et Marseille regroupés) |
+| `ville_principale` | Ville suivie (Paris, Lyon et Marseille regroupent leurs arrondissements) ou vide |
 | `est_ville_principale`, `est_metropole` | Indicateurs booléens |
 | `latitude`, `longitude` | Médiane des coordonnées des ventes de la commune (pour la carte) |
 | `niveau_vie_median` | INSEE Filosofi 2021, niveau de vie médian (€ / an / unité de consommation) |
 | `revenu_menage_median` | Estimation du revenu disponible médian d'un ménage (€ / an) |
-| `revenu_menage_ville` | Même indicateur au niveau de la ville principale (Lyon : commune 69123) |
+| `revenu_menage_ville` | Même indicateur au niveau de la ville (`code_ville`), utilisé pour les 30 villes suivies |
 
 ### `dim_type_local` (2 lignes)
 
 `type_local_key` (1 = Appartement, 2 = Maison), `type_local`.
 
-### `dim_profil_bien` (238 lignes)
+### `dim_profil_bien` (277 lignes)
 
 | Colonne | Description |
 |---|---|
@@ -87,7 +93,8 @@ Format des CSV : UTF-8, séparateur virgule, point décimal, dates ISO `AAAA-MM-
 
 | Vue | Grain | Contenu |
 |---|---|---|
-| `v_ventes` | vente | Faits joints aux dimensions |
+| `v_ventes` | vente | Faits joints aux dimensions (dont région et département) |
+| `v_prix_region_annee` | région × type × année | Volume, médianes (ligne « Ensemble » par `GROUPING SETS`) |
 | `v_prix_departement_annee` | département × type × année | Volume, médianes (ligne « Ensemble » par `GROUPING SETS`) |
 | `v_prix_commune_annee` | commune × type × année | Volume, médianes du prix au m² et de la surface |
 | `v_evolution_annuelle_ville` | ville × type × année | Médianes, volume, variations sur un an (`LAG`) |
@@ -99,7 +106,8 @@ Format des CSV : UTF-8, séparateur virgule, point décimal, dates ISO `AAAA-MM-
 | Fichier | Contenu |
 |---|---|
 | `cleaning_report.csv`, `cleaning_exclusions.csv` | Comptages de chaque règle de nettoyage |
-| `prix_departement.csv`, `prix_commune.csv` | Q1 — médianes par département / commune, type, année |
+| `prix_region.csv`, `prix_departement.csv`, `prix_commune.csv` | Q1 — médianes par région / département / commune (≥ 10 ventes), type, année (`all` = toutes années) |
+| `villes_suivies.csv` | Les 30 villes suivies : rang, code INSEE, population (INSEE Filosofi 2021), ventes, département, indicateur des 5 plus grandes |
 | `evolution_annuelle_ville.csv`, `tendance_mensuelle_ville.csv` | Q2 — tendances annuelles et mensuelles |
 | `effet_hausse_taux.csv` | Q3 — volume vs prix, 2021 → 2023 → 2025 |
 | `classement_villes.csv` | Q4 — rangs hausse / baisse / prix |
@@ -118,7 +126,9 @@ surface médiane ; `all` = toutes les valeurs du filtre.
 
 | Fichier | Clés | Contenu |
 |---|---|---|
-| `meta.json` | – | Années, départements, villes suivies, bornes du simulateur |
-| `overview.json` | `departement\|type` → mois ou année | Séries mensuelles et annuelles (vue d'ensemble) |
-| `communes.json` | `type\|annee` → commune | Communes (code, nom, département, coordonnées) et statistiques des communes ayant au moins 30 ventes |
-| `cities.json` | `ville\|type` → année ou trimestre | Statistiques des 15 villes suivies et revenu médian estimé des ménages |
+| `meta.json` | – | Années, régions et leurs départements, 30 villes suivies (rang, région), bornes du simulateur |
+| `overview.json` | `zone\|type` → mois ou année | Séries mensuelles et annuelles ; zone = `all`, `R<code région>` ou code département |
+| `departements.json` | `type\|annee` → département | Départements (code, nom, coordonnées) et leurs statistiques (carte nationale) |
+| `communes_R<code>.json` | `type\|annee` → commune | Un fichier par région, chargé à la demande : communes (code, nom, département, coordonnées) et statistiques des communes ayant au moins 30 ventes |
+| `communes_top.json` | `type\|annee` | Les 10 communes les plus et les moins chères du périmètre (≥ 30 ventes) |
+| `cities.json` | `ville\|type` → année ou trimestre | Statistiques des 30 villes suivies et revenu médian estimé des ménages |

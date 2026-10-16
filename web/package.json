@@ -2,7 +2,7 @@
   "name": "dvf-dashboard",
   "private": true,
   "version": "1.0.0",
-  "description": "Tableau de bord web du marché immobilier DVF (5 départements, 2021-2025)",
+  "description": "Tableau de bord web du marché immobilier DVF (10 régions, 30 villes, 2021-2025)",
   "type": "module",
   "scripts": {
     "dev": "vite",

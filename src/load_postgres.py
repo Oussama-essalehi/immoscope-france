@@ -16,6 +16,7 @@ import pandas as pd
 from sqlalchemy import Engine, create_engine, text
 
 from src.clean import PROCESSED_FILE
+from src.geo import department_table
 from src.income import read_income
 from src.settings import PROJECT_ROOT, DatabaseSettings, load_config, project_path, setup_logging
 
@@ -53,7 +54,7 @@ def build_dim_date(first_year: int, last_year: int) -> pd.DataFrame:
 
 
 def build_dim_commune(sales: pd.DataFrame, cfg: dict, income: pd.DataFrame) -> pd.DataFrame:
-    """One row per commune present in the clean sales, enriched with income data."""
+    """One row per commune present in the clean sales, enriched with region and income."""
     names = (
         sales.groupby(["code_commune", "nom_commune"]).size().rename("n").reset_index()
         .sort_values(["code_commune", "n"], ascending=[True, False])
@@ -62,34 +63,34 @@ def build_dim_commune(sales: pd.DataFrame, cfg: dict, income: pd.DataFrame) -> p
     )
     geo = sales.groupby("code_commune").agg(
         code_departement=("code_departement", "first"),
+        code_ville=("code_ville", "first"),
+        ville_principale=("ville_principale", "first"),
+        est_metropole=("est_metropole", "first"),
         latitude=("latitude", "median"),
         longitude=("longitude", "median"),
     )
     dim = geo.join(names).reset_index().sort_values("code_commune").reset_index(drop=True)
     dim.insert(0, "commune_key", dim.index + 1)
 
-    labels = cfg["departments_labels"]
-    dim["nom_departement"] = dim["code_departement"].map(labels)
+    deps = department_table(cfg).set_index("code_departement")
+    dim["nom_departement"] = dim["code_departement"].map(deps["nom_departement"])
     dim["departement"] = dim["code_departement"] + " - " + dim["nom_departement"]
-    dim["ville_principale"] = dim["code_commune"].map(cfg["main_cities"])
+    dim["code_region"] = dim["code_departement"].map(deps["code_region"])
+    dim["region"] = dim["code_departement"].map(deps["region"])
     dim["est_ville_principale"] = dim["ville_principale"].notna()
-    dim["est_metropole"] = dim["ville_principale"].isin(cfg["metropoles"])
+    dim["est_metropole"] = dim["est_metropole"].fillna(False).astype(bool)
 
     inc = income.set_index("code_geo")
     dim["niveau_vie_median"] = dim["code_commune"].map(inc["niveau_vie_median"])
     dim["revenu_menage_median"] = dim["code_commune"].map(inc["revenu_menage_median"])
-    # City-level income: the commune itself, or the whole city for arrondissements
-    # (Lyon arrondissements 6938x -> commune 69123).
-    city_code = dim["code_commune"].where(~dim["code_commune"].str.startswith("6938"), "69123")
-    dim["revenu_menage_ville"] = city_code.map(inc["revenu_menage_median"]).where(
-        dim["est_ville_principale"]
-    )
+    # City-level income: the whole city for Paris / Lyon / Marseille arrondissements
+    dim["revenu_menage_ville"] = dim["code_ville"].map(inc["revenu_menage_median"])
     return dim[
         [
             "commune_key", "code_commune", "nom_commune", "code_departement",
-            "nom_departement", "departement", "ville_principale", "est_ville_principale",
-            "est_metropole", "latitude", "longitude", "niveau_vie_median",
-            "revenu_menage_median", "revenu_menage_ville",
+            "nom_departement", "departement", "code_region", "region", "code_ville",
+            "ville_principale", "est_ville_principale", "est_metropole", "latitude",
+            "longitude", "niveau_vie_median", "revenu_menage_median", "revenu_menage_ville",
         ]
     ]
 
@@ -192,17 +193,18 @@ def run_sql_file(engine: Engine, path: Path) -> None:
         conn.exec_driver_sql(path.read_text(encoding="utf-8"))
 
 
-def copy_frame(engine: Engine, frame: pd.DataFrame, table: str, schema: str) -> None:
-    """Bulk-load a DataFrame with PostgreSQL ``COPY ... FROM STDIN`` (CSV)."""
-    buffer = io.StringIO()
-    frame.to_csv(buffer, index=False, header=False, na_rep="\\N")
+def copy_frame(engine: Engine, frame: pd.DataFrame, table: str, schema: str, chunk_rows: int = 250_000) -> None:
+    """Bulk-load a DataFrame with PostgreSQL ``COPY ... FROM STDIN`` (CSV), by chunks."""
     columns = ", ".join(f'"{c}"' for c in frame.columns)
     sql = f"COPY {schema}.{table} ({columns}) FROM STDIN WITH (FORMAT csv, NULL '\\N')"
     raw = engine.raw_connection()
     try:
         with raw.cursor() as cur:
             with cur.copy(sql) as copy:
-                copy.write(buffer.getvalue())
+                for start in range(0, len(frame), chunk_rows):
+                    buffer = io.StringIO()
+                    frame.iloc[start : start + chunk_rows].to_csv(buffer, index=False, header=False, na_rep="\\N")
+                    copy.write(buffer.getvalue())
         raw.commit()
     finally:
         raw.close()

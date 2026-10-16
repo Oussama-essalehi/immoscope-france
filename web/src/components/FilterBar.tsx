@@ -1,26 +1,49 @@
-import { ALL, type Filters, type Meta } from "../data";
+import { ALL, departmentsFor, regionOfDept, type Filters, type Meta } from "../data";
+import { useI18n } from "../i18n";
+import type { MessageKey } from "../locales";
 
 interface Props {
   meta: Meta;
   filters: Filters;
   onChange: (next: Filters) => void;
   /** Which filters this page exposes. */
-  show?: { dept?: boolean; type?: boolean; year?: boolean };
+  show?: { region?: boolean; dept?: boolean; type?: boolean; year?: boolean };
   yearLabel?: string;
-  /** Disallow "toutes les années" (pages that need a single year). */
+  /** Disallow "all years" (pages that need a single year). */
   requireYear?: boolean;
 }
 
-/** Department / property type / year selectors, shared across pages. */
-export function FilterBar({ meta, filters, onChange, show = { dept: true, type: true, year: true }, yearLabel = "Année", requireYear }: Props) {
+/** Region / department / property type / year selectors, shared across pages. */
+export function FilterBar({ meta, filters, onChange, show = { region: true, dept: true, type: true, year: true }, yearLabel, requireYear }: Props) {
+  const { t } = useI18n();
+  const departments = departmentsFor(meta, filters.region);
+
+  // A new region resets the department; a department implies its region
+  const setRegion = (region: string) => onChange({ ...filters, region, dept: ALL });
+  const setDept = (dept: string) =>
+    onChange({ ...filters, dept, region: dept === ALL ? filters.region : (regionOfDept(meta, dept) ?? filters.region) });
+
   return (
-    <div className="filter-bar" role="group" aria-label="Filtres">
+    <div className="filter-bar" role="group" aria-label={t("filters.group")}>
+      {show.region && (
+        <label className="field">
+          <span>{t("filters.region")}</span>
+          <select value={filters.region} onChange={(e) => setRegion(e.target.value)}>
+            <option value={ALL}>{t("filters.allRegions")}</option>
+            {meta.regions.map((r) => (
+              <option key={r.code} value={r.code}>
+                {r.name}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
       {show.dept && (
         <label className="field">
-          <span>Département</span>
-          <select value={filters.dept} onChange={(e) => onChange({ ...filters, dept: e.target.value })}>
-            <option value={ALL}>Tous les départements</option>
-            {meta.departments.map((d) => (
+          <span>{t("filters.dept")}</span>
+          <select value={filters.dept} onChange={(e) => setDept(e.target.value)}>
+            <option value={ALL}>{t("filters.allDepts")}</option>
+            {departments.map((d) => (
               <option key={d.code} value={d.code}>
                 {d.code} - {d.label}
               </option>
@@ -30,12 +53,12 @@ export function FilterBar({ meta, filters, onChange, show = { dept: true, type: 
       )}
       {show.type && (
         <label className="field">
-          <span>Type de bien</span>
+          <span>{t("filters.type")}</span>
           <select value={filters.type} onChange={(e) => onChange({ ...filters, type: e.target.value })}>
-            <option value={ALL}>Maisons et appartements</option>
-            {meta.types.map((t) => (
-              <option key={t} value={t}>
-                {t}
+            <option value={ALL}>{t("filters.allTypes")}</option>
+            {meta.types.map((type) => (
+              <option key={type} value={type}>
+                {t(`type.${type}` as MessageKey)}
               </option>
             ))}
           </select>
@@ -43,7 +66,7 @@ export function FilterBar({ meta, filters, onChange, show = { dept: true, type: 
       )}
       {show.year && (
         <label className="field">
-          <span>{yearLabel}</span>
+          <span>{yearLabel ?? t("filters.year")}</span>
           <select value={filters.year} onChange={(e) => onChange({ ...filters, year: e.target.value })}>
             {!requireYear && <option value={ALL}>{`${meta.years[0]}-${meta.lastYear}`}</option>}
             {[...meta.years].reverse().map((y) => (

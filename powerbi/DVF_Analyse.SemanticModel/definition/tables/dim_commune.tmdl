@@ -1,4 +1,4 @@
-/// Communes (et arrondissements de Lyon) ayant au moins une vente, avec libellé de ville principale et revenus INSEE Filosofi 2021.
+/// Communes (arrondissements de Paris, Lyon et Marseille compris) ayant au moins une vente, avec région, ville principale (30 plus grandes villes) et revenus INSEE Filosofi 2021.
 table dim_commune
 	lineageTag: 208ddc88-d93c-54ad-bc8b-d357d3f08121
 
@@ -49,6 +49,30 @@ table dim_commune
 		lineageTag: 72cf9c23-9de7-5b1d-9ad7-689a8fd72447
 		summarizeBy: none
 		sourceColumn: departement
+
+		annotation SummarizationSetBy = User
+
+	column code_region
+		dataType: string
+		lineageTag: 8c1e538c-40a1-50bc-b37f-1291f9ee4350
+		summarizeBy: none
+		sourceColumn: code_region
+
+		annotation SummarizationSetBy = User
+
+	column region
+		dataType: string
+		lineageTag: a9444278-3730-5366-92f1-518b8d5cef6e
+		summarizeBy: none
+		sourceColumn: region
+
+		annotation SummarizationSetBy = User
+
+	column code_ville
+		dataType: string
+		lineageTag: cc9da358-aba6-556f-8dbb-7ee20a1dfcfe
+		summarizeBy: none
+		sourceColumn: code_ville
 
 		annotation SummarizationSetBy = User
 
@@ -127,7 +151,7 @@ table dim_commune
 				let
 				    Source = Csv.Document(
 				        File.Contents(DataFolder & "dim_commune.csv"),
-				        [Delimiter = ",", Columns = 14, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+				        [Delimiter = ",", Columns = 17, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
 				    ),
 				    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				    TypedColumns = Table.TransformColumnTypes(
@@ -139,6 +163,9 @@ table dim_commune
 				            {"code_departement", type text},
 				            {"nom_departement", type text},
 				            {"departement", type text},
+				            {"code_region", type text},
+				            {"region", type text},
+				            {"code_ville", type text},
 				            {"ville_principale", type text},
 				            {"est_ville_principale", type logical},
 				            {"est_metropole", type logical},

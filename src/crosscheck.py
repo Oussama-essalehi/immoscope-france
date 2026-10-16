@@ -1,6 +1,7 @@
 """Cross-check: medians computed in PostgreSQL must equal the pandas medians.
 
-Compares the median price per m² of a few (city, year) pairs computed by the
+Compares the median price per m² of a few (city, year) pairs (cities from
+``analysis.crosscheck_cities``, first and last year) computed by the
 SQL view ``v_evolution_annuelle_ville`` and by pandas on the Parquet file, and
 writes the result to ``reports/tables/crosscheck_sql_python.csv``.
 """
@@ -18,17 +19,19 @@ from src.settings import load_config, project_path, setup_logging
 
 logger = logging.getLogger("crosscheck")
 
-CHECKS = [("Lyon", 2021), ("Lyon", 2025), ("Bordeaux", 2021), ("Bordeaux", 2025)]
 TOLERANCE_EUR = 0.01
 
 
 def run() -> pd.DataFrame:
     """Return the comparison table; raise if any difference exceeds the tolerance."""
-    schema = load_config()["database"]["schema"]
+    cfg = load_config()
+    schema = cfg["database"]["schema"]
     sales = pd.read_parquet(project_path("processed") / PROCESSED_FILE)
+    years = (int(sales["annee"].min()), int(sales["annee"].max()))
+    checks = [(city, year) for city in cfg["analysis"]["crosscheck_cities"] for year in years]
     rows = []
     with get_engine().connect() as conn:
-        for city, year in CHECKS:
+        for city, year in checks:
             for typ in ("Ensemble", "Appartement", "Maison"):
                 sql = text(
                     f"SELECT prix_m2_median, nb_ventes FROM {schema}.v_evolution_annuelle_ville "

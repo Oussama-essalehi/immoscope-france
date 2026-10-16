@@ -3,56 +3,56 @@
     2021,
     2025
   ],
-  "nb_ventes_total": 534309,
-  "nb_communes": 1939,
+  "nb_ventes_total": 3831945,
+  "nb_communes": 27329,
   "ventes_par_annee": {
-    "2021": 128360,
-    "2022": 123007,
-    "2023": 96004,
-    "2024": 85678,
-    "2025": 101260
+    "2021": 918513,
+    "2022": 879404,
+    "2023": 691720,
+    "2024": 628032,
+    "2025": 714276
   },
   "prix_m2_median_par_annee": {
-    "2021": 3214,
-    "2022": 3423,
-    "2023": 3383,
-    "2024": 3215,
-    "2025": 3211
+    "2021": 2517,
+    "2022": 2731,
+    "2023": 2723,
+    "2024": 2623,
+    "2025": 2691
   },
   "evol_volume_perimetre_pct": {
-    "2021_2023": -25.2,
-    "2021_2025": -21.1
+    "2021_2023": -24.7,
+    "2021_2025": -22.2
   },
   "evol_prix_perimetre_pct": {
-    "2021_2023": 5.2,
-    "2021_2025": -0.1
+    "2021_2023": 8.2,
+    "2021_2025": 6.9
   },
   "effet_hausse_taux": [
     {
-      "ville_principale": "Vénissieux",
-      "ventes_2021": 629,
-      "ventes_2023": 429,
-      "ventes_2025": 461,
-      "prix_m2_2021": 2753.8,
-      "prix_m2_2023": 2969.2,
-      "prix_m2_2025": 2682.9,
-      "evol_volume_hausse_taux_pct": -31.8,
-      "evol_prix_hausse_taux_pct": 7.8,
-      "evol_volume_total_pct": -26.7,
-      "evol_prix_total_pct": -2.6
+      "ville_principale": "Angers",
+      "ventes_2021": 2831,
+      "ventes_2023": 1915,
+      "ventes_2025": 2190,
+      "prix_m2_2021": 3000.0,
+      "prix_m2_2023": 3250.0,
+      "prix_m2_2025": 3139.5,
+      "evol_volume_hausse_taux_pct": -32.4,
+      "evol_prix_hausse_taux_pct": 8.3,
+      "evol_volume_total_pct": -22.6,
+      "evol_prix_total_pct": 4.7
     },
     {
-      "ville_principale": "Pessac",
-      "ventes_2021": 875,
-      "ventes_2023": 601,
-      "ventes_2025": 694,
-      "prix_m2_2021": 3930.3,
-      "prix_m2_2023": 4042.6,
-      "prix_m2_2025": 3676.9,
-      "evol_volume_hausse_taux_pct": -31.3,
-      "evol_prix_hausse_taux_pct": 2.9,
-      "evol_volume_total_pct": -20.7,
-      "evol_prix_total_pct": -6.4
+      "ville_principale": "Argenteuil",
+      "ventes_2021": 1190,
+      "ventes_2023": 819,
+      "ventes_2025": 800,
+      "prix_m2_2021": 3622.5,
+      "prix_m2_2023": 3547.6,
+      "prix_m2_2025": 3420.6,
+      "evol_volume_hausse_taux_pct": -31.2,
+      "evol_prix_hausse_taux_pct": -2.1,
+      "evol_volume_total_pct": -32.8,
+      "evol_prix_total_pct": -5.6
     },
     {
       "ville_principale": "Villeurbanne",
@@ -68,17 +68,30 @@
       "evol_prix_total_pct": -8.3
     },
     {
-      "ville_principale": "Tournefeuille",
-      "ventes_2021": 367,
-      "ventes_2023": 278,
-      "ventes_2025": 306,
-      "prix_m2_2021": 3088.0,
-      "prix_m2_2023": 3377.7,
-      "prix_m2_2025": 3135.0,
-      "evol_volume_hausse_taux_pct": -24.3,
-      "evol_prix_hausse_taux_pct": 9.4,
-      "evol_volume_total_pct": -16.6,
-      "evol_prix_total_pct": 1.5
+      "ville_principale": "Le Mans",
+      "ventes_2021": 2897,
+      "ventes_2023": 2102,
+      "ventes_2025": 2240,
+      "prix_m2_2021": 1833.3,
+      "prix_m2_2023": 2040.2,
+      "prix_m2_2025": 2045.5,
+      "evol_volume_hausse_taux_pct": -27.4,
+      "evol_prix_hausse_taux_pct": 11.3,
+      "evol_volume_total_pct": -22.7,
+      "evol_prix_total_pct": 11.6
+    },
+    {
+      "ville_principale": "Brest",
+      "ventes_2021": 3303,
+      "ventes_2023": 2479,
+      "ventes_2025": 2516,
+      "prix_m2_2021": 1914.9,
+      "prix_m2_2023": 2160.5,
+      "prix_m2_2025": 2222.2,
+      "evol_volume_hausse_taux_pct": -24.9,
+      "evol_prix_hausse_taux_pct": 12.8,
+      "evol_volume_total_pct": -23.8,
+      "evol_prix_total_pct": 16.0
     },
     {
       "ville_principale": "Nantes",
@@ -94,6 +107,45 @@
       "evol_prix_total_pct": -11.5
     },
     {
+      "ville_principale": "Le Havre",
+      "ventes_2021": 3056,
+      "ventes_2023": 2325,
+      "ventes_2025": 2344,
+      "prix_m2_2021": 2212.9,
+      "prix_m2_2023": 2388.1,
+      "prix_m2_2025": 2272.7,
+      "evol_volume_hausse_taux_pct": -23.9,
+      "evol_prix_hausse_taux_pct": 7.9,
+      "evol_volume_total_pct": -23.3,
+      "evol_prix_total_pct": 2.7
+    },
+    {
+      "ville_principale": "Reims",
+      "ventes_2021": 2945,
+      "ventes_2023": 2250,
+      "ventes_2025": 2242,
+      "prix_m2_2021": 2457.3,
+      "prix_m2_2023": 2607.6,
+      "prix_m2_2025": 2630.8,
+      "evol_volume_hausse_taux_pct": -23.6,
+      "evol_prix_hausse_taux_pct": 6.1,
+      "evol_volume_total_pct": -23.9,
+      "evol_prix_total_pct": 7.1
+    },
+    {
+      "ville_principale": "Lille",
+      "ventes_2021": 4357,
+      "ventes_2023": 3359,
+      "ventes_2025": 3389,
+      "prix_m2_2021": 3428.6,
+      "prix_m2_2023": 3549.5,
+      "prix_m2_2025": 3442.6,
+      "evol_volume_hausse_taux_pct": -22.9,
+      "evol_prix_hausse_taux_pct": 3.5,
+      "evol_volume_total_pct": -22.2,
+      "evol_prix_total_pct": 0.4
+    },
+    {
       "ville_principale": "Toulouse",
       "ventes_2021": 9110,
       "ventes_2023": 7052,
@@ -107,17 +159,95 @@
       "evol_prix_total_pct": 1.1
     },
     {
-      "ville_principale": "Sète",
-      "ventes_2021": 1352,
-      "ventes_2023": 1060,
-      "ventes_2025": 1017,
-      "prix_m2_2021": 3016.7,
-      "prix_m2_2023": 3447.7,
-      "prix_m2_2025": 3583.3,
-      "evol_volume_hausse_taux_pct": -21.6,
-      "evol_prix_hausse_taux_pct": 14.3,
-      "evol_volume_total_pct": -24.8,
-      "evol_prix_total_pct": 18.8
+      "ville_principale": "Marseille",
+      "ventes_2021": 14878,
+      "ventes_2023": 11527,
+      "ventes_2025": 11675,
+      "prix_m2_2021": 2982.6,
+      "prix_m2_2023": 3289.5,
+      "prix_m2_2025": 3333.3,
+      "evol_volume_hausse_taux_pct": -22.5,
+      "evol_prix_hausse_taux_pct": 10.3,
+      "evol_volume_total_pct": -21.5,
+      "evol_prix_total_pct": 11.8
+    },
+    {
+      "ville_principale": "Aix-en-Provence",
+      "ventes_2021": 2451,
+      "ventes_2023": 1900,
+      "ventes_2025": 2137,
+      "prix_m2_2021": 4687.5,
+      "prix_m2_2023": 5089.2,
+      "prix_m2_2025": 4942.9,
+      "evol_volume_hausse_taux_pct": -22.5,
+      "evol_prix_hausse_taux_pct": 8.6,
+      "evol_volume_total_pct": -12.8,
+      "evol_prix_total_pct": 5.4
+    },
+    {
+      "ville_principale": "Amiens",
+      "ventes_2021": 1912,
+      "ventes_2023": 1491,
+      "ventes_2025": 1630,
+      "prix_m2_2021": 2241.9,
+      "prix_m2_2023": 2381.0,
+      "prix_m2_2025": 2349.3,
+      "evol_volume_hausse_taux_pct": -22.0,
+      "evol_prix_hausse_taux_pct": 6.2,
+      "evol_volume_total_pct": -14.7,
+      "evol_prix_total_pct": 4.8
+    },
+    {
+      "ville_principale": "Saint-Denis",
+      "ventes_2021": 909,
+      "ventes_2023": 714,
+      "ventes_2025": 850,
+      "prix_m2_2021": 4285.7,
+      "prix_m2_2023": 4299.1,
+      "prix_m2_2025": 3854.1,
+      "evol_volume_hausse_taux_pct": -21.5,
+      "evol_prix_hausse_taux_pct": 0.3,
+      "evol_volume_total_pct": -6.5,
+      "evol_prix_total_pct": -10.1
+    },
+    {
+      "ville_principale": "Boulogne-Billancourt",
+      "ventes_2021": 1837,
+      "ventes_2023": 1443,
+      "ventes_2025": 1545,
+      "prix_m2_2021": 9375.0,
+      "prix_m2_2023": 8854.2,
+      "prix_m2_2025": 8300.0,
+      "evol_volume_hausse_taux_pct": -21.4,
+      "evol_prix_hausse_taux_pct": -5.6,
+      "evol_volume_total_pct": -15.9,
+      "evol_prix_total_pct": -11.5
+    },
+    {
+      "ville_principale": "Limoges",
+      "ventes_2021": 2285,
+      "ventes_2023": 1800,
+      "ventes_2025": 1862,
+      "prix_m2_2021": 1638.8,
+      "prix_m2_2023": 1714.8,
+      "prix_m2_2025": 1595.9,
+      "evol_volume_hausse_taux_pct": -21.2,
+      "evol_prix_hausse_taux_pct": 4.6,
+      "evol_volume_total_pct": -18.5,
+      "evol_prix_total_pct": -2.6
+    },
+    {
+      "ville_principale": "Grenoble",
+      "ventes_2021": 3382,
+      "ventes_2023": 2665,
+      "ventes_2025": 2277,
+      "prix_m2_2021": 2558.6,
+      "prix_m2_2023": 2680.0,
+      "prix_m2_2025": 2515.6,
+      "evol_volume_hausse_taux_pct": -21.2,
+      "evol_prix_hausse_taux_pct": 4.7,
+      "evol_volume_total_pct": -32.7,
+      "evol_prix_total_pct": -1.7
     },
     {
       "ville_principale": "Bordeaux",
@@ -133,6 +263,32 @@
       "evol_prix_total_pct": -10.2
     },
     {
+      "ville_principale": "Annecy",
+      "ventes_2021": 2129,
+      "ventes_2023": 1690,
+      "ventes_2025": 1753,
+      "prix_m2_2021": 4764.7,
+      "prix_m2_2023": 5219.2,
+      "prix_m2_2025": 5185.2,
+      "evol_volume_hausse_taux_pct": -20.6,
+      "evol_prix_hausse_taux_pct": 9.5,
+      "evol_volume_total_pct": -17.7,
+      "evol_prix_total_pct": 8.8
+    },
+    {
+      "ville_principale": "Rennes",
+      "ventes_2021": 3858,
+      "ventes_2023": 3079,
+      "ventes_2025": 3308,
+      "prix_m2_2021": 3725.5,
+      "prix_m2_2023": 3877.6,
+      "prix_m2_2025": 3785.7,
+      "evol_volume_hausse_taux_pct": -20.2,
+      "evol_prix_hausse_taux_pct": 4.1,
+      "evol_volume_total_pct": -14.3,
+      "evol_prix_total_pct": 1.6
+    },
+    {
       "ville_principale": "Lyon",
       "ventes_2021": 7963,
       "ventes_2023": 6357,
@@ -146,43 +302,17 @@
       "evol_prix_total_pct": -11.1
     },
     {
-      "ville_principale": "Saint-Herblain",
-      "ventes_2021": 890,
-      "ventes_2023": 717,
-      "ventes_2025": 700,
-      "prix_m2_2021": 2973.0,
-      "prix_m2_2023": 3038.5,
-      "prix_m2_2025": 2857.7,
-      "evol_volume_hausse_taux_pct": -19.4,
-      "evol_prix_hausse_taux_pct": 2.2,
-      "evol_volume_total_pct": -21.3,
-      "evol_prix_total_pct": -3.9
-    },
-    {
-      "ville_principale": "Mérignac",
-      "ventes_2021": 1266,
-      "ventes_2023": 1020,
-      "ventes_2025": 1113,
-      "prix_m2_2021": 3829.0,
-      "prix_m2_2023": 3870.3,
-      "prix_m2_2025": 3597.0,
-      "evol_volume_hausse_taux_pct": -19.4,
-      "evol_prix_hausse_taux_pct": 1.1,
-      "evol_volume_total_pct": -12.1,
-      "evol_prix_total_pct": -6.1
-    },
-    {
-      "ville_principale": "Saint-Nazaire",
-      "ventes_2021": 1384,
-      "ventes_2023": 1117,
-      "ventes_2025": 1041,
-      "prix_m2_2021": 2768.5,
-      "prix_m2_2023": 3000.0,
-      "prix_m2_2025": 2857.1,
-      "evol_volume_hausse_taux_pct": -19.3,
-      "evol_prix_hausse_taux_pct": 8.4,
-      "evol_volume_total_pct": -24.8,
-      "evol_prix_total_pct": 3.2
+      "ville_principale": "Montreuil",
+      "ventes_2021": 1234,
+      "ventes_2023": 1002,
+      "ventes_2025": 1025,
+      "prix_m2_2021": 6635.2,
+      "prix_m2_2023": 6442.8,
+      "prix_m2_2025": 5994.0,
+      "evol_volume_hausse_taux_pct": -18.8,
+      "evol_prix_hausse_taux_pct": -2.9,
+      "evol_volume_total_pct": -16.9,
+      "evol_prix_total_pct": -9.7
     },
     {
       "ville_principale": "Montpellier",
@@ -198,172 +328,492 @@
       "evol_prix_total_pct": 6.9
     },
     {
-      "ville_principale": "Béziers",
-      "ventes_2021": 1496,
-      "ventes_2023": 1249,
-      "ventes_2025": 1405,
-      "prix_m2_2021": 1687.1,
-      "prix_m2_2023": 1864.9,
-      "prix_m2_2025": 1913.0,
-      "evol_volume_hausse_taux_pct": -16.5,
-      "evol_prix_hausse_taux_pct": 10.5,
-      "evol_volume_total_pct": -6.1,
-      "evol_prix_total_pct": 13.4
+      "ville_principale": "Saint-Étienne",
+      "ventes_2021": 3389,
+      "ventes_2023": 2804,
+      "ventes_2025": 2558,
+      "prix_m2_2021": 1216.0,
+      "prix_m2_2023": 1284.7,
+      "prix_m2_2025": 1243.1,
+      "evol_volume_hausse_taux_pct": -17.3,
+      "evol_prix_hausse_taux_pct": 5.6,
+      "evol_volume_total_pct": -24.5,
+      "evol_prix_total_pct": 2.2
     },
     {
-      "ville_principale": "Colomiers",
-      "ventes_2021": 571,
-      "ventes_2023": 491,
-      "ventes_2025": 507,
-      "prix_m2_2021": 2695.4,
-      "prix_m2_2023": 2805.6,
-      "prix_m2_2025": 2774.4,
-      "evol_volume_hausse_taux_pct": -14.0,
-      "evol_prix_hausse_taux_pct": 4.1,
-      "evol_volume_total_pct": -11.2,
+      "ville_principale": "Toulon",
+      "ventes_2021": 3444,
+      "ventes_2023": 2876,
+      "ventes_2025": 2985,
+      "prix_m2_2021": 2586.6,
+      "prix_m2_2023": 2857.6,
+      "prix_m2_2025": 2903.2,
+      "evol_volume_hausse_taux_pct": -16.5,
+      "evol_prix_hausse_taux_pct": 10.5,
+      "evol_volume_total_pct": -13.3,
+      "evol_prix_total_pct": 12.2
+    },
+    {
+      "ville_principale": "Clermont-Ferrand",
+      "ventes_2021": 2462,
+      "ventes_2023": 2086,
+      "ventes_2025": 2086,
+      "prix_m2_2021": 2086.9,
+      "prix_m2_2023": 2220.4,
+      "prix_m2_2025": 2147.4,
+      "evol_volume_hausse_taux_pct": -15.3,
+      "evol_prix_hausse_taux_pct": 6.4,
+      "evol_volume_total_pct": -15.3,
       "evol_prix_total_pct": 2.9
+    },
+    {
+      "ville_principale": "Nîmes",
+      "ventes_2021": 2648,
+      "ventes_2023": 2252,
+      "ventes_2025": 2291,
+      "prix_m2_2021": 2156.6,
+      "prix_m2_2023": 2359.2,
+      "prix_m2_2025": 2340.9,
+      "evol_volume_hausse_taux_pct": -15.0,
+      "evol_prix_hausse_taux_pct": 9.4,
+      "evol_volume_total_pct": -13.5,
+      "evol_prix_total_pct": 8.5
+    },
+    {
+      "ville_principale": "Nice",
+      "ventes_2021": 8523,
+      "ventes_2023": 7390,
+      "ventes_2025": 7505,
+      "prix_m2_2021": 4275.9,
+      "prix_m2_2023": 4717.3,
+      "prix_m2_2025": 4888.9,
+      "evol_volume_hausse_taux_pct": -13.3,
+      "evol_prix_hausse_taux_pct": 10.3,
+      "evol_volume_total_pct": -11.9,
+      "evol_prix_total_pct": 14.3
+    },
+    {
+      "ville_principale": "Paris",
+      "ventes_2021": 30618,
+      "ventes_2023": 26966,
+      "ventes_2025": 28453,
+      "prix_m2_2021": 10869.6,
+      "prix_m2_2023": 10172.0,
+      "prix_m2_2025": 9714.3,
+      "evol_volume_hausse_taux_pct": -11.9,
+      "evol_prix_hausse_taux_pct": -6.4,
+      "evol_volume_total_pct": -7.1,
+      "evol_prix_total_pct": -10.6
+    },
+    {
+      "ville_principale": "Perpignan",
+      "ventes_2021": 2462,
+      "ventes_2023": 2211,
+      "ventes_2025": 2104,
+      "prix_m2_2021": 1526.3,
+      "prix_m2_2023": 1679.0,
+      "prix_m2_2025": 1657.0,
+      "evol_volume_hausse_taux_pct": -10.2,
+      "evol_prix_hausse_taux_pct": 10.0,
+      "evol_volume_total_pct": -14.5,
+      "evol_prix_total_pct": 8.6
     }
   ],
   "classement": [
     {
-      "ville_principale": "Sète",
-      "evol_prix_total_pct": 18.8,
-      "evol_volume_total_pct": -24.8,
-      "prix_m2_2025": 3583.3,
+      "ville_principale": "Brest",
+      "evol_prix_total_pct": 16.0,
+      "evol_volume_total_pct": -23.8,
+      "prix_m2_2025": 2222.2,
       "rang_plus_forte_hausse": 1,
-      "rang_plus_forte_baisse": 15,
-      "rang_moins_cher": 10
+      "rang_plus_forte_baisse": 30,
+      "rang_moins_cher": 6
     },
     {
-      "ville_principale": "Béziers",
-      "evol_prix_total_pct": 13.4,
-      "evol_volume_total_pct": -6.1,
-      "prix_m2_2025": 1913.0,
+      "ville_principale": "Nice",
+      "evol_prix_total_pct": 14.3,
+      "evol_volume_total_pct": -11.9,
+      "prix_m2_2025": 4888.9,
       "rang_plus_forte_hausse": 2,
-      "rang_plus_forte_baisse": 14,
-      "rang_moins_cher": 1
+      "rang_plus_forte_baisse": 29,
+      "rang_moins_cher": 25
+    },
+    {
+      "ville_principale": "Toulon",
+      "evol_prix_total_pct": 12.2,
+      "evol_volume_total_pct": -13.3,
+      "prix_m2_2025": 2903.2,
+      "rang_plus_forte_hausse": 3,
+      "rang_plus_forte_baisse": 28,
+      "rang_moins_cher": 12
+    },
+    {
+      "ville_principale": "Marseille",
+      "evol_prix_total_pct": 11.8,
+      "evol_volume_total_pct": -21.5,
+      "prix_m2_2025": 3333.3,
+      "rang_plus_forte_hausse": 4,
+      "rang_plus_forte_baisse": 27,
+      "rang_moins_cher": 15
+    },
+    {
+      "ville_principale": "Le Mans",
+      "evol_prix_total_pct": 11.6,
+      "evol_volume_total_pct": -22.7,
+      "prix_m2_2025": 2045.5,
+      "rang_plus_forte_hausse": 5,
+      "rang_plus_forte_baisse": 26,
+      "rang_moins_cher": 4
+    },
+    {
+      "ville_principale": "Annecy",
+      "evol_prix_total_pct": 8.8,
+      "evol_volume_total_pct": -17.7,
+      "prix_m2_2025": 5185.2,
+      "rang_plus_forte_hausse": 6,
+      "rang_plus_forte_baisse": 25,
+      "rang_moins_cher": 27
+    },
+    {
+      "ville_principale": "Perpignan",
+      "evol_prix_total_pct": 8.6,
+      "evol_volume_total_pct": -14.5,
+      "prix_m2_2025": 1657.0,
+      "rang_plus_forte_hausse": 7,
+      "rang_plus_forte_baisse": 24,
+      "rang_moins_cher": 3
+    },
+    {
+      "ville_principale": "Nîmes",
+      "evol_prix_total_pct": 8.5,
+      "evol_volume_total_pct": -13.5,
+      "prix_m2_2025": 2340.9,
+      "rang_plus_forte_hausse": 8,
+      "rang_plus_forte_baisse": 23,
+      "rang_moins_cher": 8
+    },
+    {
+      "ville_principale": "Reims",
+      "evol_prix_total_pct": 7.1,
+      "evol_volume_total_pct": -23.9,
+      "prix_m2_2025": 2630.8,
+      "rang_plus_forte_hausse": 9,
+      "rang_plus_forte_baisse": 22,
+      "rang_moins_cher": 11
     },
     {
       "ville_principale": "Montpellier",
       "evol_prix_total_pct": 6.9,
       "evol_volume_total_pct": -18.6,
       "prix_m2_2025": 3432.8,
-      "rang_plus_forte_hausse": 3,
-      "rang_plus_forte_baisse": 13,
-      "rang_moins_cher": 8
+      "rang_plus_forte_hausse": 10,
+      "rang_plus_forte_baisse": 21,
+      "rang_moins_cher": 17
     },
     {
-      "ville_principale": "Saint-Nazaire",
-      "evol_prix_total_pct": 3.2,
-      "evol_volume_total_pct": -24.8,
-      "prix_m2_2025": 2857.1,
-      "rang_plus_forte_hausse": 4,
-      "rang_plus_forte_baisse": 12,
-      "rang_moins_cher": 4
+      "ville_principale": "Aix-en-Provence",
+      "evol_prix_total_pct": 5.4,
+      "evol_volume_total_pct": -12.8,
+      "prix_m2_2025": 4942.9,
+      "rang_plus_forte_hausse": 11,
+      "rang_plus_forte_baisse": 20,
+      "rang_moins_cher": 26
     },
     {
-      "ville_principale": "Colomiers",
+      "ville_principale": "Amiens",
+      "evol_prix_total_pct": 4.8,
+      "evol_volume_total_pct": -14.7,
+      "prix_m2_2025": 2349.3,
+      "rang_plus_forte_hausse": 12,
+      "rang_plus_forte_baisse": 19,
+      "rang_moins_cher": 9
+    },
+    {
+      "ville_principale": "Angers",
+      "evol_prix_total_pct": 4.7,
+      "evol_volume_total_pct": -22.6,
+      "prix_m2_2025": 3139.5,
+      "rang_plus_forte_hausse": 13,
+      "rang_plus_forte_baisse": 18,
+      "rang_moins_cher": 13
+    },
+    {
+      "ville_principale": "Clermont-Ferrand",
       "evol_prix_total_pct": 2.9,
-      "evol_volume_total_pct": -11.2,
-      "prix_m2_2025": 2774.4,
-      "rang_plus_forte_hausse": 5,
-      "rang_plus_forte_baisse": 11,
-      "rang_moins_cher": 3
+      "evol_volume_total_pct": -15.3,
+      "prix_m2_2025": 2147.4,
+      "rang_plus_forte_hausse": 14,
+      "rang_plus_forte_baisse": 17,
+      "rang_moins_cher": 5
     },
     {
-      "ville_principale": "Tournefeuille",
-      "evol_prix_total_pct": 1.5,
-      "evol_volume_total_pct": -16.6,
-      "prix_m2_2025": 3135.0,
-      "rang_plus_forte_hausse": 6,
-      "rang_plus_forte_baisse": 10,
-      "rang_moins_cher": 6
+      "ville_principale": "Le Havre",
+      "evol_prix_total_pct": 2.7,
+      "evol_volume_total_pct": -23.3,
+      "prix_m2_2025": 2272.7,
+      "rang_plus_forte_hausse": 15,
+      "rang_plus_forte_baisse": 16,
+      "rang_moins_cher": 7
+    },
+    {
+      "ville_principale": "Saint-Étienne",
+      "evol_prix_total_pct": 2.2,
+      "evol_volume_total_pct": -24.5,
+      "prix_m2_2025": 1243.1,
+      "rang_plus_forte_hausse": 16,
+      "rang_plus_forte_baisse": 15,
+      "rang_moins_cher": 1
+    },
+    {
+      "ville_principale": "Rennes",
+      "evol_prix_total_pct": 1.6,
+      "evol_volume_total_pct": -14.3,
+      "prix_m2_2025": 3785.7,
+      "rang_plus_forte_hausse": 17,
+      "rang_plus_forte_baisse": 14,
+      "rang_moins_cher": 21
     },
     {
       "ville_principale": "Toulouse",
       "evol_prix_total_pct": 1.1,
       "evol_volume_total_pct": -14.4,
       "prix_m2_2025": 3297.1,
-      "rang_plus_forte_hausse": 7,
-      "rang_plus_forte_baisse": 9,
-      "rang_moins_cher": 7
+      "rang_plus_forte_hausse": 18,
+      "rang_plus_forte_baisse": 13,
+      "rang_moins_cher": 14
     },
     {
-      "ville_principale": "Vénissieux",
+      "ville_principale": "Lille",
+      "evol_prix_total_pct": 0.4,
+      "evol_volume_total_pct": -22.2,
+      "prix_m2_2025": 3442.6,
+      "rang_plus_forte_hausse": 19,
+      "rang_plus_forte_baisse": 12,
+      "rang_moins_cher": 18
+    },
+    {
+      "ville_principale": "Grenoble",
+      "evol_prix_total_pct": -1.7,
+      "evol_volume_total_pct": -32.7,
+      "prix_m2_2025": 2515.6,
+      "rang_plus_forte_hausse": 20,
+      "rang_plus_forte_baisse": 11,
+      "rang_moins_cher": 10
+    },
+    {
+      "ville_principale": "Limoges",
       "evol_prix_total_pct": -2.6,
-      "evol_volume_total_pct": -26.7,
-      "prix_m2_2025": 2682.9,
-      "rang_plus_forte_hausse": 8,
-      "rang_plus_forte_baisse": 8,
+      "evol_volume_total_pct": -18.5,
+      "prix_m2_2025": 1595.9,
+      "rang_plus_forte_hausse": 21,
+      "rang_plus_forte_baisse": 10,
       "rang_moins_cher": 2
     },
     {
-      "ville_principale": "Saint-Herblain",
-      "evol_prix_total_pct": -3.9,
-      "evol_volume_total_pct": -21.3,
-      "prix_m2_2025": 2857.7,
-      "rang_plus_forte_hausse": 9,
-      "rang_plus_forte_baisse": 7,
-      "rang_moins_cher": 5
-    },
-    {
-      "ville_principale": "Mérignac",
-      "evol_prix_total_pct": -6.1,
-      "evol_volume_total_pct": -12.1,
-      "prix_m2_2025": 3597.0,
-      "rang_plus_forte_hausse": 10,
-      "rang_plus_forte_baisse": 6,
-      "rang_moins_cher": 12
-    },
-    {
-      "ville_principale": "Pessac",
-      "evol_prix_total_pct": -6.4,
-      "evol_volume_total_pct": -20.7,
-      "prix_m2_2025": 3676.9,
-      "rang_plus_forte_hausse": 11,
-      "rang_plus_forte_baisse": 5,
-      "rang_moins_cher": 13
+      "ville_principale": "Argenteuil",
+      "evol_prix_total_pct": -5.6,
+      "evol_volume_total_pct": -32.8,
+      "prix_m2_2025": 3420.6,
+      "rang_plus_forte_hausse": 22,
+      "rang_plus_forte_baisse": 9,
+      "rang_moins_cher": 16
     },
     {
       "ville_principale": "Villeurbanne",
       "evol_prix_total_pct": -8.3,
       "evol_volume_total_pct": -31.5,
       "prix_m2_2025": 3588.9,
-      "rang_plus_forte_hausse": 12,
-      "rang_plus_forte_baisse": 4,
-      "rang_moins_cher": 11
+      "rang_plus_forte_hausse": 23,
+      "rang_plus_forte_baisse": 8,
+      "rang_moins_cher": 20
+    },
+    {
+      "ville_principale": "Montreuil",
+      "evol_prix_total_pct": -9.7,
+      "evol_volume_total_pct": -16.9,
+      "prix_m2_2025": 5994.0,
+      "rang_plus_forte_hausse": 24,
+      "rang_plus_forte_baisse": 7,
+      "rang_moins_cher": 28
+    },
+    {
+      "ville_principale": "Saint-Denis",
+      "evol_prix_total_pct": -10.1,
+      "evol_volume_total_pct": -6.5,
+      "prix_m2_2025": 3854.1,
+      "rang_plus_forte_hausse": 25,
+      "rang_plus_forte_baisse": 6,
+      "rang_moins_cher": 22
     },
     {
       "ville_principale": "Bordeaux",
       "evol_prix_total_pct": -10.2,
       "evol_volume_total_pct": -16.8,
       "prix_m2_2025": 4269.2,
-      "rang_plus_forte_hausse": 13,
-      "rang_plus_forte_baisse": 3,
-      "rang_moins_cher": 14
+      "rang_plus_forte_hausse": 26,
+      "rang_plus_forte_baisse": 5,
+      "rang_moins_cher": 23
+    },
+    {
+      "ville_principale": "Paris",
+      "evol_prix_total_pct": -10.6,
+      "evol_volume_total_pct": -7.1,
+      "prix_m2_2025": 9714.3,
+      "rang_plus_forte_hausse": 27,
+      "rang_plus_forte_baisse": 4,
+      "rang_moins_cher": 30
     },
     {
       "ville_principale": "Lyon",
       "evol_prix_total_pct": -11.1,
       "evol_volume_total_pct": -15.1,
       "prix_m2_2025": 4468.1,
-      "rang_plus_forte_hausse": 14,
-      "rang_plus_forte_baisse": 2,
-      "rang_moins_cher": 15
+      "rang_plus_forte_hausse": 28,
+      "rang_plus_forte_baisse": 3,
+      "rang_moins_cher": 24
     },
     {
       "ville_principale": "Nantes",
       "evol_prix_total_pct": -11.5,
       "evol_volume_total_pct": -22.7,
       "prix_m2_2025": 3500.0,
-      "rang_plus_forte_hausse": 15,
+      "rang_plus_forte_hausse": 29,
+      "rang_plus_forte_baisse": 2,
+      "rang_moins_cher": 19
+    },
+    {
+      "ville_principale": "Boulogne-Billancourt",
+      "evol_prix_total_pct": -11.5,
+      "evol_volume_total_pct": -15.9,
+      "prix_m2_2025": 8300.0,
+      "rang_plus_forte_hausse": 30,
       "rang_plus_forte_baisse": 1,
-      "rang_moins_cher": 9
+      "rang_moins_cher": 29
     }
   ],
-  "tests_significatifs": 10,
-  "tests_total": 15,
+  "tests_significatifs": 21,
+  "tests_total": 30,
   "accessibilite_appartement": [
+    {
+      "ville_principale": "Aix-en-Provence",
+      "type_local": "Appartement",
+      "prix_m2_median": 4775.8,
+      "surface_mediane": 58.0,
+      "budget": 150000,
+      "m2_achetables": 31.4
+    },
+    {
+      "ville_principale": "Aix-en-Provence",
+      "type_local": "Appartement",
+      "prix_m2_median": 4775.8,
+      "surface_mediane": 58.0,
+      "budget": 250000,
+      "m2_achetables": 52.3
+    },
+    {
+      "ville_principale": "Aix-en-Provence",
+      "type_local": "Appartement",
+      "prix_m2_median": 4775.8,
+      "surface_mediane": 58.0,
+      "budget": 350000,
+      "m2_achetables": 73.3
+    },
+    {
+      "ville_principale": "Amiens",
+      "type_local": "Appartement",
+      "prix_m2_median": 2470.6,
+      "surface_mediane": 53.0,
+      "budget": 150000,
+      "m2_achetables": 60.7
+    },
+    {
+      "ville_principale": "Amiens",
+      "type_local": "Appartement",
+      "prix_m2_median": 2470.6,
+      "surface_mediane": 53.0,
+      "budget": 250000,
+      "m2_achetables": 101.2
+    },
+    {
+      "ville_principale": "Amiens",
+      "type_local": "Appartement",
+      "prix_m2_median": 2470.6,
+      "surface_mediane": 53.0,
+      "budget": 350000,
+      "m2_achetables": 141.7
+    },
+    {
+      "ville_principale": "Angers",
+      "type_local": "Appartement",
+      "prix_m2_median": 3122.0,
+      "surface_mediane": 57.0,
+      "budget": 150000,
+      "m2_achetables": 48.0
+    },
+    {
+      "ville_principale": "Angers",
+      "type_local": "Appartement",
+      "prix_m2_median": 3122.0,
+      "surface_mediane": 57.0,
+      "budget": 250000,
+      "m2_achetables": 80.1
+    },
+    {
+      "ville_principale": "Angers",
+      "type_local": "Appartement",
+      "prix_m2_median": 3122.0,
+      "surface_mediane": 57.0,
+      "budget": 350000,
+      "m2_achetables": 112.1
+    },
+    {
+      "ville_principale": "Annecy",
+      "type_local": "Appartement",
+      "prix_m2_median": 5119.2,
+      "surface_mediane": 63.5,
+      "budget": 150000,
+      "m2_achetables": 29.3
+    },
+    {
+      "ville_principale": "Annecy",
+      "type_local": "Appartement",
+      "prix_m2_median": 5119.2,
+      "surface_mediane": 63.5,
+      "budget": 250000,
+      "m2_achetables": 48.8
+    },
+    {
+      "ville_principale": "Annecy",
+      "type_local": "Appartement",
+      "prix_m2_median": 5119.2,
+      "surface_mediane": 63.5,
+      "budget": 350000,
+      "m2_achetables": 68.4
+    },
+    {
+      "ville_principale": "Argenteuil",
+      "type_local": "Appartement",
+      "prix_m2_median": 3085.8,
+      "surface_mediane": 56.0,
+      "budget": 150000,
+      "m2_achetables": 48.6
+    },
+    {
+      "ville_principale": "Argenteuil",
+      "type_local": "Appartement",
+      "prix_m2_median": 3085.8,
+      "surface_mediane": 56.0,
+      "budget": 250000,
+      "m2_achetables": 81.0
+    },
+    {
+      "ville_principale": "Argenteuil",
+      "type_local": "Appartement",
+      "prix_m2_median": 3085.8,
+      "surface_mediane": 56.0,
+      "budget": 350000,
+      "m2_achetables": 113.4
+    },
     {
       "ville_principale": "Bordeaux",
       "type_local": "Appartement",
@@ -389,52 +839,196 @@
       "m2_achetables": 84.8
     },
     {
-      "ville_principale": "Béziers",
+      "ville_principale": "Boulogne-Billancourt",
       "type_local": "Appartement",
-      "prix_m2_median": 1701.1,
+      "prix_m2_median": 8276.3,
+      "surface_mediane": 53.0,
+      "budget": 150000,
+      "m2_achetables": 18.1
+    },
+    {
+      "ville_principale": "Boulogne-Billancourt",
+      "type_local": "Appartement",
+      "prix_m2_median": 8276.3,
+      "surface_mediane": 53.0,
+      "budget": 250000,
+      "m2_achetables": 30.2
+    },
+    {
+      "ville_principale": "Boulogne-Billancourt",
+      "type_local": "Appartement",
+      "prix_m2_median": 8276.3,
+      "surface_mediane": 53.0,
+      "budget": 350000,
+      "m2_achetables": 42.3
+    },
+    {
+      "ville_principale": "Brest",
+      "type_local": "Appartement",
+      "prix_m2_median": 2159.1,
+      "surface_mediane": 62.0,
+      "budget": 150000,
+      "m2_achetables": 69.5
+    },
+    {
+      "ville_principale": "Brest",
+      "type_local": "Appartement",
+      "prix_m2_median": 2159.1,
+      "surface_mediane": 62.0,
+      "budget": 250000,
+      "m2_achetables": 115.8
+    },
+    {
+      "ville_principale": "Brest",
+      "type_local": "Appartement",
+      "prix_m2_median": 2159.1,
+      "surface_mediane": 62.0,
+      "budget": 350000,
+      "m2_achetables": 162.1
+    },
+    {
+      "ville_principale": "Clermont-Ferrand",
+      "type_local": "Appartement",
+      "prix_m2_median": 2112.5,
+      "surface_mediane": 59.0,
+      "budget": 150000,
+      "m2_achetables": 71.0
+    },
+    {
+      "ville_principale": "Clermont-Ferrand",
+      "type_local": "Appartement",
+      "prix_m2_median": 2112.5,
+      "surface_mediane": 59.0,
+      "budget": 250000,
+      "m2_achetables": 118.3
+    },
+    {
+      "ville_principale": "Clermont-Ferrand",
+      "type_local": "Appartement",
+      "prix_m2_median": 2112.5,
+      "surface_mediane": 59.0,
+      "budget": 350000,
+      "m2_achetables": 165.7
+    },
+    {
+      "ville_principale": "Grenoble",
+      "type_local": "Appartement",
+      "prix_m2_median": 2500.0,
+      "surface_mediane": 60.0,
+      "budget": 150000,
+      "m2_achetables": 60.0
+    },
+    {
+      "ville_principale": "Grenoble",
+      "type_local": "Appartement",
+      "prix_m2_median": 2500.0,
+      "surface_mediane": 60.0,
+      "budget": 250000,
+      "m2_achetables": 100.0
+    },
+    {
+      "ville_principale": "Grenoble",
+      "type_local": "Appartement",
+      "prix_m2_median": 2500.0,
+      "surface_mediane": 60.0,
+      "budget": 350000,
+      "m2_achetables": 140.0
+    },
+    {
+      "ville_principale": "Le Havre",
+      "type_local": "Appartement",
+      "prix_m2_median": 2196.3,
+      "surface_mediane": 60.0,
+      "budget": 150000,
+      "m2_achetables": 68.3
+    },
+    {
+      "ville_principale": "Le Havre",
+      "type_local": "Appartement",
+      "prix_m2_median": 2196.3,
+      "surface_mediane": 60.0,
+      "budget": 250000,
+      "m2_achetables": 113.8
+    },
+    {
+      "ville_principale": "Le Havre",
+      "type_local": "Appartement",
+      "prix_m2_median": 2196.3,
+      "surface_mediane": 60.0,
+      "budget": 350000,
+      "m2_achetables": 159.4
+    },
+    {
+      "ville_principale": "Le Mans",
+      "type_local": "Appartement",
+      "prix_m2_median": 1926.0,
       "surface_mediane": 56.0,
       "budget": 150000,
-      "m2_achetables": 88.2
+      "m2_achetables": 77.9
     },
     {
-      "ville_principale": "Béziers",
+      "ville_principale": "Le Mans",
       "type_local": "Appartement",
-      "prix_m2_median": 1701.1,
+      "prix_m2_median": 1926.0,
       "surface_mediane": 56.0,
       "budget": 250000,
-      "m2_achetables": 147.0
+      "m2_achetables": 129.8
     },
     {
-      "ville_principale": "Béziers",
+      "ville_principale": "Le Mans",
       "type_local": "Appartement",
-      "prix_m2_median": 1701.1,
+      "prix_m2_median": 1926.0,
       "surface_mediane": 56.0,
       "budget": 350000,
-      "m2_achetables": 205.8
+      "m2_achetables": 181.7
     },
     {
-      "ville_principale": "Colomiers",
+      "ville_principale": "Lille",
       "type_local": "Appartement",
-      "prix_m2_median": 2681.7,
-      "surface_mediane": 63.0,
+      "prix_m2_median": 3689.7,
+      "surface_mediane": 49.0,
       "budget": 150000,
-      "m2_achetables": 55.9
+      "m2_achetables": 40.7
     },
     {
-      "ville_principale": "Colomiers",
+      "ville_principale": "Lille",
       "type_local": "Appartement",
-      "prix_m2_median": 2681.7,
-      "surface_mediane": 63.0,
+      "prix_m2_median": 3689.7,
+      "surface_mediane": 49.0,
       "budget": 250000,
-      "m2_achetables": 93.2
+      "m2_achetables": 67.8
     },
     {
-      "ville_principale": "Colomiers",
+      "ville_principale": "Lille",
       "type_local": "Appartement",
-      "prix_m2_median": 2681.7,
-      "surface_mediane": 63.0,
+      "prix_m2_median": 3689.7,
+      "surface_mediane": 49.0,
       "budget": 350000,
-      "m2_achetables": 130.5
+      "m2_achetables": 94.9
+    },
+    {
+      "ville_principale": "Limoges",
+      "type_local": "Appartement",
+      "prix_m2_median": 1509.7,
+      "surface_mediane": 56.0,
+      "budget": 150000,
+      "m2_achetables": 99.4
+    },
+    {
+      "ville_principale": "Limoges",
+      "type_local": "Appartement",
+      "prix_m2_median": 1509.7,
+      "surface_mediane": 56.0,
+      "budget": 250000,
+      "m2_achetables": 165.6
+    },
+    {
+      "ville_principale": "Limoges",
+      "type_local": "Appartement",
+      "prix_m2_median": 1509.7,
+      "surface_mediane": 56.0,
+      "budget": 350000,
+      "m2_achetables": 231.8
     },
     {
       "ville_principale": "Lyon",
@@ -461,6 +1055,30 @@
       "m2_achetables": 78.6
     },
     {
+      "ville_principale": "Marseille",
+      "type_local": "Appartement",
+      "prix_m2_median": 3200.0,
+      "surface_mediane": 60.0,
+      "budget": 150000,
+      "m2_achetables": 46.9
+    },
+    {
+      "ville_principale": "Marseille",
+      "type_local": "Appartement",
+      "prix_m2_median": 3200.0,
+      "surface_mediane": 60.0,
+      "budget": 250000,
+      "m2_achetables": 78.1
+    },
+    {
+      "ville_principale": "Marseille",
+      "type_local": "Appartement",
+      "prix_m2_median": 3200.0,
+      "surface_mediane": 60.0,
+      "budget": 350000,
+      "m2_achetables": 109.4
+    },
+    {
       "ville_principale": "Montpellier",
       "type_local": "Appartement",
       "prix_m2_median": 3396.2,
@@ -485,28 +1103,28 @@
       "m2_achetables": 103.1
     },
     {
-      "ville_principale": "Mérignac",
+      "ville_principale": "Montreuil",
       "type_local": "Appartement",
-      "prix_m2_median": 3467.5,
-      "surface_mediane": 61.0,
+      "prix_m2_median": 6000.0,
+      "surface_mediane": 50.0,
       "budget": 150000,
-      "m2_achetables": 43.3
+      "m2_achetables": 25.0
     },
     {
-      "ville_principale": "Mérignac",
+      "ville_principale": "Montreuil",
       "type_local": "Appartement",
-      "prix_m2_median": 3467.5,
-      "surface_mediane": 61.0,
+      "prix_m2_median": 6000.0,
+      "surface_mediane": 50.0,
       "budget": 250000,
-      "m2_achetables": 72.1
+      "m2_achetables": 41.7
     },
     {
-      "ville_principale": "Mérignac",
+      "ville_principale": "Montreuil",
       "type_local": "Appartement",
-      "prix_m2_median": 3467.5,
-      "surface_mediane": 61.0,
+      "prix_m2_median": 6000.0,
+      "surface_mediane": 50.0,
       "budget": 350000,
-      "m2_achetables": 100.9
+      "m2_achetables": 58.3
     },
     {
       "ville_principale": "Nantes",
@@ -533,100 +1151,220 @@
       "m2_achetables": 103.1
     },
     {
-      "ville_principale": "Pessac",
+      "ville_principale": "Nice",
       "type_local": "Appartement",
-      "prix_m2_median": 3486.3,
+      "prix_m2_median": 4848.5,
+      "surface_mediane": 53.0,
+      "budget": 150000,
+      "m2_achetables": 30.9
+    },
+    {
+      "ville_principale": "Nice",
+      "type_local": "Appartement",
+      "prix_m2_median": 4848.5,
+      "surface_mediane": 53.0,
+      "budget": 250000,
+      "m2_achetables": 51.6
+    },
+    {
+      "ville_principale": "Nice",
+      "type_local": "Appartement",
+      "prix_m2_median": 4848.5,
+      "surface_mediane": 53.0,
+      "budget": 350000,
+      "m2_achetables": 72.2
+    },
+    {
+      "ville_principale": "Nîmes",
+      "type_local": "Appartement",
+      "prix_m2_median": 2181.8,
+      "surface_mediane": 57.0,
+      "budget": 150000,
+      "m2_achetables": 68.8
+    },
+    {
+      "ville_principale": "Nîmes",
+      "type_local": "Appartement",
+      "prix_m2_median": 2181.8,
+      "surface_mediane": 57.0,
+      "budget": 250000,
+      "m2_achetables": 114.6
+    },
+    {
+      "ville_principale": "Nîmes",
+      "type_local": "Appartement",
+      "prix_m2_median": 2181.8,
+      "surface_mediane": 57.0,
+      "budget": 350000,
+      "m2_achetables": 160.4
+    },
+    {
+      "ville_principale": "Paris",
+      "type_local": "Appartement",
+      "prix_m2_median": 9705.9,
+      "surface_mediane": 42.0,
+      "budget": 150000,
+      "m2_achetables": 15.5
+    },
+    {
+      "ville_principale": "Paris",
+      "type_local": "Appartement",
+      "prix_m2_median": 9705.9,
+      "surface_mediane": 42.0,
+      "budget": 250000,
+      "m2_achetables": 25.8
+    },
+    {
+      "ville_principale": "Paris",
+      "type_local": "Appartement",
+      "prix_m2_median": 9705.9,
+      "surface_mediane": 42.0,
+      "budget": 350000,
+      "m2_achetables": 36.1
+    },
+    {
+      "ville_principale": "Perpignan",
+      "type_local": "Appartement",
+      "prix_m2_median": 1514.4,
+      "surface_mediane": 62.0,
+      "budget": 150000,
+      "m2_achetables": 99.0
+    },
+    {
+      "ville_principale": "Perpignan",
+      "type_local": "Appartement",
+      "prix_m2_median": 1514.4,
+      "surface_mediane": 62.0,
+      "budget": 250000,
+      "m2_achetables": 165.1
+    },
+    {
+      "ville_principale": "Perpignan",
+      "type_local": "Appartement",
+      "prix_m2_median": 1514.4,
+      "surface_mediane": 62.0,
+      "budget": 350000,
+      "m2_achetables": 231.1
+    },
+    {
+      "ville_principale": "Reims",
+      "type_local": "Appartement",
+      "prix_m2_median": 2632.0,
+      "surface_mediane": 57.0,
+      "budget": 150000,
+      "m2_achetables": 57.0
+    },
+    {
+      "ville_principale": "Reims",
+      "type_local": "Appartement",
+      "prix_m2_median": 2632.0,
+      "surface_mediane": 57.0,
+      "budget": 250000,
+      "m2_achetables": 95.0
+    },
+    {
+      "ville_principale": "Reims",
+      "type_local": "Appartement",
+      "prix_m2_median": 2632.0,
+      "surface_mediane": 57.0,
+      "budget": 350000,
+      "m2_achetables": 133.0
+    },
+    {
+      "ville_principale": "Rennes",
+      "type_local": "Appartement",
+      "prix_m2_median": 3703.7,
+      "surface_mediane": 59.0,
+      "budget": 150000,
+      "m2_achetables": 40.5
+    },
+    {
+      "ville_principale": "Rennes",
+      "type_local": "Appartement",
+      "prix_m2_median": 3703.7,
+      "surface_mediane": 59.0,
+      "budget": 250000,
+      "m2_achetables": 67.5
+    },
+    {
+      "ville_principale": "Rennes",
+      "type_local": "Appartement",
+      "prix_m2_median": 3703.7,
+      "surface_mediane": 59.0,
+      "budget": 350000,
+      "m2_achetables": 94.5
+    },
+    {
+      "ville_principale": "Saint-Denis",
+      "type_local": "Appartement",
+      "prix_m2_median": 3924.2,
+      "surface_mediane": 51.0,
+      "budget": 150000,
+      "m2_achetables": 38.2
+    },
+    {
+      "ville_principale": "Saint-Denis",
+      "type_local": "Appartement",
+      "prix_m2_median": 3924.2,
+      "surface_mediane": 51.0,
+      "budget": 250000,
+      "m2_achetables": 63.7
+    },
+    {
+      "ville_principale": "Saint-Denis",
+      "type_local": "Appartement",
+      "prix_m2_median": 3924.2,
+      "surface_mediane": 51.0,
+      "budget": 350000,
+      "m2_achetables": 89.2
+    },
+    {
+      "ville_principale": "Saint-Étienne",
+      "type_local": "Appartement",
+      "prix_m2_median": 1197.6,
+      "surface_mediane": 63.0,
+      "budget": 150000,
+      "m2_achetables": 125.2
+    },
+    {
+      "ville_principale": "Saint-Étienne",
+      "type_local": "Appartement",
+      "prix_m2_median": 1197.6,
+      "surface_mediane": 63.0,
+      "budget": 250000,
+      "m2_achetables": 208.7
+    },
+    {
+      "ville_principale": "Saint-Étienne",
+      "type_local": "Appartement",
+      "prix_m2_median": 1197.6,
+      "surface_mediane": 63.0,
+      "budget": 350000,
+      "m2_achetables": 292.2
+    },
+    {
+      "ville_principale": "Toulon",
+      "type_local": "Appartement",
+      "prix_m2_median": 2720.0,
       "surface_mediane": 58.0,
       "budget": 150000,
-      "m2_achetables": 43.0
+      "m2_achetables": 55.1
     },
     {
-      "ville_principale": "Pessac",
+      "ville_principale": "Toulon",
       "type_local": "Appartement",
-      "prix_m2_median": 3486.3,
+      "prix_m2_median": 2720.0,
       "surface_mediane": 58.0,
       "budget": 250000,
-      "m2_achetables": 71.7
+      "m2_achetables": 91.9
     },
     {
-      "ville_principale": "Pessac",
+      "ville_principale": "Toulon",
       "type_local": "Appartement",
-      "prix_m2_median": 3486.3,
+      "prix_m2_median": 2720.0,
       "surface_mediane": 58.0,
       "budget": 350000,
-      "m2_achetables": 100.4
-    },
-    {
-      "ville_principale": "Saint-Herblain",
-      "type_local": "Appartement",
-      "prix_m2_median": 2582.1,
-      "surface_mediane": 65.0,
-      "budget": 150000,
-      "m2_achetables": 58.1
-    },
-    {
-      "ville_principale": "Saint-Herblain",
-      "type_local": "Appartement",
-      "prix_m2_median": 2582.1,
-      "surface_mediane": 65.0,
-      "budget": 250000,
-      "m2_achetables": 96.8
-    },
-    {
-      "ville_principale": "Saint-Herblain",
-      "type_local": "Appartement",
-      "prix_m2_median": 2582.1,
-      "surface_mediane": 65.0,
-      "budget": 350000,
-      "m2_achetables": 135.5
-    },
-    {
-      "ville_principale": "Saint-Nazaire",
-      "type_local": "Appartement",
-      "prix_m2_median": 2844.1,
-      "surface_mediane": 54.0,
-      "budget": 150000,
-      "m2_achetables": 52.7
-    },
-    {
-      "ville_principale": "Saint-Nazaire",
-      "type_local": "Appartement",
-      "prix_m2_median": 2844.1,
-      "surface_mediane": 54.0,
-      "budget": 250000,
-      "m2_achetables": 87.9
-    },
-    {
-      "ville_principale": "Saint-Nazaire",
-      "type_local": "Appartement",
-      "prix_m2_median": 2844.1,
-      "surface_mediane": 54.0,
-      "budget": 350000,
-      "m2_achetables": 123.1
-    },
-    {
-      "ville_principale": "Sète",
-      "type_local": "Appartement",
-      "prix_m2_median": 3465.3,
-      "surface_mediane": 48.0,
-      "budget": 150000,
-      "m2_achetables": 43.3
-    },
-    {
-      "ville_principale": "Sète",
-      "type_local": "Appartement",
-      "prix_m2_median": 3465.3,
-      "surface_mediane": 48.0,
-      "budget": 250000,
-      "m2_achetables": 72.1
-    },
-    {
-      "ville_principale": "Sète",
-      "type_local": "Appartement",
-      "prix_m2_median": 3465.3,
-      "surface_mediane": 48.0,
-      "budget": 350000,
-      "m2_achetables": 101.0
+      "m2_achetables": 128.7
     },
     {
       "ville_principale": "Toulouse",
@@ -653,30 +1391,6 @@
       "m2_achetables": 108.1
     },
     {
-      "ville_principale": "Tournefeuille",
-      "type_local": "Appartement",
-      "prix_m2_median": 2953.5,
-      "surface_mediane": 57.0,
-      "budget": 150000,
-      "m2_achetables": 50.8
-    },
-    {
-      "ville_principale": "Tournefeuille",
-      "type_local": "Appartement",
-      "prix_m2_median": 2953.5,
-      "surface_mediane": 57.0,
-      "budget": 250000,
-      "m2_achetables": 84.6
-    },
-    {
-      "ville_principale": "Tournefeuille",
-      "type_local": "Appartement",
-      "prix_m2_median": 2953.5,
-      "surface_mediane": 57.0,
-      "budget": 350000,
-      "m2_achetables": 118.5
-    },
-    {
       "ville_principale": "Villeurbanne",
       "type_local": "Appartement",
       "prix_m2_median": 3567.9,
@@ -699,56 +1413,80 @@
       "surface_mediane": 62.0,
       "budget": 350000,
       "m2_achetables": 98.1
-    },
-    {
-      "ville_principale": "Vénissieux",
-      "type_local": "Appartement",
-      "prix_m2_median": 2542.5,
-      "surface_mediane": 65.0,
-      "budget": 150000,
-      "m2_achetables": 59.0
-    },
-    {
-      "ville_principale": "Vénissieux",
-      "type_local": "Appartement",
-      "prix_m2_median": 2542.5,
-      "surface_mediane": 65.0,
-      "budget": 250000,
-      "m2_achetables": 98.3
-    },
-    {
-      "ville_principale": "Vénissieux",
-      "type_local": "Appartement",
-      "prix_m2_median": 2542.5,
-      "surface_mediane": 65.0,
-      "budget": 350000,
-      "m2_achetables": 137.7
     }
   ],
   "annees_de_revenu": [
     {
-      "ville_principale": "Béziers",
-      "prix_median": 117700.0,
-      "revenu_menage_median": 24561.0,
+      "ville_principale": "Saint-Étienne",
+      "prix_median": 73000.0,
+      "revenu_menage_median": 27542.0,
+      "annees_de_revenu": 2.7
+    },
+    {
+      "ville_principale": "Limoges",
+      "prix_median": 90000.0,
+      "revenu_menage_median": 28026.0,
+      "annees_de_revenu": 3.2
+    },
+    {
+      "ville_principale": "Le Mans",
+      "prix_median": 125000.0,
+      "revenu_menage_median": 30365.0,
+      "annees_de_revenu": 4.1
+    },
+    {
+      "ville_principale": "Clermont-Ferrand",
+      "prix_median": 120000.0,
+      "revenu_menage_median": 28230.0,
+      "annees_de_revenu": 4.3
+    },
+    {
+      "ville_principale": "Perpignan",
+      "prix_median": 105000.0,
+      "revenu_menage_median": 24633.0,
+      "annees_de_revenu": 4.3
+    },
+    {
+      "ville_principale": "Grenoble",
+      "prix_median": 133000.0,
+      "revenu_menage_median": 30907.0,
+      "annees_de_revenu": 4.3
+    },
+    {
+      "ville_principale": "Brest",
+      "prix_median": 139000.0,
+      "revenu_menage_median": 29647.0,
+      "annees_de_revenu": 4.7
+    },
+    {
+      "ville_principale": "Le Havre",
+      "prix_median": 139000.0,
+      "revenu_menage_median": 29412.0,
+      "annees_de_revenu": 4.7
+    },
+    {
+      "ville_principale": "Nîmes",
+      "prix_median": 132000.0,
+      "revenu_menage_median": 27423.0,
       "annees_de_revenu": 4.8
     },
     {
-      "ville_principale": "Colomiers",
-      "prix_median": 184000.0,
-      "revenu_menage_median": 36144.0,
+      "ville_principale": "Amiens",
+      "prix_median": 140000.0,
+      "revenu_menage_median": 28156.0,
+      "annees_de_revenu": 5.0
+    },
+    {
+      "ville_principale": "Reims",
+      "prix_median": 148000.0,
+      "revenu_menage_median": 28827.0,
       "annees_de_revenu": 5.1
     },
     {
-      "ville_principale": "Saint-Herblain",
-      "prix_median": 185000.0,
-      "revenu_menage_median": 34378.0,
-      "annees_de_revenu": 5.4
-    },
-    {
-      "ville_principale": "Tournefeuille",
-      "prix_median": 251950.0,
-      "revenu_menage_median": 45609.0,
-      "annees_de_revenu": 5.5
+      "ville_principale": "Toulon",
+      "prix_median": 160000.0,
+      "revenu_menage_median": 30045.0,
+      "annees_de_revenu": 5.3
     },
     {
       "ville_principale": "Nantes",
@@ -763,10 +1501,16 @@
       "annees_de_revenu": 5.6
     },
     {
-      "ville_principale": "Vénissieux",
-      "prix_median": 167000.0,
-      "revenu_menage_median": 27974.0,
-      "annees_de_revenu": 6.0
+      "ville_principale": "Angers",
+      "prix_median": 177000.0,
+      "revenu_menage_median": 30365.0,
+      "annees_de_revenu": 5.8
+    },
+    {
+      "ville_principale": "Argenteuil",
+      "prix_median": 197717.5,
+      "revenu_menage_median": 33563.0,
+      "annees_de_revenu": 5.9
     },
     {
       "ville_principale": "Montpellier",
@@ -775,22 +1519,22 @@
       "annees_de_revenu": 6.0
     },
     {
-      "ville_principale": "Mérignac",
-      "prix_median": 217000.0,
-      "revenu_menage_median": 36294.0,
+      "ville_principale": "Marseille",
+      "prix_median": 185000.0,
+      "revenu_menage_median": 30695.0,
       "annees_de_revenu": 6.0
     },
     {
-      "ville_principale": "Saint-Nazaire",
-      "prix_median": 190000.0,
-      "revenu_menage_median": 31398.0,
-      "annees_de_revenu": 6.1
+      "ville_principale": "Lille",
+      "prix_median": 180000.0,
+      "revenu_menage_median": 28844.0,
+      "annees_de_revenu": 6.2
     },
     {
-      "ville_principale": "Sète",
-      "prix_median": 167000.0,
-      "revenu_menage_median": 27528.0,
-      "annees_de_revenu": 6.1
+      "ville_principale": "Rennes",
+      "prix_median": 200000.0,
+      "revenu_menage_median": 31938.0,
+      "annees_de_revenu": 6.3
     },
     {
       "ville_principale": "Villeurbanne",
@@ -805,153 +1549,144 @@
       "annees_de_revenu": 6.8
     },
     {
-      "ville_principale": "Pessac",
-      "prix_median": 275000.0,
-      "revenu_menage_median": 40168.0,
-      "annees_de_revenu": 6.8
+      "ville_principale": "Saint-Denis",
+      "prix_median": 195000.0,
+      "revenu_menage_median": 28247.0,
+      "annees_de_revenu": 6.9
     },
     {
       "ville_principale": "Bordeaux",
       "prix_median": 240000.0,
       "revenu_menage_median": 34579.0,
       "annees_de_revenu": 6.9
+    },
+    {
+      "ville_principale": "Aix-en-Provence",
+      "prix_median": 269450.0,
+      "revenu_menage_median": 37297.0,
+      "annees_de_revenu": 7.2
+    },
+    {
+      "ville_principale": "Nice",
+      "prix_median": 234000.0,
+      "revenu_menage_median": 30968.0,
+      "annees_de_revenu": 7.6
+    },
+    {
+      "ville_principale": "Annecy",
+      "prix_median": 300000.0,
+      "revenu_menage_median": 38423.0,
+      "annees_de_revenu": 7.8
+    },
+    {
+      "ville_principale": "Boulogne-Billancourt",
+      "prix_median": 420000.0,
+      "revenu_menage_median": 51556.0,
+      "annees_de_revenu": 8.1
+    },
+    {
+      "ville_principale": "Montreuil",
+      "prix_median": 305000.0,
+      "revenu_menage_median": 33389.0,
+      "annees_de_revenu": 9.1
+    },
+    {
+      "ville_principale": "Paris",
+      "prix_median": 398000.0,
+      "revenu_menage_median": 42228.0,
+      "annees_de_revenu": 9.4
     }
   ],
-  "prix_departement_derniere_annee": [
+  "regions": [
     {
-      "code_departement": "31",
-      "type_local": "Appartement",
-      "annee": 2025,
-      "nb_ventes": 10192,
-      "prix_m2_median": 2952.0,
-      "prix_median": 148870.0,
-      "surface_mediane": 55.0
+      "region": "Île-de-France",
+      "prix_m2_2021": 4521,
+      "prix_m2_2025": 4615,
+      "ventes_2025": 125120,
+      "evol_prix_total_pct": 2.1,
+      "evol_volume_hausse_taux_pct": -25.4,
+      "evol_prix_hausse_taux_pct": 6.5
     },
     {
-      "code_departement": "31",
-      "type_local": "Ensemble",
-      "annee": 2025,
-      "nb_ventes": 18939,
-      "prix_m2_median": 2837.0,
-      "prix_median": 195000.0,
-      "surface_mediane": 72.0
+      "region": "Provence-Alpes-Côte d'Azur",
+      "prix_m2_2021": 3484,
+      "prix_m2_2025": 3857,
+      "ventes_2025": 82657,
+      "evol_prix_total_pct": 10.7,
+      "evol_volume_hausse_taux_pct": -21.6,
+      "evol_prix_hausse_taux_pct": 10.9
     },
     {
-      "code_departement": "31",
-      "type_local": "Maison",
-      "annee": 2025,
-      "nb_ventes": 8747,
-      "prix_m2_median": 2695.0,
-      "prix_median": 265000.0,
-      "surface_mediane": 100.0
+      "region": "Auvergne-Rhône-Alpes",
+      "prix_m2_2021": 2524,
+      "prix_m2_2025": 2688,
+      "ventes_2025": 99682,
+      "evol_prix_total_pct": 6.5,
+      "evol_volume_hausse_taux_pct": -23.8,
+      "evol_prix_hausse_taux_pct": 7.3
     },
     {
-      "code_departement": "33",
-      "type_local": "Appartement",
-      "annee": 2025,
-      "nb_ventes": 8876,
-      "prix_m2_median": 3637.0,
-      "prix_median": 179000.0,
-      "surface_mediane": 52.0
+      "region": "Bretagne",
+      "prix_m2_2021": 2081,
+      "prix_m2_2025": 2439,
+      "ventes_2025": 45056,
+      "evol_prix_total_pct": 17.2,
+      "evol_volume_hausse_taux_pct": -26.8,
+      "evol_prix_hausse_taux_pct": 15.5
     },
     {
-      "code_departement": "33",
-      "type_local": "Ensemble",
-      "annee": 2025,
-      "nb_ventes": 21851,
-      "prix_m2_median": 3382.0,
-      "prix_median": 235000.0,
-      "surface_mediane": 79.0
+      "region": "Occitanie",
+      "prix_m2_2021": 2229,
+      "prix_m2_2025": 2435,
+      "ventes_2025": 87470,
+      "evol_prix_total_pct": 9.2,
+      "evol_volume_hausse_taux_pct": -22.5,
+      "evol_prix_hausse_taux_pct": 8.5
     },
     {
-      "code_departement": "33",
-      "type_local": "Maison",
-      "annee": 2025,
-      "nb_ventes": 12975,
-      "prix_m2_median": 3124.0,
-      "prix_median": 293000.0,
-      "surface_mediane": 96.0
+      "region": "Pays de la Loire",
+      "prix_m2_2021": 2264,
+      "prix_m2_2025": 2400,
+      "ventes_2025": 51479,
+      "evol_prix_total_pct": 6.0,
+      "evol_volume_hausse_taux_pct": -26.9,
+      "evol_prix_hausse_taux_pct": 9.2
     },
     {
-      "code_departement": "34",
-      "type_local": "Appartement",
-      "annee": 2025,
-      "nb_ventes": 11267,
-      "prix_m2_median": 3420.0,
-      "prix_median": 140500.0,
-      "surface_mediane": 45.0
+      "region": "Nouvelle-Aquitaine",
+      "prix_m2_2021": 2003,
+      "prix_m2_2025": 2167,
+      "ventes_2025": 84215,
+      "evol_prix_total_pct": 8.2,
+      "evol_volume_hausse_taux_pct": -26.3,
+      "evol_prix_hausse_taux_pct": 7.9
     },
     {
-      "code_departement": "34",
-      "type_local": "Ensemble",
-      "annee": 2025,
-      "nb_ventes": 19970,
-      "prix_m2_median": 3244.0,
-      "prix_median": 178705.0,
-      "surface_mediane": 65.0
+      "region": "Normandie",
+      "prix_m2_2021": 1950,
+      "prix_m2_2025": 2100,
+      "ventes_2025": 43582,
+      "evol_prix_total_pct": 7.7,
+      "evol_volume_hausse_taux_pct": -24.9,
+      "evol_prix_hausse_taux_pct": 8.9
     },
     {
-      "code_departement": "34",
-      "type_local": "Maison",
-      "annee": 2025,
-      "nb_ventes": 8703,
-      "prix_m2_median": 3000.0,
-      "prix_median": 266750.0,
-      "surface_mediane": 91.0
+      "region": "Hauts-de-France",
+      "prix_m2_2021": 1833,
+      "prix_m2_2025": 1902,
+      "ventes_2025": 65858,
+      "evol_prix_total_pct": 3.8,
+      "evol_volume_hausse_taux_pct": -27.0,
+      "evol_prix_hausse_taux_pct": 4.9
     },
     {
-      "code_departement": "44",
-      "type_local": "Appartement",
-      "annee": 2025,
-      "nb_ventes": 7717,
-      "prix_m2_median": 3309.0,
-      "prix_median": 165000.0,
-      "surface_mediane": 54.0
-    },
-    {
-      "code_departement": "44",
-      "type_local": "Ensemble",
-      "annee": 2025,
-      "nb_ventes": 19599,
-      "prix_m2_median": 3052.0,
-      "prix_median": 221000.0,
-      "surface_mediane": 78.0
-    },
-    {
-      "code_departement": "44",
-      "type_local": "Maison",
-      "annee": 2025,
-      "nb_ventes": 11882,
-      "prix_m2_median": 2868.0,
-      "prix_median": 265000.0,
-      "surface_mediane": 94.0
-    },
-    {
-      "code_departement": "69",
-      "type_local": "Appartement",
-      "annee": 2025,
-      "nb_ventes": 15166,
-      "prix_m2_median": 3739.0,
-      "prix_median": 210000.0,
-      "surface_mediane": 64.0
-    },
-    {
-      "code_departement": "69",
-      "type_local": "Ensemble",
-      "annee": 2025,
-      "nb_ventes": 20901,
-      "prix_m2_median": 3699.0,
-      "prix_median": 240000.0,
-      "surface_mediane": 72.0
-    },
-    {
-      "code_departement": "69",
-      "type_local": "Maison",
-      "annee": 2025,
-      "nb_ventes": 5735,
-      "prix_m2_median": 3583.0,
-      "prix_median": 360000.0,
-      "surface_mediane": 102.0
+      "region": "Grand Est",
+      "prix_m2_2021": 1500,
+      "prix_m2_2025": 1615,
+      "ventes_2025": 29157,
+      "evol_prix_total_pct": 7.6,
+      "evol_volume_hausse_taux_pct": -22.0,
+      "evol_prix_hausse_taux_pct": 7.0
     }
   ]
 }

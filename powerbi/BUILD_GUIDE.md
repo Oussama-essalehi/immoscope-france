@@ -29,7 +29,9 @@ Les fichiers ont été vérifiés hors de Power BI Desktop : schémas JSON publi
 3. **Visuel Azure Maps** autorisé : *Options > Sécurité > Visuels de carte et de carte remplie*
    (cocher l'utilisation des visuels de carte). Dans un compte d'organisation, l'administrateur
    doit aussi autoriser Azure Maps dans le portail d'administration.
-4. Les fichiers CSV de `data/gold/` présents (ils sont versionnés ; sinon `python run.py all`).
+4. Les fichiers CSV de `data/gold/` présents. Ils ne sont **pas versionnés** (`fact_ventes.csv`
+   pèse environ 290 Mo, au-delà de la limite de GitHub) : les générer avec `python run.py all`
+   (Docker requis pour PostgreSQL, compter 20 à 30 minutes dont le téléchargement).
 
 ## 2. Ouvrir le projet et définir `DataFolder`
 
@@ -55,11 +57,11 @@ En cas d'erreur « Formula.Firewall » : *Fichier > Options > Confidentialité* 
 
 | Table | Lignes | Rôle |
 |---|---|---|
-| `fact_ventes` | 534 309 | une vente d'un seul logement |
+| `fact_ventes` | 3 831 945 | une vente d'un seul logement |
 | `dim_date` | 1 826 | calendrier 2021-2025, **marquée comme table de dates** (colonne `date`) |
-| `dim_commune` | 1 939 | communes (arrondissements de Lyon inclus), ville principale, revenus INSEE |
+| `dim_commune` | 27 329 | communes (arrondissements de Paris, Lyon et Marseille inclus), département, région, ville principale, revenus INSEE |
 | `dim_type_local` | 2 | Appartement / Maison |
-| `dim_profil_bien` | 238 | tranches de prix, de surface et de pièces (triées par colonnes `*_ordre`) |
+| `dim_profil_bien` | 277 | tranches de prix, de surface et de pièces (triées par colonnes `*_ordre`) |
 | `Paramètre Budget` | 41 | paramètre de simulation (100 000 € à 500 000 €, pas de 10 000 €) |
 | `_Mesures` | – | toutes les mesures DAX, rangées par dossier d'affichage |
 
@@ -146,25 +148,26 @@ Après l'actualisation, sans aucun filtre sauf mention contraire :
 
 | Où | Attendu |
 |---|---|
-| Page 1, carte « Nombre de ventes » (aucune sélection) | **534 309** |
-| Page 1, « Prix médian au m² » (aucune sélection) | **3 289 €** |
-| Page 1, segment Année = 2025 | 101 260 ventes ; 3 211 € ; évolution prix **−0,1 %** ; évolution volume **+18,2 %** |
+| Page 1, carte « Nombre de ventes » (aucune sélection) | **3 831 945** |
+| Page 1, « Prix médian au m² » (aucune sélection) | **2 653 €** |
+| Page 1, segment Année = 2025 | 714 276 ventes ; 2 691 € ; évolution prix **+2,6 %** ; évolution volume **+13,7 %** |
 | Page 1, aucune sélection | évolutions = 2025 vs 2024, donc mêmes valeurs que ci-dessus |
-| Page 3, Année = 2025 | Lyon 4 468 € (rang 1), Bordeaux 4 269 €, … Béziers 1 913 € (rang 15) |
-| Page 3, matrice (tous types) | Lyon : 2022 +0,7 %, 2023 −4,5 %, 2024 −7,1 %, 2025 −0,4 % ; colonne 2021 vide (pas de 2020) |
-| Page 4, budget 250 000 € (défaut) | Lyon 56 m², Bordeaux 59 m², Toulouse 76 m², Béziers 131 m² |
-| Page 4, carte « Prix médian au m² (villes suivies) » | 3 597 € |
-| Page 2, tableau des plus chères (toutes années) | Arcachon 7 500 €, Lège-Cap-Ferret 7 200 €, La Baule-Escoublac 5 830 € |
+| Page 3, Année = 2025 | Paris 9 714 € (rang 1), Boulogne-Billancourt 8 300 €, Montreuil 5 994 €, … Saint-Étienne 1 243 € (rang 30) |
+| Page 3, matrice (tous types) | Paris : 2022 −1,2 %, 2023 −5,3 %, 2024 −5,7 %, 2025 +1,3 % ; Lyon : +0,7 %, −4,5 %, −7,1 %, −0,4 % ; colonne 2021 vide (pas de 2020) |
+| Page 4, budget 250 000 € (défaut) | Paris 26 m², Lyon 56 m², Marseille 75 m², Saint-Étienne 201 m² |
+| Page 4, carte « Prix médian au m² (villes suivies) » | 3 956 € |
+| Page 2, tableau des plus chères (toutes années) | Paris 6e Arrondissement 14 444 €, Paris 7e 14 180 €, Paris 4e 12 917 € |
 
 Points à vérifier visuellement :
 
 1. **Thème** : fond de page gris très clair, visuels blancs à bordure fine, couleurs bleu /
    orange / vert d'eau. Sinon : *Affichage > Thèmes > Parcourir les thèmes* > `powerbi/theme.json`.
-2. **Carte (page 2)** : les bulles apparaissent sur les 5 départements. Si la carte reste vide,
+2. **Carte (page 2)** : les bulles couvrent les 77 départements ; choisir une région pour une
+   carte lisible (Azure Maps limite le nombre de points affichés). Si la carte reste vide,
    vérifier l'autorisation Azure Maps (§ 1) puis que `latitude` / `longitude` ont bien la
    catégorie *Latitude* / *Longitude* dans le modèle.
-3. **Segments synchronisés** : changer « Type de bien » sur la page 1 doit se répercuter sur les
-   pages 2, 3 et 4 (*Affichage > Synchroniser les segments* pour contrôler).
+3. **Segments synchronisés** : changer « Région » ou « Type de bien » sur la page 1 doit se
+   répercuter sur les pages 2, 3 et 4 (*Affichage > Synchroniser les segments* pour contrôler).
 4. **Page 3** : le segment Année ne filtre que le classement (interactions désactivées vers la
    matrice et les petits multiples — *Format > Modifier les interactions*).
 5. **Page 4** : le curseur Budget est un segment « valeur unique » ; le filtre de page
@@ -183,6 +186,7 @@ Segments communs (paramètres identiques sur chaque page où ils apparaissent) :
 
 | Segment | Champ | Style | Synchronisation (*Affichage > Synchroniser les segments*) |
 |---|---|---|---|
+| Région | `dim_commune[region]` | Liste déroulante | groupe `sync_region` (pages 1 à 4) |
 | Département | `dim_commune[departement]` | Liste déroulante | groupe `sync_departement` (pages 1, 2) |
 | Type de bien | `dim_type_local[type_local]` | Liste déroulante | groupe `sync_type` (pages 1 à 4) |
 | Année | `dim_date[annee]` | Liste déroulante | groupe `sync_annee` (pages 1 à 3) |
@@ -191,8 +195,8 @@ Segments communs (paramètres identiques sur chaque page où ils apparaissent) :
 
 | # | Visuel | Position | Champs | Mise en forme |
 |---|---|---|---|---|
-| 1 | Zone de texte | 24, 12, 1232, 56 | « Marché immobilier : Haute-Garonne, Gironde, Hérault, Loire-Atlantique, Rhône » + sous-titre « Ventes DVF d'un seul logement (maison ou appartement), 2021-2025 » | 20 pt semi-gras ; 11 pt gris |
-| 2-4 | Segments Département, Type de bien, Année | 24/340/596, 76, 300/240/240, 80 | voir tableau ci-dessus | |
+| 1 | Zone de texte | 24, 12, 1232, 56 | « Marché immobilier : les 10 régions les plus peuplées de France » + sous-titre « Ventes DVF d'un seul logement (maison ou appartement), 2021-2025, hors Alsace-Moselle (non couverte par DVF) » | 20 pt semi-gras ; 11 pt gris |
+| 2-5 | Segments Région, Département, Type de bien, Année | 24/320/636/892, 76, 280/300/240/200, 80 | voir tableau ci-dessus | |
 | 5 | **Carte** (nouvelle carte, plusieurs valeurs) | 24, 164, 1232, 108 | Valeurs : `Nb Ventes`, `Prix Médian m²`, `Évolution Prix m² %`, `Évolution Volume %` | Titre « Indicateurs clés (année la plus récente de la sélection pour les évolutions) » ; renommer les champs en « Nombre de ventes », « Prix médian au m² », « Évolution du prix au m² sur un an », « Évolution du volume sur un an » |
 | 6 | **Graphique en courbes** | 24, 280, 1232, 212 | Axe X : `dim_date[annee_mois]` ; Axe Y : `Prix Médian m²` | Titre « Prix médian au m² par mois » ; axe X de type catégoriel |
 | 7 | **Histogramme groupé** | 24, 500, 1232, 208 | Axe X : `dim_date[annee_mois]` ; Axe Y : `Nb Ventes` | Titre « Nombre de ventes par mois (même axe temporel que le graphique du prix) » |
@@ -206,8 +210,8 @@ Segments communs (paramètres identiques sur chaque page où ils apparaissent) :
 
 | # | Visuel | Position | Champs | Mise en forme |
 |---|---|---|---|---|
-| 1 | Zone de texte | 24, 12, 1232, 56 | « Carte des prix au m² par commune » + « Taille des bulles = prix médian au m² ; communes avec au moins 30 ventes dans la sélection » | |
-| 2-4 | Segments Département, Type de bien, Année | comme page 1 | | |
+| 1 | Zone de texte | 24, 12, 1232, 56 | « Carte des prix au m² par commune » + « Taille des bulles = prix médian au m² ; communes avec au moins 30 ventes dans la sélection. Choisissez une région pour une carte lisible » | |
+| 2-5 | Segments Région, Département, Type de bien, Année | comme page 1 | | |
 | 5 | **Azure Maps** | 24, 164, 760, 544 | Emplacement : `dim_commune[nom_commune]` ; Latitude : `dim_commune[latitude]` ; Longitude : `dim_commune[longitude]` ; Taille : `Prix Médian m² (≥ 30 ventes)` ; Info-bulles : `Nb Ventes (≥ 30 ventes)` | Titre « Prix médian au m² par commune ». Optionnel : *Couche de bulles > Couleur de remplissage > fx* : dégradé sur `Prix Médian m² (≥ 30 ventes)` de `#CDE2FB` (bas) à `#104281` (haut) |
 | 6 | **Tableau** | 800, 164, 456, 268 | `dim_commune[nom_commune]`, `dim_commune[departement]`, `Prix Médian m² (≥ 30 ventes)`, `Nb Ventes (≥ 30 ventes)` | Titre « Communes les plus chères au m² (≥ 30 ventes) » ; tri **décroissant** sur le prix |
 | 7 | **Tableau** | 800, 440, 456, 268 | mêmes champs | Titre « Communes les moins chères au m² (≥ 30 ventes) » ; tri **croissant** sur le prix |
@@ -221,12 +225,11 @@ Filtre **de page** : `dim_commune[ville_principale]` *n'est pas vide*.
 
 | # | Visuel | Position | Champs | Mise en forme |
 |---|---|---|---|---|
-| 1 | Zone de texte | 24, 12, 1232, 56 | « Comparaison des 15 villes suivies » + « Classement, évolution annuelle et tendance trimestrielle du prix médian au m² » | |
-| 2 | Segment Type de bien | 24, 76, 240, 80 | | |
-| 3 | Segment Année (titre « Année (classement) ») | 280, 76, 240, 80 | | |
+| 1 | Zone de texte | 24, 12, 1232, 56 | « Comparaison des 30 plus grandes villes » + « Classement, évolution annuelle et tendance trimestrielle du prix médian au m² » | |
+| 2-4 | Segments Région, Type de bien, Année (titre « Année (classement) ») | 24/320/576, 76, 280/240/240, 80 | | |
 | 4 | **Graphique à barres groupées** | 24, 164, 400, 544 | Axe Y : `ville_principale` ; Axe X : `Prix Médian m²` ; Info-bulles : `Rang Ville Prix m²`, `Nb Ventes` | Titre « Classement des villes par prix médian au m² » ; tri décroissant ; étiquettes de données activées |
 | 5 | **Matrice** | 440, 164, 816, 260 | Lignes : `ville_principale` ; Colonnes : `dim_date[annee]` ; Valeurs : `Évolution Prix m² %` | Titre « Évolution annuelle du prix médian au m² (%) ». Optionnel : *Éléments de cellule > Couleur d'arrière-plan > fx* : dégradé divergent bleu `#2A78D6` (min) / gris `#F0EFEC` (0) / rouge `#E34948` (max) |
-| 6 | **Graphique en courbes** | 440, 432, 816, 276 | Axe X : `dim_date[annee_trimestre]` ; Axe Y : `Prix Médian m²` ; **Petits multiples** : `ville_principale` | Titre « Tendance trimestrielle du prix médian au m² par ville » ; grille 5 × 3 |
+| 6 | **Graphique en courbes** | 440, 432, 816, 276 | Axe X : `dim_date[annee_trimestre]` ; Axe Y : `Prix Médian m²` ; **Petits multiples** : `ville_principale` | Titre « Tendance trimestrielle du prix médian au m² par ville » ; 30 villes : Power BI affiche une grille défilante (*Format > Petits multiples > Disposition* pour régler lignes et colonnes) |
 
 Interactions (*Format > Modifier les interactions*, segment Année sélectionné) : **Aucun** vers
 la matrice et vers les petits multiples, pour qu'ils gardent toutes les années.
@@ -239,9 +242,9 @@ Filtres **de page** : `dim_commune[ville_principale]` *n'est pas vide* ; `dim_da
 | # | Visuel | Position | Champs | Mise en forme |
 |---|---|---|---|---|
 | 1 | Zone de texte | 24, 12, 1232, 56 | « Simulateur : combien de m² pour mon budget ? » + « Prix médians 2025 (filtre de page modifiable), hors frais de notaire » | |
-| 2 | **Segment** | 24, 76, 420, 80 | `'Paramètre Budget'[Budget]` | Style **Valeur unique** (curseur) ; en-tête « Budget d'achat » |
-| 3 | Segment Type de bien | 460, 76, 240, 80 | | |
-| 4 | **Carte** (plusieurs valeurs) | 716, 76, 540, 80 | `Budget Sélectionné`, `Prix Médian m²` | Titre « Budget et prix de référence » |
+| 2 | **Segment** | 24, 76, 360, 80 | `'Paramètre Budget'[Budget]` | Style **Valeur unique** (curseur) ; en-tête « Budget d'achat » |
+| 3 | Segments Région, Type de bien | 400/656, 76, 240/200, 80 | | |
+| 4 | **Carte** (plusieurs valeurs) | 872, 76, 384, 80 | `Budget Sélectionné`, `Prix Médian m²` | Titre « Budget et prix de référence » |
 | 5 | **Graphique à barres groupées** | 24, 168, 600, 540 | Axe Y : `ville_principale` ; Axe X : `m² Achetables` | Titre « Surface achetable avec le budget sélectionné » ; tri décroissant ; étiquettes |
 | 6 | **Graphique à barres groupées** | 640, 168, 616, 260 | Axe Y : `ville_principale` ; Axe X : `Surface Médiane` | Titre « Surface médiane des logements vendus » ; tri décroissant ; étiquettes |
 | 7 | **Tableau** | 640, 436, 616, 272 | `ville_principale`, `Prix Médian m²`, `m² Achetables`, `Prix Médian Vente`, `Années de Revenu` | Titre « Détail par ville (années de revenu : INSEE Filosofi 2021) » ; tri décroissant sur `m² Achetables` |
