@@ -1,0 +1,519 @@
+/* Design tokens — light by default, dark from the system setting or the toggle. */
+:root {
+  color-scheme: light;
+  --page: #f9f9f7;
+  --surface: #fcfcfb;
+  --ink: #0b0b0b;
+  --ink-2: #52514e;
+  --muted: #898781;
+  --grid: #e1e0d9;
+  --border: rgba(11, 11, 11, 0.1);
+  --accent: #2a78d6;
+  --accent-ink: #ffffff;
+  --rise: #b3261e;
+  --fall: #1c5cab;
+  --shadow: 0 1px 2px rgba(11, 11, 11, 0.06);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d;
+  --surface: #1a1a19;
+  --ink: #f0efec;
+  --ink-2: #c3c2b7;
+  --muted: #898781;
+  --grid: #2c2c2a;
+  --border: rgba(255, 255, 255, 0.1);
+  --accent: #3987e5;
+  --accent-ink: #0d0d0d;
+  --rise: #e66767;
+  --fall: #6da7ec;
+  --shadow: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+}
+
+a {
+  color: var(--accent);
+}
+
+.app {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 24px 16px 40px;
+}
+
+/* Header and navigation */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+h1 {
+  font-size: 1.6rem;
+  margin: 0 0 4px;
+  letter-spacing: -0.01em;
+}
+
+.lede {
+  margin: 0;
+  color: var(--ink-2);
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin: 20px 0 16px;
+  border-bottom: 1px solid var(--grid);
+  overflow-x: auto;
+}
+
+.tab {
+  padding: 10px 14px;
+  color: var(--ink-2);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.tab:hover {
+  color: var(--ink);
+}
+
+.tab.active {
+  color: var(--ink);
+  border-bottom-color: var(--accent);
+}
+
+.ghost-button {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--ink-2);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.ghost-button:hover {
+  color: var(--ink);
+  background: var(--grid);
+}
+
+/* Filters */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: var(--ink-2);
+  font-weight: 500;
+}
+
+select {
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 7px 10px;
+  min-width: 200px;
+}
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+  min-width: 0;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.card h2 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.card-subtitle {
+  margin: 2px 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+}
+
+.grid-2 > .card,
+.stack > .card {
+  margin-bottom: 0;
+}
+
+.grid-2 {
+  margin-bottom: 16px;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+/* KPI tiles */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.kpi {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.kpi-label {
+  font-size: 0.85rem;
+  color: var(--ink-2);
+}
+
+.kpi-value {
+  font-size: 1.7rem;
+  font-weight: 600;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.kpi-note {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.trend {
+  font-size: 0.8rem;
+}
+
+.trend-up {
+  color: var(--rise);
+}
+
+.trend-down {
+  color: var(--fall);
+}
+
+.trend-flat {
+  color: var(--muted);
+}
+
+/* Tables */
+.table-scroll {
+  overflow: auto;
+  max-height: 560px;
+}
+
+.table-scroll.short {
+  max-height: 260px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.data-table th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--ink-2);
+  border-bottom: 1px solid var(--grid);
+  padding: 6px 8px;
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+}
+
+.data-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--grid);
+}
+
+.data-table.compact td,
+.data-table.compact th {
+  padding: 4px 6px;
+}
+
+.data-table .num {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.heatmap td.num {
+  border: 2px solid var(--surface);
+  border-radius: 4px;
+}
+
+/* Tooltip */
+.tooltip {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 0.85rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  color: var(--ink);
+}
+
+.tooltip-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.tooltip-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tooltip-label {
+  color: var(--ink-2);
+}
+
+.tooltip-value {
+  margin-left: auto;
+  padding-left: 12px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+/* Map */
+.map-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 16px;
+}
+
+.map {
+  height: 560px;
+  border-radius: 8px;
+  background: var(--grid);
+}
+
+.side-tables .card:last-child {
+  margin-bottom: 0;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: var(--ink-2);
+  align-items: center;
+}
+
+.legend-title {
+  font-weight: 600;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tiles-light {
+  filter: grayscale(0.9) contrast(0.9) brightness(1.05);
+}
+
+.tiles-dark {
+  filter: grayscale(1) invert(1) brightness(0.85) contrast(0.85);
+}
+
+.leaflet-tooltip {
+  font: inherit;
+  font-size: 0.85rem;
+}
+
+/* Small multiples */
+.multiples {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px 16px;
+}
+
+.multiple-title {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.multiple-change {
+  color: var(--muted);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Budget simulator */
+.budget-panel {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) 2fr;
+  gap: 24px;
+  align-items: center;
+}
+
+.budget-panel .kpi-row {
+  margin-bottom: 0;
+}
+
+.budget-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--ink-2);
+}
+
+.budget-value {
+  font-size: 1.9rem;
+  color: var(--ink);
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.budget-scale {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+/* Footer and states */
+.app-footer {
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.app-footer p {
+  margin: 4px 0;
+}
+
+.error {
+  color: var(--rise);
+}
+
+.loading {
+  color: var(--muted);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+  .grid-2,
+  .map-layout,
+  .budget-panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .multiples {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .data-table {
+    font-size: 0.8rem;
+  }
+
+  .data-table th {
+    white-space: normal;
+  }
+
+  h1 {
+    font-size: 1.3rem;
+  }
+
+  .app-header {
+    flex-direction: column;
+  }
+
+  select {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .field {
+    flex: 1 1 100%;
+  }
+
+  .multiples {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .map {
+    height: 420px;
+  }
+}
