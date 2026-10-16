@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import type { Meta } from "../data";
 import type { Lang } from "../format";
 import { useI18n } from "../i18n";
 import { LangSwitch } from "./Switches";
@@ -6,7 +7,7 @@ import { LangSwitch } from "./Switches";
 interface Props {
   open: boolean;
   onClose: () => void;
-  totalSales: number | null;
+  meta: Meta | null;
   lang: Lang;
   onLang: (l: Lang) => void;
 }
@@ -16,7 +17,7 @@ interface Props {
  * Uses the native <dialog> element: focus trapping, Escape key and backdrop
  * come from the browser.
  */
-export function WelcomeDialog({ open, onClose, totalSales, lang, onLang }: Props) {
+export function WelcomeDialog({ open, onClose, meta, lang, onLang }: Props) {
   const { t, f } = useI18n();
   // French typography puts a space before the colon
   const colon = lang === "fr" ? " : " : ": ";
@@ -54,7 +55,13 @@ export function WelcomeDialog({ open, onClose, totalSales, lang, onLang }: Props
           </button>
         </div>
         <h2 id="welcome-title">{t("wel.title")}</h2>
-        <p>{t("wel.intro", { n: totalSales === null ? "…" : f.int(totalSales) })}</p>
+        <p>
+          {t("wel.intro", {
+            n: meta ? f.int(meta.totalSales) : "…",
+            r: meta?.regions.length ?? 10,
+            d: meta?.departmentCount ?? "…",
+          })}
+        </p>
 
         <h3>{t("wel.questionsTitle")}</h3>
         <ul>
@@ -78,7 +85,7 @@ export function WelcomeDialog({ open, onClose, totalSales, lang, onLang }: Props
           <li>
             <strong>{t("nav.cities")}</strong>
             {colon}
-            {t("wel.p3")}
+            {t("wel.p3", { c: meta?.cities.length ?? 30 })}
           </li>
           <li>
             <strong>{t("nav.simulator")}</strong>

@@ -3,7 +3,7 @@ import { ChartCard } from "../components/ChartCard";
 import { TooltipBox } from "../components/ChartTooltip";
 import { FilterBar } from "../components/FilterBar";
 import { KpiTiles } from "../components/KpiTiles";
-import { ALL, simulate, type Dataset, type Filters } from "../data";
+import { ALL, citiesFor, simulate, type Dataset, type Filters } from "../data";
 import { useI18n } from "../i18n";
 import { usePalette } from "../theme";
 
@@ -21,7 +21,7 @@ export function Simulator({ data, filters, onFilters, budget, onBudget }: Props)
   const { meta, cities } = data;
   // The simulator needs one year of prices: the latest one unless another is selected
   const year = filters.year === ALL ? String(meta.lastYear) : filters.year;
-  const rows = simulate(cities, meta, filters.type, year, budget);
+  const rows = simulate(cities, citiesFor(meta, filters), filters.type, year, budget);
   const bySurface = [...rows].sort((a, b) => b.s - a.s);
   const best = rows[0];
   const worst = rows[rows.length - 1];
@@ -29,7 +29,7 @@ export function Simulator({ data, filters, onFilters, budget, onBudget }: Props)
 
   return (
     <>
-      <FilterBar meta={meta} filters={{ ...filters, year }} onChange={onFilters} show={{ type: true, year: true }} yearLabel={t("filters.yearPrices")} requireYear />
+      <FilterBar meta={meta} filters={{ ...filters, year }} onChange={onFilters} show={{ region: true, dept: true, type: true, year: true }} yearLabel={t("filters.yearPrices")} requireYear />
       <div className="budget-panel card">
         <label className="budget-field">
           <span>{t("sim.budget")}</span>
@@ -67,11 +67,11 @@ export function Simulator({ data, filters, onFilters, budget, onBudget }: Props)
             rows: rows.map((r) => [r.city, f.euroM2(r.p), f.m2(r.m2)]),
           }}
         >
-          <ResponsiveContainer width="100%" height={520}>
+          <ResponsiveContainer width="100%" height={Math.max(200, 26 * rows.length + 40)}>
             <BarChart data={rows} layout="vertical" margin={{ top: 0, right: 64, bottom: 0, left: 8 }}>
               <CartesianGrid horizontal={false} stroke={palette.grid} />
               <XAxis type="number" stroke={palette.axis} tick={{ fill: palette.muted, fontSize: 12 }} />
-              <YAxis type="category" dataKey="city" width={110} stroke={palette.axis} tick={{ fill: palette.ink2, fontSize: 13 }} tickLine={false} />
+              <YAxis type="category" dataKey="city" width={140} interval={0} stroke={palette.axis} tick={{ fill: palette.ink2, fontSize: 13 }} tickLine={false} />
               <Tooltip
                 cursor={{ fill: palette.grid, opacity: 0.5 }}
                 content={({ active, payload }) =>
@@ -86,7 +86,7 @@ export function Simulator({ data, filters, onFilters, budget, onBudget }: Props)
                   ) : null
                 }
               />
-              <Bar dataKey="m2" fill={palette.series[0]} radius={[0, 4, 4, 0]} barSize={20}>
+              <Bar dataKey="m2" fill={palette.series[0]} radius={[0, 4, 4, 0]} barSize={16}>
                 <LabelList dataKey="m2" position="right" formatter={(v: unknown) => f.m2(Number(v))} fill={palette.ink2} fontSize={12} />
               </Bar>
             </BarChart>
@@ -98,11 +98,11 @@ export function Simulator({ data, filters, onFilters, budget, onBudget }: Props)
             subtitle={t("sim.surfaceSubtitle", { year })}
             table={{ columns: [t("col.city"), t("col.medianSurface")], rows: bySurface.map((r) => [r.city, f.m2(r.s)]) }}
           >
-            <ResponsiveContainer width="100%" height={420}>
+            <ResponsiveContainer width="100%" height={Math.max(200, 22 * rows.length + 40)}>
               <BarChart data={bySurface} layout="vertical" margin={{ top: 0, right: 56, bottom: 0, left: 8 }}>
                 <CartesianGrid horizontal={false} stroke={palette.grid} />
                 <XAxis type="number" stroke={palette.axis} tick={{ fill: palette.muted, fontSize: 12 }} />
-                <YAxis type="category" dataKey="city" width={110} stroke={palette.axis} tick={{ fill: palette.ink2, fontSize: 13 }} tickLine={false} />
+                <YAxis type="category" dataKey="city" width={140} interval={0} stroke={palette.axis} tick={{ fill: palette.ink2, fontSize: 13 }} tickLine={false} />
                 <Tooltip
                   cursor={{ fill: palette.grid, opacity: 0.5 }}
                   content={({ active, payload }) =>
@@ -111,7 +111,7 @@ export function Simulator({ data, filters, onFilters, budget, onBudget }: Props)
                     ) : null
                   }
                 />
-                <Bar dataKey="s" fill={palette.series[2]} radius={[0, 4, 4, 0]} barSize={16}>
+                <Bar dataKey="s" fill={palette.series[2]} radius={[0, 4, 4, 0]} barSize={13}>
                   <LabelList dataKey="s" position="right" formatter={(v: unknown) => f.m2(Number(v))} fill={palette.ink2} fontSize={12} />
                 </Bar>
               </BarChart>

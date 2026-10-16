@@ -6,8 +6,8 @@
 
 export const fr = {
   // Header, navigation, footer
-  "app.title": "Marché immobilier : 5 départements, 2021-2025",
-  "app.lede": "{n} ventes d'un seul logement (maison ou appartement) en Haute-Garonne, Gironde, Hérault, Loire-Atlantique et Rhône.",
+  "app.title": "Marché immobilier : les {r} régions les plus peuplées, 2021-2025",
+  "app.lede": "{n} ventes d'un seul logement (maison ou appartement) dans {d} départements, des Hauts-de-France à la Provence.",
   "app.loadingData": "Chargement des données…",
   "app.loading": "Chargement…",
   "app.loadingMap": "Chargement de la carte…",
@@ -27,6 +27,8 @@ export const fr = {
 
   // Filters
   "filters.group": "Filtres",
+  "filters.region": "Région",
+  "filters.allRegions": "Toutes les régions",
   "filters.dept": "Département",
   "filters.allDepts": "Tous les départements",
   "filters.type": "Type de bien",
@@ -69,18 +71,21 @@ export const fr = {
   "ov.volumeSubtitle": "Même axe temporel que le prix : deux échelles, deux graphiques",
 
   // Map
+  "map.titleDept": "Prix médian au m² par département",
+  "map.subtitleDept": "{n} départements ; couleur = prix, taille = nombre de ventes. Choisissez une région pour le détail par commune",
   "map.title": "Prix médian au m² par commune",
   "map.subtitle": "{n} communes avec au moins {min} ventes ; couleur = prix, taille = nombre de ventes",
+  "map.loading": "Chargement des communes…",
   "map.legend": "Prix médian au m²",
   "map.legendLabel": "Légende des couleurs",
   "map.salesCount": "{n} ventes",
   "map.top": "Les plus chères",
   "map.bottom": "Les moins chères",
-  "map.top10": "Top 10 au m²",
+  "map.top10": "Top 10 au m², communes avec au moins {min} ventes",
 
   // Cities
   "ct.rankTitle": "Classement par prix médian au m²",
-  "ct.rankSubtitle": "15 villes suivies, {period}",
+  "ct.rankSubtitle": "{count} villes suivies, {period}",
   "ct.rankTip": "Rang",
   "ct.yoyTitle": "Évolution annuelle du prix médian au m²",
   "ct.yoySubtitle": "Variation par rapport à l'année précédente ; bleu = baisse, rouge = hausse",
@@ -103,22 +108,22 @@ export const fr = {
   // Welcome dialog
   "wel.title": "Bienvenue sur le tableau de bord du marché immobilier",
   "wel.intro":
-    "Ce site présente l'analyse de {n} ventes de maisons et d'appartements réalisées entre 2021 et 2025 dans cinq départements : Haute-Garonne (Toulouse), Gironde (Bordeaux), Hérault (Montpellier), Loire-Atlantique (Nantes) et Rhône (Lyon).",
+    "Ce site présente l'analyse de {n} ventes de maisons et d'appartements réalisées entre 2021 et 2025 dans les {r} régions les plus peuplées de France : Île-de-France, Auvergne-Rhône-Alpes, Nouvelle-Aquitaine, Occitanie, Hauts-de-France, Grand Est, Provence-Alpes-Côte d'Azur, Pays de la Loire, Bretagne et Normandie ({d} départements).",
   "wel.questionsTitle": "Les questions",
   "wel.q1": "Comment les prix ont-ils évolué depuis 2021 ?",
   "wel.q2": "La hausse des taux de 2022-2023 a-t-elle freiné le marché ?",
   "wel.q3": "Où peut-on encore acheter à un prix raisonnable au m² ?",
   "wel.pagesTitle": "Les quatre pages",
   "wel.p1": "les chiffres clés et l'évolution mois par mois du prix et du nombre de ventes.",
-  "wel.p2": "le prix médian au m² de chaque commune et les communes les plus et les moins chères.",
-  "wel.p3": "le classement des 15 villes suivies et leur évolution année par année.",
+  "wel.p2": "le prix médian au m² par département, puis par commune quand une région est choisie, avec les communes les plus et les moins chères.",
+  "wel.p3": "le classement des {c} plus grandes villes et leur évolution année par année.",
   "wel.p4": "combien de m² un budget permet d'acheter dans chaque ville.",
   "wel.howTitle": "Comment l'utiliser",
   "wel.how":
-    "Les filtres (département, type de bien, année) s'appliquent à toutes les pages. Survolez un graphique pour voir le détail ; le bouton « Tableau » affiche les chiffres. Le thème et la langue se changent en haut de la page.",
+    "Les filtres (région, département, type de bien, année) s'appliquent à toutes les pages. Survolez un graphique pour voir le détail ; le bouton « Tableau » affiche les chiffres. Le thème et la langue se changent en haut de la page.",
   "wel.dataTitle": "Les données",
   "wel.data":
-    "Source : DVF géolocalisées (Etalab, d'après la DGFiP) et INSEE Filosofi 2021. Seules les ventes d'un seul logement sont gardées pour obtenir un prix au m² fiable ; les prix sont des médianes en euros courants.",
+    "Source : DVF géolocalisées (Etalab, d'après la DGFiP) et INSEE Filosofi 2021. Seules les ventes d'un seul logement sont gardées pour obtenir un prix au m² fiable ; les prix sont des médianes en euros courants. L'Alsace et la Moselle ne sont pas couvertes par DVF : le Grand Est est partiel.",
   "wel.author": "Projet d'analyse de données réalisé par Oussama Essalehi.",
   "wel.cta": "Explorer le tableau de bord",
   "wel.close": "Fermer",
@@ -127,8 +132,8 @@ export const fr = {
 export type MessageKey = keyof typeof fr;
 
 export const en: Record<MessageKey, string> = {
-  "app.title": "Housing market: 5 French départements, 2021-2025",
-  "app.lede": "{n} single-dwelling sales (houses and apartments) in Haute-Garonne, Gironde, Hérault, Loire-Atlantique and Rhône.",
+  "app.title": "Housing market: France's {r} most populated regions, 2021-2025",
+  "app.lede": "{n} single-dwelling sales (houses and apartments) in {d} départements, from Hauts-de-France to Provence.",
   "app.loadingData": "Loading data…",
   "app.loading": "Loading…",
   "app.loadingMap": "Loading the map…",
@@ -147,6 +152,8 @@ export const en: Record<MessageKey, string> = {
   "footer.repo": "GitHub repository",
 
   "filters.group": "Filters",
+  "filters.region": "Region",
+  "filters.allRegions": "All regions",
   "filters.dept": "Département",
   "filters.allDepts": "All départements",
   "filters.type": "Property type",
@@ -186,17 +193,20 @@ export const en: Record<MessageKey, string> = {
   "ov.volumeTitle": "Number of sales by month",
   "ov.volumeSubtitle": "Same time axis as the price: two scales, two charts",
 
+  "map.titleDept": "Median price per m² by département",
+  "map.subtitleDept": "{n} départements; colour = price, size = number of sales. Pick a region to see municipalities",
   "map.title": "Median price per m² by municipality",
   "map.subtitle": "{n} municipalities with at least {min} sales; colour = price, size = number of sales",
+  "map.loading": "Loading municipalities…",
   "map.legend": "Median price per m²",
   "map.legendLabel": "Colour legend",
   "map.salesCount": "{n} sales",
   "map.top": "Most expensive",
   "map.bottom": "Least expensive",
-  "map.top10": "Top 10 per m²",
+  "map.top10": "Top 10 per m², municipalities with at least {min} sales",
 
   "ct.rankTitle": "Ranking by median price per m²",
-  "ct.rankSubtitle": "15 tracked cities, {period}",
+  "ct.rankSubtitle": "{count} tracked cities, {period}",
   "ct.rankTip": "Rank",
   "ct.yoyTitle": "Year-over-year change of the median price per m²",
   "ct.yoySubtitle": "Change versus the previous year; blue = fall, red = rise",
@@ -217,22 +227,22 @@ export const en: Record<MessageKey, string> = {
 
   "wel.title": "Welcome to the housing market dashboard",
   "wel.intro":
-    "This site presents the analysis of {n} house and apartment sales between 2021 and 2025 in five French départements: Haute-Garonne (Toulouse), Gironde (Bordeaux), Hérault (Montpellier), Loire-Atlantique (Nantes) and Rhône (Lyon).",
+    "This site presents the analysis of {n} house and apartment sales between 2021 and 2025 in France's {r} most populated regions: Île-de-France, Auvergne-Rhône-Alpes, Nouvelle-Aquitaine, Occitanie, Hauts-de-France, Grand Est, Provence-Alpes-Côte d'Azur, Pays de la Loire, Bretagne and Normandie ({d} départements).",
   "wel.questionsTitle": "The questions",
   "wel.q1": "How have prices changed since 2021?",
   "wel.q2": "Did the 2022-2023 interest-rate rise slow the market down?",
   "wel.q3": "Where can you still buy at a reasonable price per m²?",
   "wel.pagesTitle": "The four pages",
   "wel.p1": "key figures and the month-by-month trend of prices and sales.",
-  "wel.p2": "the median price per m² of every municipality, with the most and least expensive ones.",
-  "wel.p3": "the ranking of the 15 tracked cities and their year-by-year change.",
+  "wel.p2": "the median price per m² by département, then by municipality once a region is picked, with the most and least expensive ones.",
+  "wel.p3": "the ranking of the {c} largest cities and their year-by-year change.",
   "wel.p4": "how many m² a given budget buys in each city.",
   "wel.howTitle": "How to use it",
   "wel.how":
-    "The filters (département, property type, year) apply to every page. Hover a chart to see details; the “Table” button shows the numbers. Theme and language can be changed at the top of the page.",
+    "The filters (region, département, property type, year) apply to every page. Hover a chart to see details; the “Table” button shows the numbers. Theme and language can be changed at the top of the page.",
   "wel.dataTitle": "The data",
   "wel.data":
-    "Source: DVF géolocalisées (Etalab, from DGFiP data) and INSEE Filosofi 2021. Only sales of a single dwelling are kept to get a reliable price per m²; prices are medians in current euros.",
+    "Source: DVF géolocalisées (Etalab, from DGFiP data) and INSEE Filosofi 2021. Only sales of a single dwelling are kept to get a reliable price per m²; prices are medians in current euros. Alsace and Moselle are not covered by DVF, so Grand Est is partial.",
   "wel.author": "Data analysis project by Oussama Essalehi.",
   "wel.cta": "Explore the dashboard",
   "wel.close": "Close",

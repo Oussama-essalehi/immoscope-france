@@ -61,7 +61,7 @@ export default function App() {
   const [data, setData] = useState<Dataset | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState<string>(pageFromHash);
-  const [filters, setFilters] = useState<Filters>({ dept: ALL, type: ALL, year: ALL });
+  const [filters, setFilters] = useState<Filters>({ region: ALL, dept: ALL, type: ALL, year: ALL });
   const [budget, setBudget] = useState(250_000);
   const [mode, setMode] = useState<Mode>(initialMode);
   const [lang, setLang] = useState<Lang>(initialLang);
@@ -116,8 +116,10 @@ export default function App() {
         <div className="app">
           <header className="app-header">
             <div>
-              <h1>{t("app.title")}</h1>
-              <p className="lede">{data ? t("app.lede", { n: f.int(data.meta.totalSales) }) : t("app.loadingData")}</p>
+              <h1>{t("app.title", { r: data?.meta.regions.length ?? 10 })}</h1>
+              <p className="lede">
+                {data ? t("app.lede", { n: f.int(data.meta.totalSales), d: data.meta.departmentCount }) : t("app.loadingData")}
+              </p>
             </div>
             <div className="header-controls">
               <button type="button" className="ghost-button" onClick={() => setWelcomeOpen(true)}>
@@ -164,7 +166,7 @@ export default function App() {
           </footer>
         </div>
 
-        <WelcomeDialog open={welcomeOpen} onClose={closeWelcome} totalSales={data?.meta.totalSales ?? null} lang={lang} onLang={changeLang} />
+        <WelcomeDialog open={welcomeOpen} onClose={closeWelcome} meta={data?.meta ?? null} lang={lang} onLang={changeLang} />
       </ThemeContext.Provider>
     </I18nContext.Provider>
   );

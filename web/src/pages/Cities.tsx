@@ -2,7 +2,7 @@ import { Bar, BarChart, CartesianGrid, LabelList, Line, LineChart, ResponsiveCon
 import { ChartCard } from "../components/ChartCard";
 import { TooltipBox } from "../components/ChartTooltip";
 import { FilterBar } from "../components/FilterBar";
-import { ALL, cityRanking, key, yoyMatrix, type Dataset, type Filters } from "../data";
+import { ALL, citiesFor, cityRanking, key, yoyMatrix, type Dataset, type Filters } from "../data";
 import { useI18n } from "../i18n";
 import { divergingColor, usePalette } from "../theme";
 
@@ -16,32 +16,33 @@ export function Cities({ data, filters, onFilters }: Props) {
   const palette = usePalette();
   const { t, f } = useI18n();
   const { meta, cities } = data;
-  const ranking = cityRanking(cities, meta, filters.type, filters.year);
-  const matrix = yoyMatrix(cities, meta, filters.type);
+  const list = citiesFor(meta, filters);
+  const ranking = cityRanking(cities, list, filters.type, filters.year);
+  const matrix = yoyMatrix(cities, list, meta.years, filters.type);
   const period = filters.year === ALL ? `${meta.years[0]}-${meta.lastYear}` : filters.year;
 
   // Shared y range for the small multiples, so that panels are comparable
-  const quarterly = meta.cities.map((c) => ({ city: c.name, points: cities.quarterly[key(c.name, filters.type)] ?? [] }));
+  const quarterly = list.map((c) => ({ city: c.name, points: cities.quarterly[key(c.name, filters.type)] ?? [] }));
   const allPrices = quarterly.flatMap((q) => q.points.map((p) => p.p));
   const yDomain: [number, number] = [Math.floor(Math.min(...allPrices) / 500) * 500, Math.ceil(Math.max(...allPrices) / 500) * 500];
 
   return (
     <>
-      <FilterBar meta={meta} filters={filters} onChange={onFilters} show={{ type: true, year: true }} yearLabel={t("filters.yearRanking")} />
+      <FilterBar meta={meta} filters={filters} onChange={onFilters} show={{ region: true, dept: true, type: true, year: true }} yearLabel={t("filters.yearRanking")} />
       <div className="grid-2">
         <ChartCard
           title={t("ct.rankTitle")}
-          subtitle={t("ct.rankSubtitle", { period })}
+          subtitle={t("ct.rankSubtitle", { count: ranking.length, period })}
           table={{
             columns: [t("col.rank"), t("col.city"), t("col.medianM2"), t("col.sales")],
             rows: ranking.map((r) => [r.rank, r.city, f.euroM2(r.p), f.int(r.n)]),
           }}
         >
-          <ResponsiveContainer width="100%" height={520}>
+          <ResponsiveContainer width="100%" height={Math.max(200, 26 * ranking.length + 40)}>
             <BarChart data={ranking} layout="vertical" margin={{ top: 0, right: 72, bottom: 0, left: 8 }}>
               <CartesianGrid horizontal={false} stroke={palette.grid} />
               <XAxis type="number" stroke={palette.axis} tick={{ fill: palette.muted, fontSize: 12 }} tickFormatter={(v: number) => f.int(v)} />
-              <YAxis type="category" dataKey="city" width={110} stroke={palette.axis} tick={{ fill: palette.ink2, fontSize: 13 }} tickLine={false} />
+              <YAxis type="category" dataKey="city" width={140} interval={0} stroke={palette.axis} tick={{ fill: palette.ink2, fontSize: 13 }} tickLine={false} />
               <Tooltip
                 cursor={{ fill: palette.grid, opacity: 0.5 }}
                 content={({ active, payload }) =>
@@ -56,7 +57,7 @@ export function Cities({ data, filters, onFilters }: Props) {
                   ) : null
                 }
               />
-              <Bar dataKey="p" fill={palette.series[0]} radius={[0, 4, 4, 0]} barSize={20}>
+              <Bar dataKey="p" fill={palette.series[0]} radius={[0, 4, 4, 0]} barSize={16}>
                 <LabelList dataKey="p" position="right" formatter={(v: unknown) => f.int(Number(v))} fill={palette.ink2} fontSize={12} />
               </Bar>
             </BarChart>
