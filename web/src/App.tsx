@@ -20,7 +20,7 @@ const PAGES: { id: string; label: MessageKey }[] = [
   { id: "simulateur", label: "nav.simulator" },
 ];
 
-const REPO_URL = "https://github.com/Oussama-essalehi/dvf-immobilier-analyse";
+const REPO_URL = "https://github.com/Oussama-essalehi/immoscope-france";
 const STORAGE = { theme: "dvf-theme", lang: "dvf-lang", welcome: "dvf-welcome-seen" };
 
 /** Current page from the URL hash (#/carte), so that links and reloads keep the page. */
