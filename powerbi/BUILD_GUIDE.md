@@ -40,7 +40,7 @@ Les fichiers ont été vérifiés hors de Power BI Desktop : schémas JSON publi
 3. *Accueil > Transformer les données (flèche) > Modifier les paramètres*.
 4. Renseigner **DataFolder** avec le chemin **absolu** du dossier `data\gold\` du dépôt,
    **terminé par une barre oblique inverse**, par exemple :
-   `C:\Users\Oussama\dev\dvf-immobilier-analyse\data\gold\`
+   `C:\Users\Oussama\dev\immoscope-france\data\gold\`
 5. Valider, puis cliquer sur **Appliquer les modifications** / **Actualiser**.
 6. Enregistrer (`Ctrl+S`) : le projet reste au format .pbip.
 
