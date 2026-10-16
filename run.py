@@ -2,7 +2,7 @@
 
 Usage::
 
-    python run.py all          # db-up, download, clean, load, analyze, export, check, test
+    python run.py all          # db-up, download, clean, load, analyze, export, export-web, check, test
     python run.py clean        # one step
     python run.py load export  # several steps, in order
 """
@@ -54,6 +54,11 @@ def export() -> None:
     step.run()
 
 
+def export_web() -> None:
+    from src import export_web as step
+    step.run()
+
+
 def check() -> None:
     from src import crosscheck as step
     step.run()
@@ -87,12 +92,13 @@ STEPS: dict[str, Callable[[], None]] = {
     "load": load,
     "analyze": analyze,
     "export": export,
+    "export-web": export_web,
     "check": check,
     "test": test,
     "notebook": notebook,
     "validate-pbi": validate_pbi,
 }
-PIPELINE = ["db-up", "download", "clean", "load", "analyze", "export", "check", "test"]
+PIPELINE = ["db-up", "download", "clean", "load", "analyze", "export", "export-web", "check", "test"]
 
 
 def main() -> None:
