@@ -40,7 +40,8 @@ Détail chiffré et méthode des tests : [`reports/findings.md`](reports/finding
 | ![Effet de la hausse des taux](reports/figures/04_effet_hausse_taux.png) | ![Classement des villes](reports/figures/05_classement_evolution_prix.png) |
 
 **Tableau de bord web** ([version en ligne](https://oussama-essalehi.github.io/dvf-immobilier-analyse/), React) — mêmes 4 pages que le rapport
-Power BI, filtres partagés, thème clair / sombre, affichage mobile :
+Power BI, filtres partagés, thème clair / sombre, version française et anglaise, fenêtre de
+présentation à la première visite, affichage mobile :
 
 | Vue d'ensemble | Carte des prix |
 |---|---|
@@ -112,9 +113,9 @@ sur 3 mois via `LATERAL` ([`sql/`](sql/)).
 | Extraction et nettoyage | Python 3.11+, pandas, NumPy, PyArrow, requests |
 | Stockage et SQL | PostgreSQL 16 (Docker), SQLAlchemy 2, psycopg 3 |
 | Analyse | SciPy (Mann-Whitney U), Plotly + Kaleido, Jupyter |
-| Qualité | pytest (14 tests), Vitest (10 tests), contrôle croisé SQL ↔ Python, validation des schémas Power BI |
+| Qualité | pytest (14 tests), Vitest (13 tests), contrôle croisé SQL ↔ Python, validation des schémas Power BI |
 | Restitution | Power BI Desktop, projet `.pbip` : modèle TMDL, rapport PBIR, thème personnalisé |
-| Web | React 18, TypeScript, Vite, Recharts, Leaflet (OpenStreetMap), Vitest ; déploiement GitHub Pages par GitHub Actions |
+| Web | React 18, TypeScript, Vite, Recharts, Leaflet (OpenStreetMap), Vitest ; interface bilingue FR / EN ; déploiement GitHub Pages par GitHub Actions |
 | Orchestration | `run.py` (multiplateforme) et `Makefile`, configuration dans `config.yaml` |
 
 ## Lancer le projet
