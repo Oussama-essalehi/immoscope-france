@@ -5,7 +5,7 @@ de la donnée publique brute jusqu'à un tableau de bord en ligne.**
 
 ### [Voir le tableau de bord en ligne → immoscope-france.vercel.app](https://immoscope-france.vercel.app/)
 
-![Python](https://img.shields.io/badge/Python-3776AB) ![SQL](https://img.shields.io/badge/PostgreSQL-4169E1) ![Power BI](https://img.shields.io/badge/Power%20BI-F2C811) ![React](https://img.shields.io/badge/React-61DAFB)
+[![CI](https://github.com/Oussama-essalehi/immoscope-france/actions/workflows/ci.yml/badge.svg)](https://github.com/Oussama-essalehi/immoscope-france/actions/workflows/ci.yml) ![Python](https://img.shields.io/badge/Python-3776AB) ![SQL](https://img.shields.io/badge/PostgreSQL-4169E1) ![Power BI](https://img.shields.io/badge/Power%20BI-F2C811) ![React](https://img.shields.io/badge/React-61DAFB)
 
 ## La question
 
