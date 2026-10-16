@@ -1,0 +1,113 @@
+# Configuration du pipeline DVF — tout le périmètre d'analyse se règle ici.
+
+data_source:
+  # Vérifié sur https://www.data.gouv.fr/datasets/demandes-de-valeurs-foncieres-geolocalisees
+  # (ressource « Données au format CSV » -> https://files.data.gouv.fr/geo-dvf/latest/csv/)
+  base_url: "https://files.data.gouv.fr/geo-dvf/latest/csv"
+  file_pattern: "{base_url}/{year}/departements/{department}.csv.gz"
+  timeout_seconds: 120
+
+# Enrichissement optionnel : revenus INSEE Filosofi 2021 (base communale).
+# Page source : https://www.insee.fr/fr/statistiques/7756729
+income:
+  enabled: true
+  url: "https://www.insee.fr/fr/statistiques/fichier/7756729/base-cc-filosofi-2021-geo2025_csv.zip"
+  year: 2021
+
+scope:
+  departments: ["31", "33", "34", "44", "69"]
+  # "auto" = toutes les années publiées dans le répertoire latest/csv/,
+  # ou une liste explicite, ex. [2021, 2022, 2023, 2024, 2025]
+  years: auto
+
+# Villes suivies dans les analyses comparatives (code INSEE -> libellé).
+# Lyon est découpée en arrondissements dans DVF (69381 à 69389) : ils sont
+# regroupés sous le même libellé.
+main_cities:
+  "31555": Toulouse
+  "31149": Colomiers
+  "31557": Tournefeuille
+  "33063": Bordeaux
+  "33281": Mérignac
+  "33318": Pessac
+  "34172": Montpellier
+  "34032": Béziers
+  "34301": Sète
+  "44109": Nantes
+  "44184": Saint-Nazaire
+  "44162": Saint-Herblain
+  "69381": Lyon
+  "69382": Lyon
+  "69383": Lyon
+  "69384": Lyon
+  "69385": Lyon
+  "69386": Lyon
+  "69387": Lyon
+  "69388": Lyon
+  "69389": Lyon
+  "69266": Villeurbanne
+  "69259": Vénissieux
+
+# Les 5 métropoles (une par département), mises en avant dans les graphiques.
+metropoles: [Toulouse, Bordeaux, Montpellier, Nantes, Lyon]
+
+departments_labels:
+  "31": Haute-Garonne
+  "33": Gironde
+  "34": Hérault
+  "44": Loire-Atlantique
+  "69": Rhône
+
+cleaning:
+  nature_mutation: "Vente"
+  dwelling_types: ["Maison", "Appartement"]
+  # Types de locaux tolérés à côté du logement dans une même mutation
+  allowed_annex_types: ["Dépendance"]
+  min_surface_m2: 9
+  max_surface_m2: 1000
+  min_price_eur: 10000
+  max_price_eur: 20000000
+  # Filtre des valeurs extrêmes de prix/m², par département x type de bien
+  outlier_quantiles: [0.01, 0.99]
+  outlier_groupby: ["code_departement", "type_local"]
+
+# Tranches : "edges" = bornes inférieures (incluses) de chaque tranche.
+bands:
+  price:
+    edges: [0, 100000, 200000, 300000, 400000, 500000, 750000]
+    labels: ["< 100 k€", "100-200 k€", "200-300 k€", "300-400 k€", "400-500 k€", "500-750 k€", "≥ 750 k€"]
+  surface:
+    edges: [0, 30, 50, 70, 90, 120, 150]
+    labels: ["< 30 m²", "30-50 m²", "50-70 m²", "70-90 m²", "90-120 m²", "120-150 m²", "≥ 150 m²"]
+  rooms:
+    edges: [1, 2, 3, 4, 5]
+    labels: ["1 pièce", "2 pièces", "3 pièces", "4 pièces", "5 pièces et +"]
+
+analysis:
+  budgets: [150000, 250000, 350000]
+  # Une ville doit compter au moins ce nombre de ventes par groupe pour être testée
+  min_sales_for_test: 30
+  # Seuil de significativité du test de Mann-Whitney
+  alpha: 0.05
+  # Période de référence avant la hausse des taux et période après
+  rate_rise:
+    before_year: 2021
+    after_year: 2023
+
+database:
+  # Valeurs par défaut du conteneur local (docker-compose.yml) ;
+  # surchargeables par les variables d'environnement DVF_DB_HOST, DVF_DB_PORT,
+  # DVF_DB_NAME, DVF_DB_USER, DVF_DB_PASSWORD (fichier .env non versionné).
+  host: localhost
+  port: 5433
+  name: dvf
+  user: dvf
+  password: dvf_local
+  schema: dvf
+
+paths:
+  raw: data/raw
+  processed: data/processed
+  gold: data/gold
+  figures: reports/figures
+  tables: reports/tables

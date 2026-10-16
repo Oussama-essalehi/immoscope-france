@@ -1,0 +1,42 @@
+/// Type de bien : Appartement ou Maison.
+table dim_type_local
+	lineageTag: 602dab92-f104-53d4-beb8-3e66bf87c2b6
+
+	column type_local_key
+		dataType: int64
+		isHidden
+		lineageTag: 60f6a434-0f85-5452-908c-c5f5f90b73c7
+		summarizeBy: none
+		sourceColumn: type_local_key
+
+		annotation SummarizationSetBy = User
+
+	column type_local
+		dataType: string
+		lineageTag: f115f3ad-a4a9-5a78-88a8-9918025ae1d8
+		summarizeBy: none
+		sourceColumn: type_local
+
+		annotation SummarizationSetBy = User
+
+	partition dim_type_local = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(
+				        File.Contents(DataFolder & "dim_type_local.csv"),
+				        [Delimiter = ",", Columns = 2, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+				    ),
+				    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    TypedColumns = Table.TransformColumnTypes(
+				        PromotedHeaders,
+				        {
+				            {"type_local_key", Int64.Type},
+				            {"type_local", type text}
+				        },
+				        "en-US"
+				    )
+				in
+				    TypedColumns
+
+	annotation PBI_ResultType = Table

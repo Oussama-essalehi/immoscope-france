@@ -1,0 +1,7 @@
+step,description,rows_before,rows_after,mutations_before,mutations_after
+1_vente,nature_mutation = 'Vente',2248608,2028251,881146,795101
+2_logement,Mutation contenant une Maison ou un Appartement,2028251,1510649,795101,580793
+3_un_logement,"1 ligne par mutation, un seul logement",1510649,547030,580793,547030
+4_valeurs_manquantes,Prix et surface renseignés et > 0,547030,546778,547030,546778
+6a_bornes,Bornes dures surface et prix,546778,545182,546778,545182
+6b_percentiles,prix_m2 entre P1 et P99 (dép. x type),545182,534309,545182,534309

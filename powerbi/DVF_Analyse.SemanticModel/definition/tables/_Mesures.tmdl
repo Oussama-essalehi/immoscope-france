@@ -1,0 +1,165 @@
+/// Table dédiée aux mesures DAX (aucune donnée).
+table _Mesures
+	lineageTag: 4b31157b-ee88-5c75-a82b-bf9678cbc1b9
+
+	/// Nombre de ventes (une vente = une mutation d'un seul logement).
+	measure 'Nb Ventes' = COUNTROWS ( fact_ventes )
+		formatString: #,0
+		displayFolder: 1. Volume
+		lineageTag: 271e484f-cca1-55e5-832e-b989dc16bd5a
+
+	/// Nombre de ventes sur la même période un an plus tôt. Sans année unique dans le contexte : année précédant la dernière année sélectionnée.
+	measure 'Nb Ventes N-1' =
+			VAR _annee = MAX ( dim_date[annee] )
+			RETURN
+			    IF (
+			        HASONEVALUE ( dim_date[annee] ),
+			        CALCULATE ( [Nb Ventes], SAMEPERIODLASTYEAR ( dim_date[date] ) ),
+			        CALCULATE ( [Nb Ventes], REMOVEFILTERS ( dim_date ), dim_date[annee] = _annee - 1 )
+			    )
+		formatString: #,0
+		displayFolder: 1. Volume
+		lineageTag: abf50685-297b-54ca-94aa-f06177567351
+
+	/// Variation du nombre de ventes sur un an (période sélectionnée vs même période N-1). Vide si N-1 n'existe pas.
+	measure 'Évolution Volume %' =
+			VAR _annee = MAX ( dim_date[annee] )
+			VAR _n =
+			    IF (
+			        HASONEVALUE ( dim_date[annee] ),
+			        [Nb Ventes],
+			        CALCULATE ( [Nb Ventes], REMOVEFILTERS ( dim_date ), dim_date[annee] = _annee )
+			    )
+			VAR _n1 = [Nb Ventes N-1]
+			RETURN
+			    IF ( NOT ISBLANK ( _n1 ), DIVIDE ( _n - _n1, _n1 ) )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 1. Volume
+		lineageTag: 4fcedb23-511e-5ff3-b199-ba1f63a52ce3
+
+	/// Médiane du prix au m² (valeur foncière / surface réelle bâtie). Indicateur principal, robuste aux biens atypiques.
+	measure 'Prix Médian m²' = MEDIAN ( fact_ventes[prix_m2] )
+		formatString: #,0 "€"
+		displayFolder: 2. Prix
+		lineageTag: 79763f32-fc81-5261-8c33-aaa03c279dce
+
+	/// Moyenne du prix au m². À comparer à la médiane : un écart important signale une distribution tirée par les biens chers.
+	measure 'Prix Moyen m²' = AVERAGE ( fact_ventes[prix_m2] )
+		formatString: #,0 "€"
+		displayFolder: 2. Prix
+		lineageTag: a1b5f0f0-3094-5572-ac35-5666bb762b24
+
+	/// Médiane du prix de vente total (valeur foncière, hors frais de notaire).
+	measure 'Prix Médian Vente' = MEDIAN ( fact_ventes[valeur_fonciere] )
+		formatString: #,0 "€"
+		displayFolder: 2. Prix
+		lineageTag: 84949a9c-b731-5fb5-a6dd-d729a2e96527
+
+	/// Médiane de la surface réelle bâtie des logements vendus.
+	measure 'Surface Médiane' = MEDIAN ( fact_ventes[surface] )
+		formatString: #,0 "m²"
+		displayFolder: 2. Prix
+		lineageTag: ee25dd7a-4b1b-5c7f-9743-fc5b8106a044
+
+	/// Prix médian au m² sur la même période un an plus tôt. Sans année unique dans le contexte : année précédant la dernière année sélectionnée.
+	measure 'Prix Médian m² N-1' =
+			VAR _annee = MAX ( dim_date[annee] )
+			RETURN
+			    IF (
+			        HASONEVALUE ( dim_date[annee] ),
+			        CALCULATE ( [Prix Médian m²], SAMEPERIODLASTYEAR ( dim_date[date] ) ),
+			        CALCULATE ( [Prix Médian m²], REMOVEFILTERS ( dim_date ), dim_date[annee] = _annee - 1 )
+			    )
+		formatString: #,0 "€"
+		displayFolder: 2. Prix
+		lineageTag: 18d33eea-5a2d-5fac-98ef-5ac91690c7a2
+
+	/// Variation sur un an du prix médian au m² (période sélectionnée vs même période N-1). Vide si N-1 n'existe pas.
+	measure 'Évolution Prix m² %' =
+			VAR _annee = MAX ( dim_date[annee] )
+			VAR _n =
+			    IF (
+			        HASONEVALUE ( dim_date[annee] ),
+			        [Prix Médian m²],
+			        CALCULATE ( [Prix Médian m²], REMOVEFILTERS ( dim_date ), dim_date[annee] = _annee )
+			    )
+			VAR _n1 = [Prix Médian m² N-1]
+			RETURN
+			    IF ( NOT ISBLANK ( _n1 ), DIVIDE ( _n - _n1, _n1 ) )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 2. Prix
+		lineageTag: c7fedbc0-0dfb-53c2-bcdb-512c1457b3ad
+
+	/// Rang de la ville principale par prix médian au m² parmi les villes sélectionnées (1 = la plus chère).
+	measure 'Rang Ville Prix m²' =
+			IF (
+			    HASONEVALUE ( dim_commune[ville_principale] )
+			        && NOT ISBLANK ( SELECTEDVALUE ( dim_commune[ville_principale] ) ),
+			    RANKX (
+			        FILTER (
+			            ALLSELECTED ( dim_commune[ville_principale] ),
+			            NOT ISBLANK ( dim_commune[ville_principale] )
+			        ),
+			        [Prix Médian m²],
+			        ,
+			        DESC,
+			        DENSE
+			    )
+			)
+		formatString: 0
+		displayFolder: 3. Classement
+		lineageTag: c0ed8b15-47cb-52ef-bff2-f60e8d4175f8
+
+	/// Prix médian au m², affiché seulement quand la sélection compte au moins 30 ventes (évite les médianes instables des petites communes).
+	measure 'Prix Médian m² (≥ 30 ventes)' = IF ( [Nb Ventes] >= 30, [Prix Médian m²] )
+		formatString: #,0 "€"
+		displayFolder: 4. Carte
+		lineageTag: 9ef2f944-701e-504a-bb12-71c875a321bd
+
+	/// Nombre de ventes, affiché seulement à partir de 30 ventes (même filtre que le prix médian fiable).
+	measure 'Nb Ventes (≥ 30 ventes)' = IF ( [Nb Ventes] >= 30, [Nb Ventes] )
+		formatString: #,0
+		displayFolder: 4. Carte
+		lineageTag: d457d5b4-3767-50d8-843c-fcde1e1bb32c
+
+	/// Budget choisi dans le curseur « Paramètre Budget » (250 000 € par défaut).
+	measure 'Budget Sélectionné' = SELECTEDVALUE ( 'Paramètre Budget'[Budget], 250000 )
+		formatString: #,0 "€"
+		displayFolder: 5. Simulateur
+		lineageTag: 75033645-4c40-5aba-b66b-dfda6ca1b8d2
+
+	/// Surface achetable avec le budget sélectionné au prix médian au m² du contexte (hors frais de notaire).
+	measure 'm² Achetables' = DIVIDE ( [Budget Sélectionné], [Prix Médian m²] )
+		formatString: #,0 "m²"
+		displayFolder: 5. Simulateur
+		lineageTag: ec26b3c4-90f3-5882-bf68-184b1905e7c6
+
+	/// Prix médian d'un logement divisé par le revenu disponible médian estimé d'un ménage de la ville (INSEE Filosofi 2021). Calculé pour une seule ville principale.
+	measure 'Années de Revenu' =
+			IF (
+			    HASONEVALUE ( dim_commune[ville_principale] )
+			        && NOT ISBLANK ( SELECTEDVALUE ( dim_commune[ville_principale] ) ),
+			    DIVIDE ( [Prix Médian Vente], MAX ( dim_commune[revenu_menage_ville] ) )
+			)
+		formatString: 0.0 "ans"
+		displayFolder: 5. Simulateur
+		lineageTag: be3a7b78-5c06-5522-82be-93cca2c28dbd
+
+	column Colonne
+		dataType: string
+		isHidden
+		lineageTag: c03470e8-ab49-5882-b46a-c910ddd3cc2e
+		summarizeBy: none
+		sourceColumn: Colonne
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _Mesures = m
+		mode: import
+		source =
+				let
+				    Source = #table(type table [Colonne = text], {})
+				in
+				    Source
+
+	annotation PBI_ResultType = Table

@@ -1,0 +1,93 @@
+/// Dimension « profil du bien » : tranches de prix, de surface et de nombre de pièces.
+table dim_profil_bien
+	lineageTag: be15affd-fd44-5c95-bef4-88a8178f3b00
+
+	column profil_key
+		dataType: int64
+		isHidden
+		lineageTag: 3a998d1b-9851-5b28-a338-6143ab046195
+		summarizeBy: none
+		sourceColumn: profil_key
+
+		annotation SummarizationSetBy = User
+
+	column tranche_prix
+		dataType: string
+		lineageTag: 72c6d104-bcc0-5e82-853a-366a7c9a213d
+		summarizeBy: none
+		sourceColumn: tranche_prix
+		sortByColumn: tranche_prix_ordre
+
+		annotation SummarizationSetBy = User
+
+	column tranche_prix_ordre
+		dataType: int64
+		isHidden
+		lineageTag: e52cae81-c934-59fe-81e4-9cfc292fd83b
+		summarizeBy: none
+		sourceColumn: tranche_prix_ordre
+
+		annotation SummarizationSetBy = User
+
+	column tranche_surface
+		dataType: string
+		lineageTag: 90223109-12ce-5820-bbd9-826e0a6023a1
+		summarizeBy: none
+		sourceColumn: tranche_surface
+		sortByColumn: tranche_surface_ordre
+
+		annotation SummarizationSetBy = User
+
+	column tranche_surface_ordre
+		dataType: int64
+		isHidden
+		lineageTag: a36b2dbb-5c88-50b5-a84d-2628e9676c0e
+		summarizeBy: none
+		sourceColumn: tranche_surface_ordre
+
+		annotation SummarizationSetBy = User
+
+	column tranche_pieces
+		dataType: string
+		lineageTag: 8bd82dbf-d330-5d75-afe6-e32074da876f
+		summarizeBy: none
+		sourceColumn: tranche_pieces
+		sortByColumn: tranche_pieces_ordre
+
+		annotation SummarizationSetBy = User
+
+	column tranche_pieces_ordre
+		dataType: int64
+		isHidden
+		lineageTag: acad6b5c-5795-530d-851b-3e2429ef2028
+		summarizeBy: none
+		sourceColumn: tranche_pieces_ordre
+
+		annotation SummarizationSetBy = User
+
+	partition dim_profil_bien = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(
+				        File.Contents(DataFolder & "dim_profil_bien.csv"),
+				        [Delimiter = ",", Columns = 7, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+				    ),
+				    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    TypedColumns = Table.TransformColumnTypes(
+				        PromotedHeaders,
+				        {
+				            {"profil_key", Int64.Type},
+				            {"tranche_prix", type text},
+				            {"tranche_prix_ordre", Int64.Type},
+				            {"tranche_surface", type text},
+				            {"tranche_surface_ordre", Int64.Type},
+				            {"tranche_pieces", type text},
+				            {"tranche_pieces_ordre", Int64.Type}
+				        },
+				        "en-US"
+				    )
+				in
+				    TypedColumns
+
+	annotation PBI_ResultType = Table

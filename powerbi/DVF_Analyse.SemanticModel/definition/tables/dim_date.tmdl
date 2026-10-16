@@ -1,0 +1,137 @@
+/// Calendrier journalier couvrant les années complètes du périmètre (table de dates marquée).
+table dim_date
+	lineageTag: 988b2b90-7b4a-5b3f-b0e6-f8c7f4e3ad53
+	dataCategory: Time
+
+	column date_key
+		dataType: int64
+		isHidden
+		lineageTag: 5fe31bdf-230f-545a-9864-42a0f8220f43
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = User
+
+	column date
+		dataType: dateTime
+		formatString: dd/mm/yyyy
+		isKey
+		lineageTag: a940d36d-57c9-5758-af7e-6e55edef375d
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = User
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column annee
+		dataType: int64
+		formatString: 0
+		lineageTag: bd03cfc6-c418-544e-8e0f-58494fccd1f4
+		summarizeBy: none
+		sourceColumn: annee
+
+		annotation SummarizationSetBy = User
+
+	column semestre
+		dataType: int64
+		formatString: 0
+		lineageTag: 621371a5-b06c-5ee6-8170-9fb536ea964a
+		summarizeBy: none
+		sourceColumn: semestre
+
+		annotation SummarizationSetBy = User
+
+	column trimestre
+		dataType: int64
+		formatString: 0
+		lineageTag: 09753064-3cf5-5892-9de1-26719adcf66b
+		summarizeBy: none
+		sourceColumn: trimestre
+
+		annotation SummarizationSetBy = User
+
+	column mois
+		dataType: int64
+		formatString: 0
+		lineageTag: 665759ae-0fba-5651-9770-45adfcf2df0f
+		summarizeBy: none
+		sourceColumn: mois
+
+		annotation SummarizationSetBy = User
+
+	column mois_nom
+		dataType: string
+		lineageTag: a7f919ff-55ab-5c75-807f-6fb22c80f6a2
+		summarizeBy: none
+		sourceColumn: mois_nom
+		sortByColumn: mois
+
+		annotation SummarizationSetBy = User
+
+	column annee_mois
+		dataType: string
+		lineageTag: 54bdc9da-bfa2-5ef5-a425-6b64f0e147ac
+		summarizeBy: none
+		sourceColumn: annee_mois
+
+		annotation SummarizationSetBy = User
+
+	column annee_trimestre
+		dataType: string
+		lineageTag: ab5e0742-913f-5748-abff-413647eac055
+		summarizeBy: none
+		sourceColumn: annee_trimestre
+
+		annotation SummarizationSetBy = User
+
+	column debut_mois
+		dataType: dateTime
+		formatString: mmm yyyy
+		lineageTag: a111c10f-1997-50cf-9c74-b6a6f888b3d1
+		summarizeBy: none
+		sourceColumn: debut_mois
+
+		annotation SummarizationSetBy = User
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column jour_semaine
+		dataType: int64
+		isHidden
+		lineageTag: 0ec8c94a-ec63-5086-ac7e-32b17e4c5679
+		summarizeBy: none
+		sourceColumn: jour_semaine
+
+		annotation SummarizationSetBy = User
+
+	partition dim_date = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(
+				        File.Contents(DataFolder & "dim_date.csv"),
+				        [Delimiter = ",", Columns = 11, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+				    ),
+				    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    TypedColumns = Table.TransformColumnTypes(
+				        PromotedHeaders,
+				        {
+				            {"date_key", Int64.Type},
+				            {"date", type date},
+				            {"annee", Int64.Type},
+				            {"semestre", Int64.Type},
+				            {"trimestre", Int64.Type},
+				            {"mois", Int64.Type},
+				            {"mois_nom", type text},
+				            {"annee_mois", type text},
+				            {"annee_trimestre", type text},
+				            {"debut_mois", type date},
+				            {"jour_semaine", Int64.Type}
+				        },
+				        "en-US"
+				    )
+				in
+				    TypedColumns
+
+	annotation PBI_ResultType = Table
