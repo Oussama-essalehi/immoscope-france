@@ -4,7 +4,7 @@ import { CircleMarker, MapContainer, TileLayer, Tooltip as LeafletTooltip } from
 import { ChartCard } from "../components/ChartCard";
 import { FilterBar } from "../components/FilterBar";
 import { binIndex, communePoints, quantileBreaks, type CommunePoint, type Dataset, type Filters } from "../data";
-import { fmtEuroM2, fmtInt } from "../format";
+import { useI18n } from "../i18n";
 import { usePalette } from "../theme";
 
 interface Props {
@@ -19,15 +19,16 @@ const TILES = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 const ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
 function CommuneTable({ rows, caption }: { rows: CommunePoint[]; caption: string }) {
+  const { t, f } = useI18n();
   return (
     <table className="data-table compact">
       <caption className="sr-only">{caption}</caption>
       <thead>
         <tr>
-          <th>Commune</th>
-          <th>Dép.</th>
-          <th className="num">Prix médian</th>
-          <th className="num">Ventes</th>
+          <th>{t("col.commune")}</th>
+          <th>{t("col.dept")}</th>
+          <th className="num">{t("col.medianPrice")}</th>
+          <th className="num">{t("col.sales")}</th>
         </tr>
       </thead>
       <tbody>
@@ -35,8 +36,8 @@ function CommuneTable({ rows, caption }: { rows: CommunePoint[]; caption: string
           <tr key={r.code}>
             <td>{r.name}</td>
             <td>{r.dept}</td>
-            <td className="num">{fmtEuroM2(r.p)}</td>
-            <td className="num">{fmtInt(r.n)}</td>
+            <td className="num">{f.euroM2(r.p)}</td>
+            <td className="num">{f.int(r.n)}</td>
           </tr>
         ))}
       </tbody>
@@ -46,6 +47,7 @@ function CommuneTable({ rows, caption }: { rows: CommunePoint[]; caption: string
 
 export function PriceMap({ data, filters, onFilters, dark }: Props) {
   const palette = usePalette();
+  const { t, f } = useI18n();
   const points = useMemo(() => communePoints(data.communes, filters), [data.communes, filters]);
   const breaks = useMemo(() => quantileBreaks(points.map((p) => p.p), palette.sequential.length), [points, palette]);
   const maxSales = Math.max(1, ...points.map((p) => p.n));
@@ -53,7 +55,7 @@ export function PriceMap({ data, filters, onFilters, dark }: Props) {
   const legend = palette.sequential.map((color, i) => {
     const low = i === 0 ? null : breaks[i - 1];
     const high = i < breaks.length ? breaks[i] : null;
-    const text = low === null ? `< ${fmtInt(high)} €` : high === null ? `≥ ${fmtInt(low)} €` : `${fmtInt(low)} – ${fmtInt(high)} €`;
+    const text = low === null ? `< ${f.euro(high)}` : high === null ? `≥ ${f.euro(low)}` : `${f.euro(low)} – ${f.euro(high)}`;
     return { color, text };
   });
 
@@ -61,11 +63,7 @@ export function PriceMap({ data, filters, onFilters, dark }: Props) {
     <>
       <FilterBar meta={data.meta} filters={filters} onChange={onFilters} />
       <div className="map-layout">
-        <ChartCard
-          className="map-card"
-          title="Prix médian au m² par commune"
-          subtitle={`${fmtInt(points.length)} communes avec au moins ${data.meta.minSalesCommune} ventes ; couleur = prix, taille = nombre de ventes`}
-        >
+        <ChartCard className="map-card" title={t("map.title")} subtitle={t("map.subtitle", { n: f.int(points.length), min: data.meta.minSalesCommune })}>
           <MapContainer center={[45.2, 1.9]} zoom={6} scrollWheelZoom={false} className="map">
             <TileLayer url={TILES} attribution={ATTRIBUTION} className={dark ? "tiles-dark" : "tiles-light"} />
             {points.map((p) => (
@@ -83,13 +81,13 @@ export function PriceMap({ data, filters, onFilters, dark }: Props) {
                 <LeafletTooltip>
                   <strong>{p.name}</strong> ({p.dept})
                   <br />
-                  {fmtEuroM2(p.p)} · {fmtInt(p.n)} ventes
+                  {f.euroM2(p.p)} · {t("map.salesCount", { n: f.int(p.n) })}
                 </LeafletTooltip>
               </CircleMarker>
             ))}
           </MapContainer>
-          <div className="legend" aria-label="Légende des couleurs">
-            <span className="legend-title">Prix médian au m²</span>
+          <div className="legend" aria-label={t("map.legendLabel")}>
+            <span className="legend-title">{t("map.legend")}</span>
             {legend.map((l) => (
               <span className="legend-item" key={l.text}>
                 <span className="swatch" style={{ background: l.color }} />
@@ -99,11 +97,11 @@ export function PriceMap({ data, filters, onFilters, dark }: Props) {
           </div>
         </ChartCard>
         <div className="side-tables">
-          <ChartCard title="Les plus chères" subtitle="Top 10 au m²">
-            <CommuneTable rows={sorted.slice(0, 10)} caption="Communes les plus chères" />
+          <ChartCard title={t("map.top")} subtitle={t("map.top10")}>
+            <CommuneTable rows={sorted.slice(0, 10)} caption={t("map.top")} />
           </ChartCard>
-          <ChartCard title="Les moins chères" subtitle="Top 10 au m²">
-            <CommuneTable rows={sorted.slice(-10).reverse()} caption="Communes les moins chères" />
+          <ChartCard title={t("map.bottom")} subtitle={t("map.top10")}>
+            <CommuneTable rows={sorted.slice(-10).reverse()} caption={t("map.bottom")} />
           </ChartCard>
         </div>
       </div>

@@ -1,3 +1,5 @@
+import { useI18n } from "../i18n";
+
 export interface Kpi {
   label: string;
   value: string;
@@ -8,10 +10,10 @@ export interface Kpi {
 }
 
 const ARROWS = { up: "▲", down: "▼", flat: "■" } as const;
-const WORDS = { up: "hausse", down: "baisse", flat: "stable" } as const;
 
 /** Row of headline figures. */
 export function KpiTiles({ items }: { items: Kpi[] }) {
+  const { t } = useI18n();
   return (
     <div className="kpi-row">
       {items.map((k) => (
@@ -19,7 +21,7 @@ export function KpiTiles({ items }: { items: Kpi[] }) {
           <span className="kpi-label">{k.label}</span>
           <span className="kpi-value">
             {k.trend && (
-              <span className={`trend trend-${k.trend}`} aria-label={WORDS[k.trend]}>
+              <span className={`trend trend-${k.trend}`} aria-label={t(`trend.${k.trend}`)}>
                 {ARROWS[k.trend]}
               </span>
             )}

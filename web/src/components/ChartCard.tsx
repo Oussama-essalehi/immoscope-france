@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from "react";
+import { useI18n } from "../i18n";
 
 export interface TableView {
   columns: string[];
@@ -16,6 +17,7 @@ interface Props {
 
 /** Card with a title, an optional subtitle and a "chart / table" toggle. */
 export function ChartCard({ title, subtitle, table, className, children }: Props) {
+  const { t } = useI18n();
   const [showTable, setShowTable] = useState(false);
   return (
     <section className={`card ${className ?? ""}`}>
@@ -31,7 +33,7 @@ export function ChartCard({ title, subtitle, table, className, children }: Props
             onClick={() => setShowTable((v) => !v)}
             aria-pressed={showTable}
           >
-            {showTable ? "Graphique" : "Tableau"}
+            {showTable ? t("card.chart") : t("card.table")}
           </button>
         )}
       </header>

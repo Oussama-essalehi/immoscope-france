@@ -3,7 +3,7 @@ import { ChartCard } from "../components/ChartCard";
 import { TooltipBox } from "../components/ChartTooltip";
 import { FilterBar } from "../components/FilterBar";
 import { ALL, cityRanking, key, yoyMatrix, type Dataset, type Filters } from "../data";
-import { fmtEuroM2, fmtInt, fmtPct } from "../format";
+import { useI18n } from "../i18n";
 import { divergingColor, usePalette } from "../theme";
 
 interface Props {
@@ -14,6 +14,7 @@ interface Props {
 
 export function Cities({ data, filters, onFilters }: Props) {
   const palette = usePalette();
+  const { t, f } = useI18n();
   const { meta, cities } = data;
   const ranking = cityRanking(cities, meta, filters.type, filters.year);
   const matrix = yoyMatrix(cities, meta, filters.type);
@@ -26,20 +27,20 @@ export function Cities({ data, filters, onFilters }: Props) {
 
   return (
     <>
-      <FilterBar meta={meta} filters={filters} onChange={onFilters} show={{ type: true, year: true }} yearLabel="Année du classement" />
+      <FilterBar meta={meta} filters={filters} onChange={onFilters} show={{ type: true, year: true }} yearLabel={t("filters.yearRanking")} />
       <div className="grid-2">
         <ChartCard
-          title="Classement par prix médian au m²"
-          subtitle={`15 villes suivies, ${period}`}
+          title={t("ct.rankTitle")}
+          subtitle={t("ct.rankSubtitle", { period })}
           table={{
-            columns: ["Rang", "Ville", "Prix médian au m²", "Ventes"],
-            rows: ranking.map((r) => [r.rank, r.city, fmtEuroM2(r.p), fmtInt(r.n)]),
+            columns: [t("col.rank"), t("col.city"), t("col.medianM2"), t("col.sales")],
+            rows: ranking.map((r) => [r.rank, r.city, f.euroM2(r.p), f.int(r.n)]),
           }}
         >
           <ResponsiveContainer width="100%" height={520}>
             <BarChart data={ranking} layout="vertical" margin={{ top: 0, right: 72, bottom: 0, left: 8 }}>
               <CartesianGrid horizontal={false} stroke={palette.grid} />
-              <XAxis type="number" stroke={palette.axis} tick={{ fill: palette.muted, fontSize: 12 }} tickFormatter={(v: number) => fmtInt(v)} />
+              <XAxis type="number" stroke={palette.axis} tick={{ fill: palette.muted, fontSize: 12 }} tickFormatter={(v: number) => f.int(v)} />
               <YAxis type="category" dataKey="city" width={110} stroke={palette.axis} tick={{ fill: palette.ink2, fontSize: 13 }} tickLine={false} />
               <Tooltip
                 cursor={{ fill: palette.grid, opacity: 0.5 }}
@@ -48,26 +49,26 @@ export function Cities({ data, filters, onFilters }: Props) {
                     <TooltipBox
                       title={`${payload[0].payload.rank}. ${payload[0].payload.city}`}
                       lines={[
-                        { label: "Prix médian", value: fmtEuroM2(payload[0].payload.p) },
-                        { label: "Ventes", value: fmtInt(payload[0].payload.n) },
+                        { label: t("tip.medianM2"), value: f.euroM2(payload[0].payload.p) },
+                        { label: t("tip.sales"), value: f.int(payload[0].payload.n) },
                       ]}
                     />
                   ) : null
                 }
               />
               <Bar dataKey="p" fill={palette.series[0]} radius={[0, 4, 4, 0]} barSize={20}>
-                <LabelList dataKey="p" position="right" formatter={(v: unknown) => fmtInt(Number(v))} fill={palette.ink2} fontSize={12} />
+                <LabelList dataKey="p" position="right" formatter={(v: unknown) => f.int(Number(v))} fill={palette.ink2} fontSize={12} />
               </Bar>
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
 
-        <ChartCard title="Évolution annuelle du prix médian au m²" subtitle="Variation par rapport à l'année précédente ; bleu = baisse, rouge = hausse">
+        <ChartCard title={t("ct.yoyTitle")} subtitle={t("ct.yoySubtitle")}>
           <div className="table-scroll">
             <table className="data-table heatmap">
               <thead>
                 <tr>
-                  <th>Ville</th>
+                  <th>{t("col.city")}</th>
                   {meta.years.map((y) => (
                     <th key={y} className="num">
                       {y}
@@ -85,7 +86,7 @@ export function Cities({ data, filters, onFilters }: Props) {
                         className="num"
                         style={v === null ? undefined : { background: divergingColor(palette, v), color: Math.abs(v) > 0.06 ? "#ffffff" : palette.ink }}
                       >
-                        {fmtPct(v)}
+                        {f.pct(v)}
                       </td>
                     ))}
                   </tr>
@@ -96,7 +97,7 @@ export function Cities({ data, filters, onFilters }: Props) {
         </ChartCard>
       </div>
 
-      <ChartCard title="Tendance trimestrielle du prix médian au m², ville par ville" subtitle="Même échelle pour toutes les villes">
+      <ChartCard title={t("ct.multiTitle")} subtitle={t("ct.multiSubtitle")}>
         <div className="multiples">
           {quarterly.map(({ city, points }) => {
             const first = points[0]?.p;
@@ -105,7 +106,7 @@ export function Cities({ data, filters, onFilters }: Props) {
               <div className="multiple" key={city}>
                 <div className="multiple-title">
                   <span>{city}</span>
-                  <span className="multiple-change">{fmtPct(first && last ? last / first - 1 : null)}</span>
+                  <span className="multiple-change">{f.pct(first && last ? last / first - 1 : null)}</span>
                 </div>
                 <ResponsiveContainer width="100%" height={110}>
                   <LineChart data={points} margin={{ top: 4, right: 4, bottom: 0, left: 4 }}>
@@ -114,7 +115,7 @@ export function Cities({ data, filters, onFilters }: Props) {
                     <Tooltip
                       content={({ active, payload, label }) =>
                         active && payload?.length ? (
-                          <TooltipBox title={`${city}, ${String(label).replace("-", " ")}`} lines={[{ label: "Prix médian", value: fmtEuroM2(payload[0].payload.p) }]} />
+                          <TooltipBox title={`${city}, ${String(label).replace("-", " ")}`} lines={[{ label: t("tip.medianM2"), value: f.euroM2(payload[0].payload.p) }]} />
                         ) : null
                       }
                     />
