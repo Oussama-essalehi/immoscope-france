@@ -22,7 +22,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from scipy.stats import mannwhitneyu
 
-from src.clean import PROCESSED_FILE
+from src.clean import CITIES_FILE, PROCESSED_FILE
 from src.income import read_income
 from src.settings import load_config, project_path, setup_logging
 
@@ -128,12 +128,22 @@ def median_by(df: pd.DataFrame, keys: list[str]) -> pd.DataFrame:
     )
 
 
+MIN_SALES_COMMUNE_TABLE = 10
+
+
 def price_by_area(df: pd.DataFrame) -> dict[str, pd.DataFrame]:
-    """Q1 — median price per m² by department, commune and property type."""
+    """Q1 — median price per m² by region, department, commune and property type.
+
+    Every level also gets an ``annee = 'all'`` row (whole period). The commune
+    table keeps groups with at least 10 sales (smaller ones are not meaningful).
+    """
     data = with_all_types(df)
-    dept = median_by(data, ["code_departement", "type_local", "annee"])
+    data = pd.concat([data.assign(annee=data["annee"].astype(str)), data.assign(annee="all")], ignore_index=True)
+    region = median_by(data, ["code_region", "region", "type_local", "annee"])
+    dept = median_by(data, ["code_region", "code_departement", "type_local", "annee"])
     commune = median_by(data, ["code_commune", "nom_commune", "code_departement", "type_local", "annee"])
-    return {"prix_departement": dept, "prix_commune": commune}
+    commune = commune[commune["nb_ventes"] >= MIN_SALES_COMMUNE_TABLE]
+    return {"prix_region": region, "prix_departement": dept, "prix_commune": commune}
 
 
 def city_yearly(df: pd.DataFrame) -> pd.DataFrame:
@@ -222,14 +232,13 @@ def affordability(yearly: pd.DataFrame, budgets: Sequence[int], last: int) -> pd
     return pd.DataFrame(rows)
 
 
-def income_ratio(yearly: pd.DataFrame, cfg: dict, last: int) -> pd.DataFrame:
+def income_ratio(yearly: pd.DataFrame, df: pd.DataFrame, last: int) -> pd.DataFrame:
     """Q6 — years of median household income needed to buy the median dwelling."""
     income = read_income()
     if income.empty:
         return pd.DataFrame()
-    city_codes: dict[str, str] = {}
-    for code, city in cfg["main_cities"].items():
-        city_codes.setdefault(city, "69123" if code.startswith("6938") else code)
+    # whole-city INSEE code (Paris 75056, not its arrondissements)
+    city_codes = df.dropna(subset=["ville_principale"]).groupby("ville_principale")["code_ville"].first()
     rev = income.set_index("code_geo")["revenu_menage_median"]
     latest = yearly[(yearly["annee"] == last) & (yearly["type_local"] == ALL_TYPES)].copy()
     latest["revenu_menage_median"] = latest["ville_principale"].map(city_codes).map(rev)
@@ -353,7 +362,7 @@ def fig_distribution(df: pd.DataFrame, metropoles: Sequence[str], last: int) -> 
     fig.update_layout(boxmode="group", boxgap=0.35, boxgroupgap=0.12)
     fig.update_xaxes(categoryorder="array", categoryarray=order, title=None)
     fig.update_yaxes(title="Prix au m² (€)", tickformat=",.0f", rangemode="tozero")
-    base_layout(fig, f"Distribution des prix au m² dans les 5 métropoles ({last})",
+    base_layout(fig, f"Distribution des prix au m² dans les {len(metropoles)} plus grandes villes ({last})",
                 "Boîtes : 1er quartile, médiane, 3e quartile ; moustaches : 1,5 x l'écart interquartile")
     add_source(fig)
     return fig
@@ -439,7 +448,7 @@ def fig_rate_effect(effect: pd.DataFrame, before: int, after: int, metropoles: S
                      showgrid=True, gridcolor=GRID)
     fig.update_yaxes(title=f"Variation du prix médian au m² {before} → {after} (%)", ticksuffix=" %")
     base_layout(fig, "Hausse des taux : les volumes ont plongé, les prix ont peu bougé",
-                f"Chaque point est une ville ; {before} = taux bas, {after} = taux au plus haut", height=560)
+                f"Chaque point est une ville ; {before} = taux bas, {after} = taux au plus haut", height=680)
     add_source(fig)
     return fig
 
@@ -463,7 +472,7 @@ def fig_price_change(ranking: pd.DataFrame, first: int, last: int) -> go.Figure:
     rng = data["evol_prix_total_pct"].abs().max() * 1.25
     fig.update_xaxes(range=[-rng, rng])
     base_layout(fig, f"Évolution des prix {first} → {last} : les grandes métropoles reculent",
-                "Rouge : hausse ; bleu : baisse. Maisons et appartements confondus", height=600)
+                "Rouge : hausse ; bleu : baisse. Maisons et appartements confondus", height=880)
     add_source(fig)
     return fig
 
@@ -491,7 +500,7 @@ def fig_affordability(afford: pd.DataFrame, budgets: Sequence[int], last: int) -
         fig.update_xaxes(range=[0, data["m2_achetables"].max() * 1.2], showgrid=False,
                          showticklabels=False, ticks="", row=1, col=i)
     base_layout(fig, f"Combien de m² d'appartement pour mon budget ? ({last})",
-                "Budget divisé par le prix médian au m² des appartements de la ville", height=620)
+                "Budget divisé par le prix médian au m² des appartements de la ville", height=900)
     fig.update_xaxes(ticks="", showticklabels=False)
     fig.update_annotations(font={"size": 13, "color": INK})
     add_source(fig, "Hors frais de notaire.")
@@ -531,7 +540,7 @@ def fig_tests(tests: pd.DataFrame, first: int, last: int) -> go.Figure:
     fig.update_yaxes(showgrid=False)
     base_layout(fig, f"Test de Mann-Whitney : prix au m² {first} vs {last}",
                 "Seuil de Bonferroni sur l'ensemble des tests ; taille d'effet = corrélation rang-bisérielle",
-                height=600)
+                height=900)
     add_source(fig)
     return fig
 
@@ -552,7 +561,33 @@ def fig_income(ratio: pd.DataFrame, last: int) -> go.Figure:
     fig.update_yaxes(showgrid=False, autorange="reversed")
     base_layout(fig, f"Effort d'achat : prix médian d'un logement ({last}) / revenu médian du ménage",
                 "Revenu : INSEE Filosofi 2021 (niveau de vie médian x unités de consommation par ménage)",
-                height=600)
+                height=880)
+    add_source(fig)
+    return fig
+
+
+def fig_regions(region_table: pd.DataFrame, first: int, last: int) -> go.Figure:
+    """Median price per m² by region (last year), with the change since the first year."""
+    data = region_table[region_table["type_local"] == ALL_TYPES]
+    wide = data.pivot(index="region", columns="annee", values="prix_m2_median")
+    wide = wide[[str(first), str(last)]].dropna().sort_values(str(last))
+    change = (wide[str(last)] / wide[str(first)] - 1) * 100
+    labels = [
+        f"{v:,.0f} €  ({c:+.1f} %)".replace(",", " ").replace(".", ",")
+        for v, c in zip(wide[str(last)], change)
+    ]
+    fig = go.Figure(
+        go.Bar(
+            x=wide[str(last)], y=wide.index, orientation="h",
+            marker={"color": SEQ_MID, "line": {"color": SURFACE, "width": 2}},
+            text=labels, textposition="outside", textfont={"color": INK_2}, showlegend=False,
+        )
+    )
+    fig.update_xaxes(title=f"Prix médian au m² {last} (€)", tickformat=",.0f", showgrid=True, gridcolor=GRID,
+                     range=[0, wide[str(last)].max() * 1.35])
+    fig.update_yaxes(showgrid=False)
+    base_layout(fig, f"Prix médian au m² par région ({last})",
+                f"Entre parenthèses : évolution depuis {first}. Maisons et appartements confondus", height=560)
     add_source(fig)
     return fig
 
@@ -564,8 +599,10 @@ def run() -> dict:
     """Compute every table, test and figure; return the summary dictionary."""
     cfg = load_config()
     acfg = cfg["analysis"]
-    metropoles = cfg["metropoles"]
     df = pd.read_parquet(project_path("processed") / PROCESSED_FILE)
+    # Largest cities first (order of the city selection)
+    cities = pd.read_csv(project_path("tables") / CITIES_FILE)
+    metropoles = cities.loc[cities["est_metropole"], "ville"].tolist()
     # Only complete years are compared: every month must be present
     months = df.groupby("annee")["mois"].nunique()
     full_years = months[months == 12].index
@@ -579,7 +616,7 @@ def run() -> dict:
     effect = rate_rise_effect(yearly, before, after, last)
     ranking = city_ranking(effect, last)
     afford = affordability(yearly, acfg["budgets"], last)
-    ratio = income_ratio(yearly, cfg, last)
+    ratio = income_ratio(yearly, df, last)
     tests = price_tests(df, first, last, acfg["alpha"], acfg["min_sales_for_test"])
 
     outputs = {
@@ -605,6 +642,7 @@ def run() -> dict:
     save_figure(fig_tests(tests, first, last), "07_test_mann_whitney")
     if not ratio.empty:
         save_figure(fig_income(ratio, last), "08_annees_de_revenu")
+    save_figure(fig_regions(areas["prix_region"], first, last), "09_prix_par_region")
 
     summary = build_summary(df, areas, yearly, effect, ranking, afford, ratio, tests, first, last, before, after)
     (tables_dir / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -651,9 +689,28 @@ def build_summary(
         "accessibilite_appartement": afford[afford["type_local"] == "Appartement"]
         .round(1).to_dict(orient="records"),
         "annees_de_revenu": ratio.round(1).to_dict(orient="records"),
-        "prix_departement_derniere_annee": areas["prix_departement"]
-        .query("annee == @last").round(0).to_dict(orient="records"),
+        "regions": region_summary(areas["prix_region"], first, before, after, last),
     }
+
+
+def region_summary(region_table: pd.DataFrame, first: int, before: int, after: int, last: int) -> list[dict]:
+    """Per region: price and volume for the key years, and their changes."""
+    data = region_table[region_table["type_local"] == ALL_TYPES].set_index(["region", "annee"])
+    rows = []
+    for region in data.index.get_level_values(0).unique():
+        get = lambda year, col: float(data.loc[(region, str(year)), col])  # noqa: E731
+        rows.append(
+            {
+                "region": region,
+                f"prix_m2_{first}": round(get(first, "prix_m2_median")),
+                f"prix_m2_{last}": round(get(last, "prix_m2_median")),
+                f"ventes_{last}": int(get(last, "nb_ventes")),
+                "evol_prix_total_pct": round((get(last, "prix_m2_median") / get(first, "prix_m2_median") - 1) * 100, 1),
+                "evol_volume_hausse_taux_pct": round((get(after, "nb_ventes") / get(before, "nb_ventes") - 1) * 100, 1),
+                "evol_prix_hausse_taux_pct": round((get(after, "prix_m2_median") / get(before, "prix_m2_median") - 1) * 100, 1),
+            }
+        )
+    return sorted(rows, key=lambda r: -r[f"prix_m2_{last}"])
 
 
 if __name__ == "__main__":
