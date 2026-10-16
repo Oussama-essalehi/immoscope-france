@@ -402,7 +402,7 @@ def fig_monthly_price(monthly: pd.DataFrame, metropoles: Sequence[str]) -> go.Fi
         )
     fig.update_yaxes(title="Prix médian au m² (€), glissant 3 mois", tickformat=",.0f")
     fig.update_xaxes(dtick="M6", tickformat="%m/%Y", range=[monthly["debut_mois"].min(), monthly["debut_mois"].max() + pd.DateOffset(months=5)])
-    base_layout(fig, "Prix médian au m² : pic en 2022, repli ensuite à Lyon, Bordeaux et Nantes",
+    base_layout(fig, "Prix médian au m² : Paris et Lyon reculent, Nice et Marseille montent",
                 "Médiane glissante sur 3 mois, maisons et appartements")
     add_source(fig)
     return fig
@@ -433,7 +433,7 @@ def fig_rate_effect(effect: pd.DataFrame, before: int, after: int, metropoles: S
     """Scatter: change in volume (x) vs change in price (y), one point per city."""
     is_metro = effect["ville_principale"].isin(metropoles)
     fig = go.Figure()
-    for flag, name, color in ((True, "Métropole", SEQ_DARK), (False, "Autre ville suivie", SEQ_LIGHT)):
+    for flag, name, color in ((True, f"{len(metropoles)} plus grandes villes", SEQ_DARK), (False, "Autres villes suivies", SEQ_LIGHT)):
         sub = effect[is_metro == flag]
         fig.add_trace(
             go.Scatter(
@@ -447,7 +447,7 @@ def fig_rate_effect(effect: pd.DataFrame, before: int, after: int, metropoles: S
     fig.update_xaxes(title=f"Variation du nombre de ventes {before} → {after} (%)", ticksuffix=" %",
                      showgrid=True, gridcolor=GRID)
     fig.update_yaxes(title=f"Variation du prix médian au m² {before} → {after} (%)", ticksuffix=" %")
-    base_layout(fig, "Hausse des taux : les volumes ont plongé, les prix ont peu bougé",
+    base_layout(fig, "Hausse des taux : les volumes ont plongé partout, les prix ont divergé",
                 f"Chaque point est une ville ; {before} = taux bas, {after} = taux au plus haut", height=680)
     add_source(fig)
     return fig
@@ -471,7 +471,7 @@ def fig_price_change(ranking: pd.DataFrame, first: int, last: int) -> go.Figure:
     fig.update_yaxes(title=None, showgrid=False)
     rng = data["evol_prix_total_pct"].abs().max() * 1.25
     fig.update_xaxes(range=[-rng, rng])
-    base_layout(fig, f"Évolution des prix {first} → {last} : les grandes métropoles reculent",
+    base_layout(fig, f"Prix {first} → {last} : les grandes métropoles reculent, la Méditerranée monte",
                 "Rouge : hausse ; bleu : baisse. Maisons et appartements confondus", height=880)
     add_source(fig)
     return fig
